@@ -1,5 +1,4 @@
-// HealthComponent.js
-import BaseComponent from './BaseComponent.js';
+import BaseComponent from "../abstracts/BaseComponent.js";
 
 export default class HealthComponent extends BaseComponent {
     constructor(maxHealth) {

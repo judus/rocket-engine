@@ -33,6 +33,9 @@ export default class BaseScene extends EngineBase {
         this.camera.addComponent(TouchComponent, 100, 500);
         this.camera.addComponent(ShakeComponent);
 
+        this.dataStoreManager.create('cameras');
+        this.dataStoreManager.getStore('cameras').set('main', this.camera);
+
         engine.service('sceneCamera', this.camera);
         engine.initService('sceneCamera');
     }

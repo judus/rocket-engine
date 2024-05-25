@@ -1,7 +1,4 @@
-// systems/ProjectileGrid.js
 import BaseGridDataStore from './BaseGridDataStore.js';
-import ProjectilePool from "./ProjectilePool.js";
-import ParticleSystem from "../systems/particles/ParticleSystem.js";
 
 export default class ProjectileGrid extends BaseGridDataStore {
     constructor(eventBus, cellSize = 100, projectilePool) {

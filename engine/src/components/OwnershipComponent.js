@@ -1,5 +1,4 @@
-import BaseComponent from "./CameraComponent.js";
-
+import BaseComponent from "../abstracts/BaseComponent.js";
 export default class OwnershipComponent extends BaseComponent {
     /**
      * OwnershipComponent constructor.

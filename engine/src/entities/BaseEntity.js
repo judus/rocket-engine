@@ -1,3 +1,5 @@
+import Vector2D from "../utils/maths/Vector2D.js";
+
 function generateUUID() {
     return `${Date.now()}-${Math.floor(Math.random() * 1e9)}`;
 }
@@ -6,6 +8,7 @@ export default class BaseEntity {
         this.id = id || generateUUID();
         this.type = type || this.constructor.name
         this.components = {};
+        this.pos = this.getComponent('position') ? this.getComponent('position') : new Vector2D(0,0);
     }
 
     addComponent(componentType, component) {

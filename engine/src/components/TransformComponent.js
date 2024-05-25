@@ -1,5 +1,5 @@
-import BaseComponent from "./CameraComponent.js";
 import Spatial2D from "../utils/spatial/Spatial2D.js";
+import BaseComponent from "../abstracts/BaseComponent.js";
 
 export default class TransformComponent extends BaseComponent {
     constructor(x = 0, y = 0, rotation = 0, scale = 1) {

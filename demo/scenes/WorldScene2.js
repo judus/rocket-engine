@@ -12,9 +12,6 @@ export default class WorldScene2 extends BaseScene {
     init(engine) {
         super.init(engine);
 
-        // Set up layers
-        this.addLayer('backgroundLayer', ExampleLayer);
-        this.addLayer('mainLayer', ExampleLayer);
 
         engine.createStore('exampleType');
 

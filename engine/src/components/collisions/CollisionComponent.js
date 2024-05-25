@@ -1,6 +1,6 @@
-import BaseComponent from "./CameraComponent.js";
-import CollisionDetector from '../systems/collisions/CollisionDetector.js';
 import DefaultCollisionResponse from "./DefaultCollisionResponse.js";
+import BaseComponent from "../../abstracts/BaseComponent.js";
+import CollisionDetector from "../../physics/collisions/CollisionDetector.js";
 
 export default class CollisionComponent extends BaseComponent {
     constructor(type = 'box' || 'polygon', debug = false, collisionResponse = null) {

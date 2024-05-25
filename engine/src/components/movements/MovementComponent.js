@@ -1,7 +1,7 @@
-import BaseComponent from '../CameraComponent.js';
 import MovementState from './MovementState.js';
 import AccelerationProfile from './AccelerationProfile.js';
 import DecelerationProfile from './DecelerationProfile.js';
+import BaseComponent from "../../abstracts/BaseComponent.js";
 
 export default class MovementComponent extends BaseComponent {
     constructor(options = {}) {

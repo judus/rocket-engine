@@ -1,5 +1,4 @@
 import Projectile from "../entities/Projectile.js";
-import ParticleSystem from "../systems/particles/ParticleSystem.js";
 
 function generateUUID() {
     return `${Date.now()}-${Math.floor(Math.random() * 1e9)}`;

@@ -1,5 +1,5 @@
 import BaseEntity from './BaseEntity.js';
-import Spatial2D from '../utils/Spatial2D.js';
+import Spatial2D from "../utils/spatial/Spatial2D.js";
 
 function generateUUID() {
     return `${Date.now()}-${Math.floor(Math.random() * 1e9)}`;

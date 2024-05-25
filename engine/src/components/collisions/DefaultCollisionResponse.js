@@ -1,8 +1,9 @@
 import CollisionResponse from './CollisionResponse.js';
 import SequentialBehavior from '../../behaviors/SequentialBehavior.js';
-import ShowExplosionBehavior from '../../behaviors/ShowExplosionBehavior.js';
-import ApplyBounceBackBehavior from '../../behaviors/ApplyBounceBackBehavior.js';
-import TakeDamageBehavior from '../../behaviors/TakeDamageBehavior.js';
+import ShowExplosionBehavior from "../../../../demo/behaviors/ShowExplosionBehavior.js";
+import ApplyBounceBackBehavior from "../../../../demo/behaviors/ApplyBounceBackBehavior.js";
+import TakeDamageBehavior from "../../../../demo/behaviors/TakeDamageBehavior.js";
+
 
 export default class DefaultCollisionResponse extends CollisionResponse {
     constructor(particleSystem) {

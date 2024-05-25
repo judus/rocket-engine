@@ -1,10 +1,10 @@
 // entities/Projectile.js
 import BaseEntity from './BaseEntity.js';
-import CollisionComponent from "../components/CollisionComponent.js";
-import BoundingBoxComponent from "../components/BoundingBoxComponent.js";
 import RenderComponent from "../components/RenderComponent.js";
 import TransformComponent from "../components/TransformComponent.js";
-import Spatial3D from "../utils/Spatial3D.js";
+import Spatial3D from "../utils/spatial/Spatial3D.js";
+import CollisionComponent from "../components/collisions/CollisionComponent.js";
+import BoundingBoxComponent from "../components/collisions/BoundingBoxComponent.js";
 
 export default class Projectile extends BaseEntity {
     constructor(id, particleSystem) {
