@@ -22,6 +22,11 @@ export default class EngineInit {
     initializeServices() {
         this.service('timer', this.service('timer') || this.defaultTimer());
         this.service('defaultRenderer', this.engine.config.defaultRenderer);
+        this.service('defaultDataStore', this.engine.config.defaultDataStore);
+
+        if(!this.engine.config.disableEventBus) {
+            this.service('eventBus', this.service('eventBus') || this.defaultEventBus());
+        }
 
         if(!this.engine.config.disableRenderSystem) {
             this.service('renderSystem', this.service('renderSystem') || this.defaultRenderSystem());
@@ -41,10 +46,6 @@ export default class EngineInit {
 
         if(!this.engine.config.disableDataStoreManager) {
             this.service('dataStoreManager', this.service('dataStoreManager') || this.defaultDataStoreManager());
-        }
-
-        if(!this.engine.config.disableEventBus) {
-            this.service('eventBus', this.service('eventBus') || this.defaultEventBus());
         }
 
         if(!this.engine.config.disableAssetManager) {
@@ -111,7 +112,8 @@ export default class EngineInit {
     }
 
     defaultDataStoreManager() {
-        return new DataStoreManager(this.engine.config.defaultDataStore);
+
+        return new DataStoreManager(this.engine.create('defaultDataStore', this.engine.service('eventBus'))); // get a new instance
     }
 
     defaultEventBus() {

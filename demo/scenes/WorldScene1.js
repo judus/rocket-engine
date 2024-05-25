@@ -1,7 +1,5 @@
 import BaseScene from "../../engine/src/scenes/BaseScene.js";
-import PositionComponent from "../../engine/src/components/PositionComponent.js";
-import RenderComponent from "../../engine/src/components/RenderComponent.js";
-import Entity from "../../engine/src/entities/Entity.js";
+import Entity from "../entities/Entity.js";
 import ExampleLayer from '../layers/ExampleLayer.js';
 
 export default class WorldScene1 extends BaseScene {
@@ -14,53 +12,39 @@ export default class WorldScene1 extends BaseScene {
 
         // Set up layers
         this.addLayer('backgroundLayer', ExampleLayer);
-        this.addLayer('mainLayer', ExampleLayer);
 
         engine.createStore('exampleType');
 
-        // // Add entities
-        // const entity1 = new Entity('entity1');
-        // entity1.addComponent('position', new PositionComponent(100, 100));
-        // entity1.addComponent('render', new RenderComponent('sprite1'));
-        //
-        // const entity2 = new Entity('entity2');
-        // entity2.addComponent('position', new PositionComponent(200, 200));
-        // entity2.addComponent('render', new RenderComponent('sprite2'));
-        //
-        // // Add entities to the entity manager
-        // this.engine.service('entityManager').addEntity(entity1);
-        // this.engine.service('entityManager').addEntity(entity2);
-        //
-        // // Set camera target
-        // this.setCameraTarget(entity1);
+        // Add entities with random positions
+        for(let i = 0; i < 10; i++) {
+            const randomX = Math.random() * 1024; // Assuming a canvas width of 800
+            const randomY = Math.random() * 768; // Assuming a canvas height of 600
+
+            const entity = new Entity(randomX, randomY, i % 2 === 0 ? 'red' : 'green');
+            engine.service('entityManager').addEntity(entity, 'exampleType');
+        }
+
+        // Set camera target to the first entity
+        const firstEntity = engine.service('entityManager').getEntitiesByType('exampleType')[0];
+        this.setCameraTarget(firstEntity);
     }
 
     onLoad() {
-        // Optionally return a loading scene
         return null;
     }
 
     load(callback) {
-        // Load assets needed for this scene
-        const assetManager = this.engine.service('assetManager');
-        assetManager.loadImage('sprite1', 'path/to/sprite1.png');
-        assetManager.loadImage('sprite2', 'path/to/sprite2.png');
-
-        // Call the callback once loading is complete
-        assetManager.setCompleteHandler(() => {
-            if(typeof callback === 'function') {
-                callback();
-            }
-        });
+        // No assets to load for this simplified example
+        if(typeof callback === 'function') {
+            callback();
+        }
     }
 
     update(deltaTime, tickCount, totalTime) {
         super.update(deltaTime, tickCount, totalTime);
-        // Additional update logic for this scene
     }
 
     render(deltaTime, tickCount, totalTime) {
         super.render(deltaTime, tickCount, totalTime);
-        // Additional render logic for this scene
     }
 }

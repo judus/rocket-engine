@@ -94,3 +94,4 @@ export default class BaseDataStore {
         return Array.from(this.data.values());
     }
 }
+

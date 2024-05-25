@@ -46,7 +46,12 @@ export default class EntityManager {
             throw new Error(`Data store for type ${type} not found`);
         }
 
-        return Array.from(store.values());
+        const entities = [];
+        store.forEach((value, key) => {
+            entities.push(value);
+        });
+
+        return entities;
     }
 
     queryEntitiesInArea(area) {

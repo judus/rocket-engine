@@ -1,10 +1,19 @@
+function generateUUID() {
+    return `${Date.now()}-${Math.floor(Math.random() * 1e9)}`;
+}
 export default class BaseEntity {
-    constructor() {
+    constructor(id, type) {
+        this.id = id || generateUUID();
+        this.type = type || this.constructor.name
         this.components = {};
     }
 
-    addComponent(name, component) {
-        this.components[name] = component;
+    addComponent(componentType, component) {
+        this.components[componentType] = component;
+        component.entity = this; // Allows components to access their parent entity.
+        if(component.onAdd) {
+            component.onAdd();
+        }
     }
 
     getComponent(name) {
@@ -12,11 +21,15 @@ export default class BaseEntity {
     }
 
     removeComponent(name) {
-        if(!this.components[name]) {
+        const component = this.components[name];
+        if(component) {
+            if(typeof component.onRemove === 'function') {
+                component.onRemove();
+            }
+            delete this.components[name];
+        } else {
             console.warn(`Component '${name}' does not exist and cannot be removed.`);
-            return;
         }
-        delete this.components[name];
     }
 
     hasComponent(name) {

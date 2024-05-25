@@ -16,7 +16,7 @@ export default class RenderComponent extends BaseComponent {
      * Renders the entity using the provided render function.
      * @param {number} deltaTime - The time elapsed since the last render.
      * @param {CanvasRenderingContext2D} context - The rendering context.
-     * @param {Camera} camera - The cameras to render relative to.
+     * @param {Camera} camera - The camera to render relative to.
      */
     render(deltaTime, context, camera) {
         if(this.renderFunction) {
@@ -49,6 +49,7 @@ export default class RenderComponent extends BaseComponent {
      */
     onAdd() {
         // Logic to execute when the component is added to an entity
+        this.entity = this.entity || null;
     }
 
     /**

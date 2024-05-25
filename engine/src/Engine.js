@@ -33,7 +33,8 @@ export default class Engine {
 
         (new EngineInit(this)).initializeServices();
         this.serviceContainer.initAll(this.engineApi);
-        this.pluginContainer.initAll(this.engineApi);    }
+        this.pluginContainer.initAll(this.engineApi);
+    }
 
     /**
      * Sets the default configuration values and merges with provided config.

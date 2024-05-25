@@ -8,6 +8,8 @@ export default class PositionComponent extends BaseComponent {
      */
     constructor(x, y) {
         super();
+        this.x = x;
+        this.y = y;
     }
 
     update(deltaTime) {
