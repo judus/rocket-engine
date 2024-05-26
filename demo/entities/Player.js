@@ -1,23 +1,3 @@
-// import MovementComponent from './components/movements/MovementComponent.js';
-// import RenderComponent from './components/RenderComponent.js';
-// import SpatialECS2D from "./entities/SpatialECS2D.js";
-// import Drawing from "./utils/Drawing.js";
-// import AttackComponent from "./components/AttackComponent.js";
-// import TransformComponent from "./components/TransformComponent.js";
-// import FaceVelocityBehavior from "./behaviors/FaceVelocityBehavior.js";
-// import BoundingBoxComponent from "./components/BoundingBoxComponent.js";
-// import MovementState from "./components/movements/MovementState.js";
-// import CollisionComponent from "./components/CollisionComponent.js";
-// import InventoryComponent from "./components/InventoryComponent.js";
-// import {movementStateDefinitions} from "./components/movements/movementStateDefinitions.js";
-// import ScannerComponent from "./components/ScannerComponent.js";
-// import NavigationComponent from "./components/NavigationComponent.js";
-// import AutopilotComponent from "./components/AutopilotComponent.js";
-// import HangarComponent from "./components/HangarComponent.js";
-// import WeaponSystemComponent from "./components/WeaponSystemComponent.js";
-// import DefaultCollisionResponse from "./components/collisions/DefaultCollisionResponse.js";
-// import HealthComponent from "./components/HealthComponent.js";
-
 import SpatialECS2D from "../../engine/src/entities/SpatialECS2D.js";
 import Drawing from "../../engine/src/services/Drawing.js";
 import MovementComponent from "../../engine/src/components/movements/MovementComponent.js";
@@ -37,6 +17,7 @@ import WeaponSystemComponent from "../components/WeaponSystemComponent.js";
 import AttackComponent from "../components/AttackComponent.js";
 import AutopilotComponent from "../components/AutopilotComponent.js";
 import {movementStateDefinitions} from "../../engine/src/components/movements/movementStateDefinitions.js";
+import PositionComponent from "../../engine/src/components/PositionComponent.js";
 
 export default class Player extends SpatialECS2D {
     constructor(dataStoreManager, eventBus, x = 0, y = 0, id = null) {

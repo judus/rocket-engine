@@ -1,4 +1,4 @@
-### Summary of Changes and Engine Functionality
+### Summary of Changes and Rocket Functionality
 
 #### Overview
 
@@ -11,15 +11,15 @@ integration and management of these services.
 
 #### 1. **Initialization and Configuration**
 
-- **Engine Configuration:** The engine is initialized with a configuration object that sets default values for various
+- **Rocket Configuration:** The engine is initialized with a configuration object that sets default values for various
   parameters.
 - **Service and Plugin Containers:** The engine uses `BaseContainer` to manage services and plugins, allowing for easy
   addition, retrieval, and removal of services and plugins.
 
-#### 2. **Engine API Enhancements**
+#### 2. **Rocket API Enhancements**
 
-- **Proxy Methods:** We have added explicit method definitions in the `Engine` class to expose all methods
-  of `EngineApi`. This ensures better IDE support and autocompletion.
+- **Proxy Methods:** We have added explicit method definitions in the `Rocket` class to expose all methods
+  of `Engine`. This ensures better IDE support and autocompletion.
 - **Scene Management:** The `SceneDirector` class has been enhanced to manage scenes and scene stacks, encapsulating the
   logic for adding scenes and switching between them.
 
@@ -42,13 +42,13 @@ integration and management of these services.
 
 ### Detailed Breakdown
 
-#### Engine Class
+#### Rocket Class
 
 - **Initialization:** Configures default values and initializes services and plugins.
-- **Proxy Methods:** Exposes all `EngineApi` methods to ensure better IDE support.
+- **Proxy Methods:** Exposes all `Engine` methods to ensure better IDE support.
 - **Start/Stop Methods:** Manages the game loop by starting and stopping the timer.
 
-#### EngineApi Class
+#### Engine Class
 
 Provides methods to interact with various services and manage the game engine, including:
 
@@ -75,12 +75,12 @@ Handles rendering of scenes to a canvas element:
 - **Rendering:** Clears the canvas and renders all layers of the scene.
 - **Fade Effects:** Supports fade-in and fade-out effects for scene transitions.
 
-### How the Engine Works Now
+### How the Rocket Works Now
 
 1. **Initialization:**
 
    ```javascript
-   const engine = new Engine({
+   const engine = new Rocket({
        targetElement: document.getElementById('main'),
        showPerformanceMonitor: true
    });
@@ -99,7 +99,7 @@ Handles rendering of scenes to a canvas element:
    }, { container: document.getElementById('cockpit'), width: 200, height: 200 });
    ```
 
-3. **Starting the Engine:**
+3. **Starting the Rocket:**
 
    ```javascript
    engine.start();

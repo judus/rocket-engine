@@ -47,9 +47,9 @@ export default class RenderComponent extends BaseComponent {
     /**
      * Called when the component is added to an entity.
      */
-    onAdd() {
+    onAdd(entity) {
         // Logic to execute when the component is added to an entity
-        this.entity = this.entity || null;
+        this.entity = entity || null;
     }
 
     /**

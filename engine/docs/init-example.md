@@ -72,7 +72,7 @@ Make sure you have an HTML file set up as follows:
 Here's an example of how you might initialize the game engine in your `main.js` file:
 
 ```javascript
-import { Engine } from './path/to/engine';
+import { Rocket } from './path/to/engine';
 import { Timer } from './path/to/timer';
 import { RenderSystem } from './path/to/renderSystem';
 import { DataStoreManager } from './path/to/dataStoreManager';
@@ -89,7 +89,7 @@ import { ExampleApplication } from './path/to/exampleApplication';
 import { ExamplePlugin } from './path/to/examplePlugin';
 
 // Initialize the engine
-const engine = new Engine({
+const engine = new Rocket({
   disableRenderSystem: false, // Use the default render system unless specified otherwise
   disableDataStores: false    // Use the default data store manager unless specified otherwise
 });
@@ -146,8 +146,8 @@ canvas.addEventListener('load', () => {
 
 1. **HTML Setup**: The HTML file sets up a container for the game canvas and includes styles to ensure the canvas fills
    the screen and scales appropriately.
-2. **Engine Initialization**:
-    - The `Engine` class is initialized with a configuration object. In this example, the render system and data store
+2. **Rocket Initialization**:
+    - The `Rocket` class is initialized with a configuration object. In this example, the render system and data store
       manager are enabled by default.
     - Various services such
       as `Timer`, `RenderSystem`, `DataStoreManager`, `EventBus`, `AssetManager`, `AudioManager`, `InputManager`, `InputBindingsManager`, `SpritesheetManager`,
@@ -174,12 +174,12 @@ how the components work, how to use them, and the overall flow of the applicatio
 
 #### JavaScript Initialization
 
-2. **Engine Initialization**:
-    - The `Engine` class is instantiated with a configuration object. This object can disable the default render system
+2. **Rocket Initialization**:
+    - The `Rocket` class is instantiated with a configuration object. This object can disable the default render system
       and data store manager if desired.
     - Example:
       ```javascript
-      const engine = new Engine({
+      const engine = new Rocket({
         disableRenderSystem: false,
         disableDataStores: false
       });
@@ -271,7 +271,7 @@ how the components work, how to use them, and the overall flow of the applicatio
 ### Example Initialization Script (`main.js`)
 
 ```javascript
-import { Engine } from './path/to/engine';
+import { Rocket } from './path/to/engine';
 import { Timer } from './path/to/timer';
 import { RenderSystem } from './path/to/renderSystem';
 import { DataStoreManager } from './path/to/dataStoreManager';
@@ -288,7 +288,7 @@ import { ExampleApplication } from './path/to/exampleApplication';
 import { ExamplePlugin } from './path/to/examplePlugin';
 
 // Initialize the engine
-const engine = new Engine({
+const engine = new Rocket({
   disableRenderSystem: false,
   disableDataStores: false
 });
@@ -344,7 +344,7 @@ canvas.addEventListener('load', () => {
 ### Application Flow Summary
 
 1. **HTML Setup**: Prepare the HTML structure with a canvas for rendering and a loading indicator.
-2. **Engine Initialization**: Instantiate the `Engine` class with optional configuration settings.
+2. **Rocket Initialization**: Instantiate the `Rocket` class with optional configuration settings.
 3. **Service Registration**: Register essential services
    like `Timer`, `RenderSystem`, `DataStoreManager`, `EventBus`, `AssetManager`, `AudioManager`, `InputManager`, `InputBindingsManager`, `SpritesheetManager`,
    and `EntityManager`.

@@ -12,55 +12,57 @@ export default class Cockpit extends BaseScene {
 
     init(engine) {
         super.init(engine);
+        //this.seededRandom = new SeededRandom(123456);
+
 
         // Set up layers
         this.addLayer('backgroundLayer', BackgroundLayer);
+        this.addLayer('foregroundLayer', ExampleLayer);
 
-        engine.createStore('exampleType');
+        // engine.createStore('exampleType');
+        //
+        // // Add entities with random positions
+        // for(let i = 0; i < 10; i++) {
+        //     const randomX = this.seededRandom.between(0, 512); // Assuming a canvas width of 800
+        //     const randomY = this.seededRandom.between(0, 334); // Assuming a canvas height of 600
+        //
+        //     const entity = new Entity(randomX, randomY, i % 2 === 0 ? 'red' : 'green');
+        //     engine.service('entityManager').addEntity(entity, 'exampleType');
+        // }
 
-        // // Add entities
-        // const entity1 = new Entity('entity1');
-        // entity1.addComponent('position', new PositionComponent(100, 100));
-        // entity1.addComponent('render', new RenderComponent('sprite1'));
-        //
-        // const entity2 = new Entity('entity2');
-        // entity2.addComponent('position', new PositionComponent(200, 200));
-        // entity2.addComponent('render', new RenderComponent('sprite2'));
-        //
-        // // Add entities to the entity manager
-        // this.engine.service('entityManager').addEntity(entity1);
-        // this.engine.service('entityManager').addEntity(entity2);
-        //
-        // // Set camera target
-        // this.setCameraTarget(entity1);
+        // Set camera target to the first entity
+        //const firstEntity = engine.service('entityManager').getEntitiesByType('exampleType')[0];
     }
 
     onLoad() {
-        // Optionally return a loading scene
         return null;
     }
 
-    load(callback) {
-        // Load assets needed for this scene
-        const assetManager = this.engine.service('assetManager');
-        assetManager.loadImage('sprite1', 'path/to/sprite1.png');
-        assetManager.loadImage('sprite2', 'path/to/sprite2.png');
+    onEnter() {
+        super.onEnter();
 
-        // Call the callback once loading is complete
-        assetManager.setCompleteHandler(() => {
-            if(typeof callback === 'function') {
-                callback();
-            }
-        });
+        const player = this.dataStoreManager.getStore('entities').get('player');
+        const camera = this.dataStoreManager.getStore('cameras').get(this.constructor.name + '-main');
+        if(player || camera) {
+            camera.setTarget(player);
+            this.eventBus.emit('controlEntity', 'player');
+        } else {
+            console.error("Player entity not found in the data store");
+        }
+    }
+
+    load(callback) {
+        // No assets to load for this simplified example
+        if(typeof callback === 'function') {
+            callback();
+        }
     }
 
     update(deltaTime, tickCount, totalTime) {
         super.update(deltaTime, tickCount, totalTime);
-        // Additional update logic for this scene
     }
 
     render(deltaTime, tickCount, totalTime) {
         super.render(deltaTime, tickCount, totalTime);
-        // Additional render logic for this scene
     }
 }

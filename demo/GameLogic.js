@@ -1,10 +1,12 @@
 import UnifiedCollisionSystem from "../engine/src/physics/collisions/UnifiedCollisionSystem.js";
+import SceneDirector from "../engine/src/scenes/SceneDirector.js";
 
 export default class GameLogic {
-    constructor(dataStore) {
-        this.dataStore = dataStore;
-        this.isPaused = false;
+    constructor(engine) {
+        this.engine = engine;
+        this.dataStore = this.engine.dataStoreManager();
         this.unifiedCollisionSystem = new UnifiedCollisionSystem();
+        this.isPaused = false;
     }
 
     update(deltaTime) {
@@ -15,15 +17,19 @@ export default class GameLogic {
     }
 
     processGameLogic(deltaTime) {
+        this.sceneDirector = this.engine.sceneDirector();
+        this.sceneManager = this.sceneDirector.getSceneManager('world');
+        this.currentScene = this.sceneManager.getCurrentScene();
+        this.mainCamera = this.currentScene.cameraManager.getCamera('main');
+
         this.dataStore.getStore('entities').forEach(entity => {
             entity.update(deltaTime);
         });
 
         this.dataStore.getStore('projectiles').update(deltaTime);
 
-        const camera = this.dataStore.getStore('cameras').get('main');
-        const entities = this.dataStore.getStore('entities').getEntitiesInArea(camera.getArea());
-        const projectiles = this.dataStore.getStore('projectiles').getProjectilesInArea(camera.getArea());
+        const entities = this.dataStore.getStore('entities').getEntitiesInArea(this.mainCamera.getArea());
+        const projectiles = this.dataStore.getStore('projectiles').getProjectilesInArea(this.mainCamera.getArea());
 
         // Combine entities and projectiles
         const allObjects = [...entities, ...projectiles];
@@ -48,11 +54,8 @@ export default class GameLogic {
     }
 
     async gameOver() {
-        const renderer = this.dataStore.getStore('systems').get('canvasRenderer');
-        if(renderer instanceof CanvasRenderer) {
-            const sceneManager = this.dataStore.getStore('systems').get('sceneManager');
-            await sceneManager.switchToScene('gameOverScene');
-        };
+        await this.sceneManager.switchTo('GameOverScene');
+        this.pause();
     }
 
 

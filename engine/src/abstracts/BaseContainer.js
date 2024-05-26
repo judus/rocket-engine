@@ -19,8 +19,9 @@ export default class BaseContainer {
     add(name, item) {
         if(typeof item === 'function') {
             this.factories[name] = item;
+            return null;
         } else {
-            this.items[name] = item;
+            return this.items[name] = item;
         }
     }
 

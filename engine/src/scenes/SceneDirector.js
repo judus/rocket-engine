@@ -6,140 +6,106 @@ export default class SceneDirector extends EngineBase {
         this.sceneManagers = new Map();
     }
 
-    /**
-     * Adds a SceneManager instance to the director.
-     * @param {string} name - The name of the SceneManager.
-     * @param {SceneManager} sceneManager - The SceneManager instance.
-     */
     addSceneManager(name, sceneManager) {
         this.sceneManagers.set(name, sceneManager);
     }
 
-    /**
-     * Retrieves a SceneManager by name.
-     * @param {string} name - The name of the SceneManager.
-     * @returns {SceneManager} The SceneManager instance.
-     */
     getSceneManager(name) {
         return this.sceneManagers.get(name);
     }
 
-    /**
-     * Updates all scenes managed by the SceneManagers.
-     * @param {number} deltaTime - The time elapsed since the last update.
-     * @param {number} tickCount - The current tick count.
-     * @param {number} totalTime - The total elapsed time.
-     */
     update(deltaTime, tickCount, totalTime) {
         this.sceneManagers.forEach(sceneManager => {
             sceneManager.updateCurrentScene(deltaTime, tickCount, totalTime);
         });
     }
 
-    /**
-     * Renders all scenes managed by the SceneManagers.
-     * @param {number} deltaTime - The time elapsed since the last update.
-     * @param {number} tickCount - The current tick count.
-     * @param {number} totalTime - The total elapsed time.
-     */
     render(deltaTime, tickCount, totalTime) {
         this.sceneManagers.forEach(sceneManager => {
             sceneManager.renderCurrentScene(deltaTime, tickCount, totalTime);
         });
     }
 
-    /**
-     * Adds a scene to the default or specified scene manager.
-     * @param {BaseScene} scene - The scene instance.
-     * @param {string} [sceneName] - The name of the scene.
-     * @param {string} [sceneGroup='main'] - The group of the scene manager.
-     * @param {HTMLElement} [container=null] - The html element the canvas should be appended to.
-     */
-    addScene(scene, sceneName = null, sceneGroup = 'main', container = null) {
-        console.log('Adding scene', scene.constructor.name, 'to stack', sceneGroup);
-
-        let sceneManager = this.getSceneManager(sceneGroup);
+    addScene(scene, sceneName = null, stack = 'main', container = null) {
+        let sceneManager = this.getSceneManager(stack);
         if(!sceneManager) {
-            // Create the SceneManager using the factory method
-            const engine = this.engine;
-            const width = engine.engine.config.defaultSceneWidth;
-            const height = engine.engine.config.defaultSceneHeight;
-
-            container = container || engine.config.targetElement;
-            const renderer = this.engine.create('defaultRenderer', container, {width, height}, sceneGroup);
-
-            sceneManager = this.engine.create('sceneManager', renderer, width, height);
-            this.addSceneManager(sceneGroup, sceneManager);
-            engine.service(sceneGroup, sceneManager);
-            engine.initService(sceneGroup);
+            sceneManager = this.createSceneManager(stack, container);
         }
 
-        // Set the scene dimensions
-        scene.setDimensions(sceneManager.width, sceneManager.height);
+        this.setupScene(scene, sceneManager, sceneName);
 
-        // Create the LayerManager from the container and set it on the scene
-        const layerManager = this.engine.create('layerManager', sceneManager.width, sceneManager.height);
-        scene.setLayerManager(layerManager);
-
-        sceneManager.addScene(sceneName || scene.constructor.name, scene);
-
-        // Set the current scene if not already set
         if(!sceneManager.getCurrentScene()) {
-            sceneManager.switchToScene(sceneName || scene.constructor.name);
+            sceneManager.first();
         }
     }
 
-    /**
-     * Sets up scenes with specific configuration.
-     * @param {string} name - The name of the scene manager.
-     * @param {Function} setupCallback - The setup callback function.
-     * @param {Object} [options] - Optional parameters.
-     * @param {Renderer} [options.renderer=null] - The renderer for the scene manager.
-     * @param {number} [options.width] - The width of the scene.
-     * @param {number} [options.height] - The height of the scene.
-     * @param {HTMLElement} [options.container=null] - The html element the canvas should be appended to.
-     */
     stack(name, setupCallback, options = {}) {
-        const sceneGroup = name;
+        const stack = name;
         const engine = this.engine;
-        const container = options.container || engine.engine.config.targetElement;
-        const width = options.width || engine.engine.config.defaultSceneWidth;
-        const height = options.height || engine.engine.config.defaultSceneHeight;
+        const container = options.container || engine.config.targetElement;
+        const width = options.width || engine.config.defaultSceneWidth;
+        const height = options.height || engine.config.defaultSceneHeight;
 
         const renderer = options.renderer || this.engine.create('defaultRenderer', container, {
             width,
             height
-        }, sceneGroup);
+        }, stack);
 
-        let sceneManager = this.getSceneManager(sceneGroup);
+        let sceneManager = this.getSceneManager(stack);
         if(!sceneManager) {
-            // Create the SceneManager using the factory method
-            sceneManager = this.engine.create('sceneManager', renderer, width, height);
-            this.addSceneManager(sceneGroup, sceneManager);
-            engine.service(sceneGroup, sceneManager);
-            engine.initService(sceneGroup);
+            sceneManager = this.createSceneManager(stack, container, width, height, renderer);
         }
 
         const stackApi = {
             addScene: (scene, sceneName = null) => {
-                this.addScene(scene, sceneName, sceneGroup);
+                this.addScene(scene, sceneName, stack, container);
             }
         };
 
         setupCallback(stackApi);
+
+        // Ensure the first scene is loaded
+        if(!sceneManager.getCurrentScene()) {
+            sceneManager.first();
+        }
+
+        return sceneManager; // Return the created sceneManager
     }
 
-    /**
-     * Switches to a specific scene within a scene manager.
-     * @param {string} sceneName - The name of the scene to switch to.
-     * @param {string} [sceneGroup='main'] - The group of the scene manager.
-     */
-    switchScene(sceneName, sceneGroup = 'main') {
-        const sceneManager = this.getSceneManager(sceneGroup);
+    switchTo(sceneName, stack = 'main') {
+        const sceneManager = this.getSceneManager(stack);
         if(sceneManager) {
-            sceneManager.switchToScene(sceneName);
+            sceneManager.switchTo(sceneName);
         } else {
-            console.error(`SceneManager "${sceneGroup}" not found`);
+            console.error(`SceneManager "${stack}" not found`);
         }
+    }
+
+    createSceneManager(stack, container, width = null, height = null, renderer = null) {
+        const engine = this.engine;
+
+        width = width || engine.config.defaultSceneWidth;
+        height = height || engine.config.defaultSceneHeight;
+        container = container || engine.config.targetElement;
+
+        renderer = renderer || this.engine.create('defaultRenderer', container, {width, height}, stack);
+        const sceneManager = this.engine.create('sceneManager', renderer, width, height);
+        this.addSceneManager(stack, sceneManager);
+        engine.service(stack, sceneManager);
+        engine.initService(stack);
+
+        return sceneManager;
+    }
+
+    setupScene(scene, sceneManager, sceneName = null) {
+        scene.setDimensions(sceneManager.width, sceneManager.height);
+
+        const layerManager = this.engine.create('layerManager', sceneManager.width, sceneManager.height);
+        scene.setLayerManager(layerManager);
+
+        const cameraManager = this.engine.create('cameraManager');
+        scene.setCameraManager(cameraManager);
+
+        sceneManager.addScene(sceneName || scene.constructor.name, scene);
     }
 }

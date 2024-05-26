@@ -1,7 +1,8 @@
 export default class PlayerActions {
-    constructor(eventBus, dataStore) {
-        this.eventBus = eventBus;
-        this.dataStore = dataStore;
+    constructor(engine) {
+        this.engine = engine;
+        this.eventBus = this.engine.eventBus();
+        this.dataStore = this.engine.dataStoreManager();
         this.entities = this.dataStore.getStore('entities');
         this.currentEntity = null;
         this.movementDirections = {x: 0, y: 0}; // Track movement direction
@@ -77,8 +78,10 @@ export default class PlayerActions {
         if(!this.currentEntity) return;
 
         const movement = this.currentEntity.getComponent('movement');
+
         if(movement) {
             if(state) {
+
                 if(isStarting) {
                     movement.setState(state);
                 } else {

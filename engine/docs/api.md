@@ -7,7 +7,7 @@ management of these services.
 
 ### Classes and Methods
 
-#### Engine
+#### Rocket
 
 The core of the game engine that initializes and manages various services and plugins.
 
@@ -32,7 +32,7 @@ The core of the game engine that initializes and manages various services and pl
 - `defaultGlobalMouse()`: Returns the default GlobalMouse.
 - `defaultScopedMouse()`: Returns the default ScopedMouse.
 
-#### EngineApi
+#### Engine
 
 Provides convenience methods for interacting with the engine's services and plugins.
 
@@ -444,7 +444,7 @@ Provides methods for creating and manipulating SVG elements.
 
 ### Updated Documentation
 
-#### Engine
+#### Rocket
 
 The core of the game engine that initializes and manages various services and plugins.
 
@@ -457,7 +457,7 @@ The core of the game engine that initializes and manages various services and pl
 - `start()`: Starts the game loop.
 - `stop()`: Stops the game loop.
 
-#### EngineApi
+#### Engine
 
 Provides convenience methods for interacting with the engine's services and plugins.
 

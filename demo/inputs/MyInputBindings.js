@@ -4,11 +4,11 @@ export default class MyInputBindings extends InputBindings {
 
     constructor(eventBus) {
         super(eventBus);
+        this.eventBus = eventBus;
     }
 
     init(engine) {
-        console.log(engine);
-        this.eventBus = engine.service('eventBus');
+        this.eventBus = engine.eventBus();
     }
 
     /**

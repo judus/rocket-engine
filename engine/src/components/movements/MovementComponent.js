@@ -1,4 +1,4 @@
-import MovementState from './MovementState.js';
+
 import AccelerationProfile from './AccelerationProfile.js';
 import DecelerationProfile from './DecelerationProfile.js';
 import BaseComponent from "../../abstracts/BaseComponent.js";

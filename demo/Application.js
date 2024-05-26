@@ -4,12 +4,13 @@ import EntityInitialization from "./entities/EntityInitialization.js";
 import EngineBase from "../engine/src/abstracts/EngineBase.js";
 
 export default class Application {
-    constructor(eventBus, dataStoreManager) {
-        this.eventBus = eventBus;
-        this.dataStore = dataStoreManager;
-        this.entityInitialization = new EntityInitialization(this.dataStore, this.eventBus);
-        this.playerActions = new PlayerActions(this.eventBus, this.dataStore);
-        this.gameLogic = new GameLogic(this.dataStore);
+    init(engine) {
+        this.engine = engine;
+        this.eventBus = this.engine.eventBus();
+        this.dataStore = this.engine.dataStoreManager();
+        this.entityInitialization = new EntityInitialization(this.engine);
+        this.playerActions = new PlayerActions(this.engine);
+        this.gameLogic = new GameLogic(this.engine);
         this.setupEventListeners();
         this.initializeEntities();
     }

@@ -7,22 +7,22 @@ import ParticleGrid from "../../engine/src/datastores/ParticleGrid.js";
 import ParticleSystem from "../../engine/src/particles/ParticleSystem.js";
 
 export default class EntityFactory {
-    constructor(dataStoreManager, eventBus) {
-        this.dataStoreManager = dataStoreManager;
-        this.eventBus = eventBus;
+    constructor(engine) {
+        this.engine = engine;
+        this.eventBus = this.engine.eventBus();
+        this.dataStoreManager = this.engine.dataStoreManager();
+
         this.dataStoreManager.create('global');
         this.dataStoreManager.create('entities', new SpatialHashGrid2DDataStore(this.eventBus, 100));
 
         // Initialize the particle system and register it in the global store
-        this.dataStoreManager.create('particles', new ParticleGrid(eventBus, 100));
-        const particleSystem = new ParticleSystem(dataStoreManager.getStore('particles'));
+        this.dataStoreManager.create('particles', new ParticleGrid(this.eventBus, 100));
+        const particleSystem = new ParticleSystem(this.dataStoreManager.getStore('particles'));
         this.dataStoreManager.getStore('global').set('particleSystem', particleSystem);
 
         // Initialize the projectile pool and register it in the projectile store
         const projectilePool = new ProjectilePool(100, particleSystem);
-        this.dataStoreManager.create('projectiles', new ProjectileGrid(eventBus, 100, projectilePool));
-
-        console.log(this.dataStoreManager);
+        this.dataStoreManager.create('projectiles', new ProjectileGrid(this.eventBus, 100, projectilePool));
     }
 
     createStationFromDefinition(definition, x, y, id, faction) {

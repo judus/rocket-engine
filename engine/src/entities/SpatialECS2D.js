@@ -22,9 +22,9 @@ export default class SpatialECS2D extends SpatialEntity2D {
      */
     addComponent(componentType, component) {
         this.components[componentType] = component;
-        component.entity = this; // Allows components to access their parent entity.
+        component.entity = this;
         if(component.onAdd) {
-            component.onAdd();
+            component.onAdd(this);
         }
     }
 

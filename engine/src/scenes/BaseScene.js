@@ -14,8 +14,6 @@ export default class BaseScene extends EngineBase {
         this.fadeInDuration = fadeInDuration;
         this.fadeOutDuration = fadeOutDuration;
         this.cameraTarget = cameraTarget;
-        this.width = 800; // Default width
-        this.height = 600; // Default height
 
         this.handleMouseWheel = this.handleMouseWheel.bind(this);
         this.handleScopedMouseMove = this.handleScopedMouseMove.bind(this);
@@ -24,20 +22,14 @@ export default class BaseScene extends EngineBase {
 
     init(engine) {
         super.init(engine);
-        this.eventBus = engine.service('eventBus');
-        this.dataStoreManager = engine.service('dataStoreManager');
+        this.eventBus = this.engine.eventBus();
+        this.dataStoreManager = this.engine.dataStoreManager();
 
-        this.camera = new CameraECS(this.width, this.height, this.eventBus);
+        this.camera = this.cameraManager.createCamera('main', this.width, this.height, this.eventBus);
         this.camera.addComponent(ZoomComponent);
         this.camera.addComponent(FollowComponent, 480, 270);
         this.camera.addComponent(TouchComponent, 100, 500);
         this.camera.addComponent(ShakeComponent);
-
-        this.dataStoreManager.create('cameras');
-        this.dataStoreManager.getStore('cameras').set('main', this.camera);
-
-        engine.service('sceneCamera', this.camera);
-        engine.initService('sceneCamera');
     }
 
     setDimensions(width, height) {
@@ -47,6 +39,10 @@ export default class BaseScene extends EngineBase {
 
     setLayerManager(layerManager) {
         this.layerManager = layerManager;
+    }
+
+    setCameraManager(cameraManager) {
+        this.cameraManager = cameraManager;
     }
 
     load(callback) {
@@ -108,7 +104,7 @@ export default class BaseScene extends EngineBase {
     }
 
     update(deltaTime, tickCount, totalTime) {
-        this.updateCamera(deltaTime);
+        this.camera && this.updateCamera(deltaTime);
     }
 
     render(deltaTime, tickCount, totalTime) {

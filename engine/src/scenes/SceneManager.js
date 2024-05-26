@@ -8,6 +8,8 @@ export default class SceneManager extends EngineBase {
         this.renderer = renderer;
         this.width = width;
         this.height = height;
+        this.currentSceneIndex = -1; // Initialize to -1 to indicate no scene is active yet
+        this.sceneOrder = []; // To keep track of the order of scenes added
     }
 
     /**
@@ -17,6 +19,7 @@ export default class SceneManager extends EngineBase {
      */
     addScene(sceneName, scene) {
         this.scenes.set(sceneName, scene);
+        this.sceneOrder.push(sceneName);
         scene.init(this.engine); // Initialize the scene with the engine API
     }
 
@@ -56,9 +59,10 @@ export default class SceneManager extends EngineBase {
      * Switches to the specified scene.
      * @param {string} name - The name of the scene to switch to.
      */
-    async switchToScene(name) {
+    async switchTo(name) {
         if(this.scenes.has(name)) {
             const nextScene = this.scenes.get(name);
+            this.currentSceneIndex = this.sceneOrder.indexOf(name);
 
             if(this.currentScene) {
                 await this.transitionOutScene(this.currentScene);
@@ -100,6 +104,50 @@ export default class SceneManager extends EngineBase {
     async transitionOutScene(scene) {
         if(scene && scene.transitionOutScene) {
             await scene.transitionOutScene(this.renderer);
+        }
+    }
+
+    /**
+     * Switches to the previous scene.
+     */
+    previous() {
+        if(this.currentSceneIndex > 0) {
+            this.currentSceneIndex--;
+            const sceneName = this.sceneOrder[this.currentSceneIndex];
+            this.switchTo(sceneName);
+        }
+    }
+
+    /**
+     * Switches to the next scene.
+     */
+    next() {
+        if(this.currentSceneIndex < this.sceneOrder.length - 1) {
+            this.currentSceneIndex++;
+            const sceneName = this.sceneOrder[this.currentSceneIndex];
+            this.switchTo(sceneName);
+        }
+    }
+
+    /**
+     * Switches to the first scene.
+     */
+    first() {
+        if(this.sceneOrder.length > 0) {
+            this.currentSceneIndex = 0;
+            const sceneName = this.sceneOrder[this.currentSceneIndex];
+            this.switchTo(sceneName);
+        }
+    }
+
+    /**
+     * Switches to the last scene.
+     */
+    last() {
+        if(this.sceneOrder.length > 0) {
+            this.currentSceneIndex = this.sceneOrder.length - 1;
+            const sceneName = this.sceneOrder[this.currentSceneIndex];
+            this.switchTo(sceneName);
         }
     }
 }

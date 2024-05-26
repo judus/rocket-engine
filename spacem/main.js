@@ -1,5 +1,5 @@
 import Timer from "./core/Timer.js";
-import Engine from "./core/Engine.js";
+import Engine from "./core/Rocket.js";
 import SceneManager from "./core/SceneManager.js";
 import DataStoreManager from "./core/DataStoreManager.js";
 import InputManager from "./core/InputManager.js";

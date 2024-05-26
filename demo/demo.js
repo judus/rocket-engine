@@ -1,4 +1,4 @@
-import Engine from 'engine/src/Engine.js';
+import Rocket from 'engine/src/Rocket.js';
 
 
 const canvasElement = document.getElementById('canvas');
@@ -10,7 +10,7 @@ const inputBindings = {
     })
 };
 
-const engine = new Engine({
+const engine = new Rocket({
     disableRenderSystem: false,
     disableDataStoreManager: false,
     disableEventBus: false,

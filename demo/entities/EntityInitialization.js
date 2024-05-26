@@ -3,12 +3,13 @@ import EntityDefinitions from './EntityDefinitions.js';
 import SeededRandom from "../../engine/src/utils/noise/SeededRandom.js";
 
 export default class EntityInitialization {
-    constructor(dataStoreManager, eventBus, seed = 12345) {
-        this.dataStoreManager = dataStoreManager;
-        this.eventBus = eventBus;
-        this.seededRandom = new SeededRandom(seed);
+    constructor(engine, seed = 12345) {
+        this.engine = engine;
+        this.eventBus = this.engine.eventBus();
+        this.dataStoreManager = this.engine.dataStoreManager();
+        this.seededRandom = new SeededRandom(12345);
         this.entityDefinitions = new EntityDefinitions();
-        this.entityFactory = new EntityFactory(dataStoreManager, eventBus);
+        this.entityFactory = new EntityFactory(this.engine);
 
         // Initialize faction data store
         this.initializeFactions();

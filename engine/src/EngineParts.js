@@ -1,0 +1,17 @@
+export default class EngineParts {
+    static TIMER = 'timer';
+    static EVENT_BUS = 'eventBus';
+    static RENDER_SYSTEM = 'renderSystem';
+    static SCENE_DIRECTOR = 'sceneDirector';
+    static SCENE_MANAGER = 'sceneManager';
+    static LAYER_MANAGER = 'layerManager';
+    static DATA_STORE_MANAGER = 'dataStoreManager';
+    static ASSET_MANAGER = 'assetManager';
+    static AUDIO_MANAGER = 'audioManager';
+    static INPUT_MANAGER = 'inputManager';
+    static INPUT_BINDINGS_MANAGER = 'inputBindingsManager';
+    static SPRITE_SHEET_MANAGER = 'spriteSheetManager';
+    static ENTITY_MANAGER = 'entityManager';
+    static GLOBAL_MOUSE = 'globalMouse';
+    static SCOPED_MOUSE = 'scopedMouse';
+}

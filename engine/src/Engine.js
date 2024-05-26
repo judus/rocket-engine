@@ -1,72 +1,8 @@
-/**
- * @typedef {import('./timer/Timer').default} Timer
- * @typedef {import('./events/EventBus').default} EventBus
- * @typedef {import('./entities/BaseEntity').default} BaseEntity
- * @typedef {import('./rendering/CompositeRenderer').default} RenderSystem
- * @typedef {import('./scenes/SceneDirector').default} SceneDirector
- */
+import EngineParts from './EngineParts.js';
 
-/**
- * @typedef {Object} Services
- * @property {Timer} timer
- * @property {EventBus} eventBus
- * @property {BaseEntity} application
- * @property {CompositeRenderer} renderSystem
- * @property {SceneDirector} sceneDirector
- */
-
-import EngineApi from "./EngineApi.js";
-import BaseContainer from "./abstracts/BaseContainer.js";
-import BaseDataStore from "./datastores/BaseDataStore.js";
-import EngineInit from "./EngineInit.js";
-import CanvasRenderer from "./rendering/CanvasRenderer.js";
-
-/**
- * Engine class to initialize and manage various services.
- */
 export default class Engine {
-    constructor(config) {
-        this.config = this.defaultConfig(config);
-        this.serviceContainer = new BaseContainer();
-        this.pluginContainer = new BaseContainer();
-        this.engineApi = new EngineApi(this);
-
-        (new EngineInit(this)).initializeServices();
-        this.serviceContainer.initAll(this.engineApi);
-        this.pluginContainer.initAll(this.engineApi);
-    }
-
-    /**
-     * Sets the default configuration values and merges with provided config.
-     * @param {Object} config - Custom configuration object.
-     * @returns {Object} Merged configuration object.
-     */
-    defaultConfig(config) {
-        return {
-            fps: 60,
-            targetElement: document.body,
-            inputBindings: null,
-            showPerformanceMonitor: false,
-            defaultSceneWidth: 1024,
-            defaultSceneHeight: 768,
-            defaultRenderer: CanvasRenderer,
-            disableSceneDirector: false,
-            disableSceneManager: false,
-            disableRenderSystem: false,
-            disableDataStoreManager: false,
-            disableEventBus: false,
-            disableAssetManager: false,
-            disableAudioManager: false,
-            disableInputManager: false,
-            disableInputBindingsManager: false,
-            disableSpriteSheetManager: false,
-            disableEntityManager: false,
-            disableGlobalMouse: false,
-            disableScopedMouse: false,
-            disableLayerManager: false,
-            defaultDataStore: BaseDataStore,
-            ...config
-        };
+    constructor(rocket) {
+        this.rocket = rocket;
     }
 
     /**
@@ -78,194 +14,381 @@ export default class Engine {
      */
     service(name, instance = null) {
         if(instance === null) {
-            return this.serviceContainer.get(name);
+            return this.rocket.serviceContainer.get(name);
         } else if(instance === undefined) {
-            this.serviceContainer.remove(name);
+            this.rocket.serviceContainer.remove(name);
         } else {
-            this.serviceContainer.add(name, instance);
+            const service = this.rocket.serviceContainer.add(name, instance);
+            if (this.rocket.isInitialized && typeof service.init === 'function') {
+                service.init(this);
+            }
         }
-    }
-
-    /**
-     * Starts the engine, setting up the update and render callbacks.
-     */
-    start() {
-        let updateCallback = () => {
-        };
-        let renderCallback = () => {
-        };
-
-        const renderSystem = this.service('renderSystem');
-        const sceneDirector = this.service('sceneDirector');
-        const application = this.service('application');
-
-        // Check if the application has update and render methods
-        const shouldUpdateApp = application && typeof application.update === 'function';
-        const shouldRenderApp = application && typeof application.render === 'function';
-
-        if(shouldUpdateApp || sceneDirector) {
-            updateCallback = (deltaTime, tickCount, totalTime) => {
-                try {
-                    if(shouldUpdateApp) application.update(deltaTime);
-                    if(sceneDirector) sceneDirector.update(deltaTime, tickCount, totalTime);
-                } catch(error) {
-                    console.error("Update error:", error);
-                }
-            };
-        }
-
-        if(renderSystem && (sceneDirector || shouldRenderApp)) {
-            console.log(`Rendering with ${sceneDirector ? 'SceneDirector' : 'Application'}`);
-
-            renderCallback = (deltaTime, tickCount, totalTime) => {
-                try {
-                    if(shouldRenderApp) application.render(deltaTime);
-                    if(sceneDirector) sceneDirector.render(deltaTime, tickCount, totalTime);
-                } catch(error) {
-                    console.error("Render error:", error);
-                }
-            };
-        }
-
-        const timer = this.service('timer');
-        timer.start(updateCallback, renderCallback);
-    }
-
-    /**
-     * Stops the engine by stopping the timer.
-     */
-    stop() {
-        const timer = this.service('timer');
-        timer.stop();
-    }
-
-
-    // Explicit method definitions
-    stack(name, setupCallback, options = {}) {
-        return this.engineApi.stack(name, setupCallback, options);
-    }
-
-    addScene(scene, sceneName = null, sceneGroup = 'main', container = null) {
-        return this.engineApi.addScene(scene, sceneName, sceneGroup, container);
-    }
-
-    switchScene(sceneName, sceneGroup = 'main') {
-        return this.engineApi.switchScene(sceneName, sceneGroup);
     }
 
     create(name, ...params) {
-        return this.engineApi.create(name, ...params);
+        return this.rocket.serviceContainer.create(name, ...params);
     }
 
     plugin(name, instance) {
-        return this.engineApi.plugin(name, instance);
+        if(instance === undefined) {
+            return this.rocket.pluginContainer.get(name);
+        } else if(instance === null) {
+            this.rocket.pluginContainer.remove(name);
+        } else {
+            this.rocket.pluginContainer.add(name, instance);
+        }
+    }
+
+    timer() {
+        return this.service(EngineParts.TIMER);
+    }
+
+    eventBus() {
+        return this.service(EngineParts.EVENT_BUS);
+    }
+
+    renderSystem() {
+        return this.service(EngineParts.RENDER_SYSTEM);
+    }
+
+    sceneDirector() {
+        return this.service(EngineParts.SCENE_DIRECTOR);
+    }
+
+    createSceneManager(...params) {
+        return this.create(EngineParts.SCENE_MANAGER, ...params);
+    }
+
+    createLayerManager(...params) {
+        return this.create(EngineParts.LAYER_MANAGER, ...params);
+    }
+
+    createScopedMouse(...params) {
+        return this.create(EngineParts.SCOPED_MOUSE, ...params);
+    }
+
+    dataStoreManager() {
+        return this.service(EngineParts.DATA_STORE_MANAGER);
+    }
+
+    assetManager() {
+        return this.service(EngineParts.ASSET_MANAGER);
+    }
+
+    audioManager() {
+        return this.service(EngineParts.AUDIO_MANAGER);
+    }
+
+    inputManager() {
+        return this.service(EngineParts.INPUT_MANAGER);
+    }
+
+    inputBindingsManager() {
+        return this.service(EngineParts.INPUT_BINDINGS_MANAGER);
+    }
+
+    spriteSheetManager() {
+        return this.service(EngineParts.SPRITE_SHEET_MANAGER);
+    }
+
+    entityManager() {
+        return this.service(EngineParts.ENTITY_MANAGER);
+    }
+
+    globalMouse() {
+        return this.service(EngineParts.GLOBAL_MOUSE);
     }
 
     store(name) {
-        return this.engineApi.store(name);
+        const dataStoreManager = this.service(EngineParts.DATA_STORE_MANAGER);
+        if(!dataStoreManager) {
+            console.warn('DataStoreManager is not available');
+            return null;
+        }
+
+        return dataStoreManager.getStore(name);
     }
 
     createStore(name, dataStore = null) {
-        return this.engineApi.createStore(name, dataStore);
+        const dataStoreManager = this.service(EngineParts.DATA_STORE_MANAGER);
+        if(!dataStoreManager) {
+            console.warn('DataStoreManager is not available');
+            return;
+        }
+
+        dataStoreManager.create(name, dataStore);
     }
 
     prune(name) {
-        return this.engineApi.prune(name);
+        const dataStoreManager = this.service(EngineParts.DATA_STORE_MANAGER);
+        if(!dataStoreManager) {
+            console.warn('DataStoreManager is not available');
+            return;
+        }
+
+        dataStoreManager.remove(name);
     }
 
     on(event, listener) {
-        return this.engineApi.on(event, listener);
+        const eventBus = this.service(EngineParts.EVENT_BUS);
+        if(!eventBus) {
+            console.warn('EventBus is not available');
+            return;
+        }
+
+        eventBus.on(event, listener);
     }
 
     off(event, listener) {
-        return this.engineApi.off(event, listener);
+        const eventBus = this.service(EngineParts.EVENT_BUS);
+        if(!eventBus) {
+            console.warn('EventBus is not available');
+            return;
+        }
+
+        eventBus.off(event, listener);
     }
 
     emit(event, ...args) {
-        return this.engineApi.emit(event, ...args);
+        const eventBus = this.service(EngineParts.EVENT_BUS);
+        if(!eventBus) {
+            console.warn('EventBus is not available');
+            return;
+        }
+
+        eventBus.emit(event, ...args);
     }
 
     loadImage(key, src) {
-        return this.engineApi.loadImage(key, src);
+        const assetManager = this.service(EngineParts.ASSET_MANAGER);
+        if(!assetManager) {
+            console.warn('AssetManager is not available');
+            return;
+        }
+        assetManager.loadImage(key, src);
     }
 
     loadSound(key, src) {
-        return this.engineApi.loadSound(key, src);
+        const assetManager = this.service(EngineParts.ASSET_MANAGER);
+        if(!assetManager) {
+            console.warn('AssetManager is not available');
+            return;
+        }
+        assetManager.loadSound(key, src);
     }
 
     loadJSON(key, src) {
-        return this.engineApi.loadJSON(key, src);
+        const assetManager = this.service(EngineParts.ASSET_MANAGER);
+        if(!assetManager) {
+            console.warn('AssetManager is not available');
+            return;
+        }
+        assetManager.loadJSON(key, src);
     }
 
     getAsset(key) {
-        return this.engineApi.getAsset(key);
+        const assetManager = this.service(EngineParts.ASSET_MANAGER);
+        if(!assetManager) {
+            console.warn('AssetManager is not available');
+            return null;
+        }
+        return assetManager.getAsset(key);
     }
 
     setProgressHandler(callback) {
-        return this.engineApi.setProgressHandler(callback);
+        const assetManager = this.service(EngineParts.ASSET_MANAGER);
+        if(!assetManager) {
+            console.warn('AssetManager is not available');
+            return;
+        }
+        assetManager.setProgressHandler(callback);
     }
 
     setCompleteHandler(callback) {
-        return this.engineApi.setCompleteHandler(callback);
+        const assetManager = this.service(EngineParts.ASSET_MANAGER);
+        if(!assetManager) {
+            console.warn('AssetManager is not available');
+            return;
+        }
+        assetManager.setCompleteHandler(callback);
     }
 
     loadAudio(key, src) {
-        return this.engineApi.loadAudio(key, src);
+        const audioManager = this.service(EngineParts.AUDIO_MANAGER);
+        if(!audioManager) {
+            console.warn('AudioManager is not available');
+            return;
+        }
+        audioManager.loadSound(key, src);
     }
 
     playAudio(key, loop = false) {
-        return this.engineApi.playAudio(key, loop);
+        const audioManager = this.service(EngineParts.AUDIO_MANAGER);
+        if(!audioManager) {
+            console.warn('AudioManager is not available');
+            return;
+        }
+        audioManager.playSound(key, loop);
     }
 
     pauseAudio(key) {
-        return this.engineApi.pauseAudio(key);
+        const audioManager = this.service(EngineParts.AUDIO_MANAGER);
+        if(!audioManager) {
+            console.warn('AudioManager is not available');
+            return;
+        }
+        audioManager.pauseSound(key);
     }
 
     stopAudio(key) {
-        return this.engineApi.stopAudio(key);
+        const audioManager = this.service(EngineParts.AUDIO_MANAGER);
+        if(!audioManager) {
+            console.warn('AudioManager is not available');
+            return;
+        }
+        audioManager.stopSound(key);
     }
 
     getAudio(key) {
-        return this.engineApi.getAudio(key);
+        const audioManager = this.service(EngineParts.AUDIO_MANAGER);
+        if(!audioManager) {
+            console.warn('AudioManager is not available');
+            return null;
+        }
+        return audioManager.getSound(key);
     }
 
     registerInputBindings(inputBindings) {
-        return this.engineApi.registerInputBindings(inputBindings);
+        const inputBindingsManager = this.service(EngineParts.INPUT_BINDINGS_MANAGER);
+        if(!inputBindingsManager) {
+            console.warn('InputBindingsManager is not available');
+            return;
+        }
+        inputBindingsManager.registerInputBindings(inputBindings);
     }
 
     loadSpritesheet(key, imageUrl, frameWidth, frameHeight) {
-        return this.engineApi.loadSpritesheet(key, imageUrl, frameWidth, frameHeight);
+        const spritesheetManager = this.service(EngineParts.SPRITE_SHEET_MANAGER);
+        if(!spritesheetManager) {
+            console.warn('SpriteSheetManager is not available');
+            return;
+        }
+        return spritesheetManager.loadSpritesheet(key, imageUrl, frameWidth, frameHeight);
     }
 
     getSpritesheet(key) {
-        return this.engineApi.getSpritesheet(key);
+        const spritesheetManager = this.service(EngineParts.SPRITE_SHEET_MANAGER);
+        if(!spritesheetManager) {
+            console.warn('SpriteSheetManager is not available');
+            return null;
+        }
+        return spritesheetManager.getSpritesheet(key);
     }
 
     addEntity(entity, type) {
-        return this.engineApi.addEntity(entity, type);
+        const entityManager = this.service(EngineParts.ENTITY_MANAGER);
+        if(!entityManager) {
+            console.warn('EntityManager is not available');
+            return;
+        }
+        entityManager.addEntity(entity, type);
     }
 
     removeEntity(entity) {
-        return this.engineApi.removeEntity(entity);
+        const entityManager = this.service(EngineParts.ENTITY_MANAGER);
+        if(!entityManager) {
+            console.warn('EntityManager is not available');
+            return;
+        }
+        entityManager.removeEntity(entity);
     }
 
     getEntity(id) {
-        return this.engineApi.getEntity(id);
+        const entityManager = this.service(EngineParts.ENTITY_MANAGER);
+        if(!entityManager) {
+            console.warn('EntityManager is not available');
+            return null;
+        }
+        return entityManager.getEntity(id);
     }
 
     getEntitiesByType(type) {
-        return this.engineApi.getEntitiesByType(type);
+        const entityManager = this.service(EngineParts.ENTITY_MANAGER);
+        if(!entityManager) {
+            console.warn('EntityManager is not available');
+            return null;
+        }
+        return entityManager.getEntitiesByType(type);
     }
 
     queryEntitiesInArea(area) {
-        return this.engineApi.queryEntitiesInArea(area);
+        const entityManager = this.service(EngineParts.ENTITY_MANAGER);
+        if(!entityManager) {
+            console.warn('EntityManager is not available');
+            return null;
+        }
+        return entityManager.queryEntitiesInArea(area);
     }
 
     getEntitiesByProperty(property, value) {
-        return this.engineApi.getEntitiesByProperty(property, value);
+        const entityManager = this.service(EngineParts.ENTITY_MANAGER);
+        if(!entityManager) {
+            console.warn('EntityManager is not available');
+            return null;
+        }
+        return entityManager.getEntitiesByProperty(property, value);
+    }
+
+    /**
+     * Adds a scene to the default or specified scene manager.
+     * @param {BaseScene} scene - The scene instance.
+     * @param {string} [sceneName] - The name of the scene.
+     * @param {string} [sceneGroup='main'] - The group of the scene manager.
+     * @param {HTMLElement} [container=null] - The html element the canvas should be appended to.
+     */
+    addScene(scene, sceneName = null, sceneGroup = 'main', container = null) {
+        const sceneDirector = this.service(EngineParts.SCENE_DIRECTOR);
+        sceneDirector.addScene(scene, sceneName, sceneGroup, container);
+    }
+
+    /**
+     * Sets up scenes with specific configuration.
+     * @param {string} name - The name of the scene manager.
+     * @param {Function} setupCallback - The setup callback function.
+     * @param {Object} [options] - Optional parameters.
+     * @param {Renderer} [options.renderer=null] - The renderer for the scene manager.
+     * @param {number} [options.width] - The width of the scene.
+     * @param {number} [options.height] - The height of the scene.
+     * @param {HTMLElement} [options.container=null] - The html element the canvas should be appended to.
+     */
+    stack(name, setupCallback, options = {}) {
+        const sceneDirector = this.service(EngineParts.SCENE_DIRECTOR);
+        return sceneDirector.stack(name, setupCallback, options);
+    }
+
+    /**
+     * Switches to a specific scene within a scene manager.
+     * @param {string} sceneName - The name of the scene to switch to.
+     * @param {string} [sceneGroup='main'] - The group of the scene manager.
+     */
+    switchTo(sceneName, sceneGroup = 'main') {
+        const sceneDirector = this.service(EngineParts.SCENE_DIRECTOR);
+        if(sceneDirector) {
+            const sceneManager = sceneDirector.getSceneManager(sceneGroup);
+            if(sceneManager) {
+                sceneManager.switchTo(sceneName);
+            } else {
+                console.error(`SceneManager "${sceneGroup}" not found`);
+            }
+        } else {
+            console.error("SceneDirector not found");
+        }
     }
 
     initService(name) {
-        return this.engineApi.initService(name);
+        const service = this.service(name);
+        if(service && typeof service.init === 'function') {
+            service.init(this);
+        }
     }
 }

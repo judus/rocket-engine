@@ -1,13 +1,9 @@
 import BaseLayer from "../../../engine/src/scenes/BaseLayer.js";
 import P5noise from "../../../engine/src/utils/noise/p5noise.js";
-export default class BackgroundLayer extends BaseLayer {
+
+export default class AxisBackground extends BaseLayer {
     constructor(canvas, context) {
         super(canvas, context);
-        this.starDensity = 0.001; // Number of stars per pixel
-        this.noiseScale = 0.0005; // Scale for noise function
-        this.brightnessThreshold = 0.8; // Threshold for star brightness
-        this.p5noise = new P5noise();
-        this.p5noise.noiseSeed(12345); // Set a seed for the noise function
     }
 
     drawAxis(scene) {
@@ -32,11 +28,7 @@ export default class BackgroundLayer extends BaseLayer {
     }
 
     render(scene) {
-        const camera = scene.camera;
-
-        this.context.fillStyle = '#000000';
-        this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
+        this.clear()
         this.drawAxis(scene);
     }
 }

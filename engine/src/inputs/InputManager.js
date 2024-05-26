@@ -18,18 +18,18 @@ export default class InputManager extends EngineBase {
 
     /**
      * Initializes the input manager by setting up event listeners.
-     * @param {EngineApi} engine - The engine API.
+     * @param {Engine} engine - The engine API.
      */
     init(engine) {
         this.engine = engine;
-        this.eventBus = engine.service('eventBus');
-        this.globalMouse = engine.service('globalMouse');
+        this.eventBus = engine.eventBus();
+        this.globalMouse = engine.globalMouse();
 
         this.setupKeyboardListeners();
         this.setupGlobalMouseListeners();
 
         // Get all canvases from the scene managers
-        const director = this.engine.service('sceneDirector');
+        const director = this.engine.sceneDirector();
         director.sceneManagers.forEach(sceneManager => {
             const renderer = sceneManager.renderer;
             if(renderer && renderer.canvas) {
