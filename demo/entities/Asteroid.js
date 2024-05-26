@@ -9,6 +9,7 @@ import HealthComponent from "../../engine/src/components/HealthComponent.js";
 import RenderComponent from "../../engine/src/components/RenderComponent.js";
 import ClickableComponent from "../../engine/src/components/ClickableComponent.js";
 import FaceVelocityBehavior from "../../engine/src/behaviors/FaceVelocityBehavior.js";
+import EntityVerticesComponent from "../components/EntityVerticesComponent.js";
 
 export default class Asteroid extends SpatialECS2D {
     constructor(dataStoreManager, eventBus, definition, x = 0, y = 0, id = null, scale = 1) {
@@ -50,9 +51,7 @@ export default class Asteroid extends SpatialECS2D {
         this.addComponent('health', new HealthComponent(100));
 
 
-        this.addComponent('render', new RenderComponent((deltaTime, context, entity, camera) => {
-            this.drawing.draw(context, entity, camera);
-        }));
+        this.addComponent('render', new EntityVerticesComponent());
 
         // Initialize behavior
         this.behavior = new FaceVelocityBehavior();

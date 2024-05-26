@@ -1,6 +1,6 @@
-import BaseLayer from "../../engine/src/scenes/BaseLayer.js";
+import BaseLayer from "../../../engine/src/scenes/BaseLayer.js";
 
-export default class ExampleLayer extends BaseLayer {
+export default class HighlightBackground extends BaseLayer {
     constructor(canvas, context) {
         super(canvas, context);
     }
@@ -12,10 +12,10 @@ export default class ExampleLayer extends BaseLayer {
     render(scene, deltaTime, tickCount, totalTime) {
         this.clear();
         this.getEntities(scene).forEach(entity => {
-            if (entity.getComponent) {
-                const renderComponent = entity.getComponent('render');
-                if(renderComponent) {
-                    renderComponent.render(deltaTime, this.context, scene.camera);
+            if(entity.getComponent) {
+                const component = entity.getComponent('highlight');
+                if(component) {
+                    component.render(deltaTime, this.context, scene.camera);
                 }
             }
         });

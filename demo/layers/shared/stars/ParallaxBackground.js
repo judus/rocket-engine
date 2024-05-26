@@ -10,6 +10,7 @@ export default class ParallaxBackground extends BaseLayer {
             new StarBackground(context, this.canvas.width, this.canvas.height, 100, 0.005), // Medium distance stars
             new StarBackground(context, this.canvas.width, this.canvas.height, 100, 0.008), // Closer stars
         ];
+        this.lazy = true;
     }
 
     render(scene) {

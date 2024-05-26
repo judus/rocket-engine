@@ -48,7 +48,7 @@ export default class Projectile extends BaseEntity {
         this.components[componentType] = component;
         component.entity = this;
         if(component.onAdd) {
-            component.onAdd();
+            component.onAdd(this);
         }
     }
 

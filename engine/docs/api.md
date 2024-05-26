@@ -148,6 +148,23 @@ Manages multiple `SceneManager` instances and facilitates scene switching and st
 - `stack(name, setupCallback, options = {})`: Sets up scenes with specific configuration.
 - `switchScene(sceneName, sceneGroup = 'main')`: Switches to a specific scene within a `SceneManager`.
 
+#### SceneManager
+
+Manages scenes within a specific context or stack.
+
+**Methods:**
+
+- `constructor(renderer, width, height)`: Initializes the `SceneManager` with a renderer, width, and height.
+- `addScene(sceneName, scene)`: Adds a scene to the scene manager.
+- `getCurrentScene()`: Gets the current scene.
+- `updateCurrentScene(deltaTime, tickCount, totalTime)`: Updates the current scene.
+- `renderCurrentScene(deltaTime, tickCount, totalTime)`: Renders the current scene.
+- `switchTo(name)`: Switches to the specified scene.
+- `previous()`: Switches to the previous scene.
+- `next()`: Switches to the next scene.
+- `first()`: Switches to the first scene.
+- `last()`: Switches to the last scene.
+
 #### AssetManager
 
 Manages loading and retrieving assets.
@@ -191,7 +208,9 @@ Handles input events and state.
 - `normalizeKey(key)`: Normalizes the key to a standard representation.
 - `setupGlobalMouseListeners()`: Sets up global mouse event listeners.
 - `setupScopedMouseListeners()`: Sets up scoped mouse event listeners.
-- `emitMouseButtonEvent(eventBus, eventType, scopedMouse, event)`: Emits mouse button events.
+- `emitMouseButtonEvent(eventBus
+
+, eventType, scopedMouse, event)`: Emits mouse button events.
 
 #### InputBindingsManager
 
@@ -250,10 +269,7 @@ Manages entities and their components.
 
 **Methods:**
 
-- `constructor(dataStoreManager)`: Initializes the
-
-entity manager with a data store manager.
-
+- `constructor(dataStoreManager)`: Initializes the entity manager with a data store manager.
 - `addEntity(entity, type)`: Adds an entity to the manager.
 - `removeEntity(entity)`: Removes an entity from the manager.
 - `getEntity(id)`: Retrieves an entity by ID.
@@ -441,75 +457,3 @@ Provides methods for creating and manipulating SVG elements.
 - `createText(textContent, x, y, fill, fontSize, fontFamily)`: Creates an SVG text element.
 - `setAttributes(element, attributes)`: Sets multiple attributes on an SVG element.
 - `clear(svg)`: Clears all child elements from an SVG element.
-
-### Updated Documentation
-
-#### Rocket
-
-The core of the game engine that initializes and manages various services and plugins.
-
-**Methods:**
-
-- `constructor(config)`: Initializes the engine with the provided configuration.
-- `service(name, instance = null)`: Adds, retrieves, or removes a service.
-- `plugin(name, instance)`: Adds, retrieves, or removes a plugin.
-- `init()`: Initializes all plugins.
-- `start()`: Starts the game loop.
-- `stop()`: Stops the game loop.
-
-#### Engine
-
-Provides convenience methods for interacting with the engine's services and plugins.
-
-**Methods:**
-
-- `service(name, instance = null)`: Adds, retrieves, or removes a service.
-- `plugin(name, instance)`: Adds, retrieves, or removes a plugin.
-- `store(name)`: Retrieves a data store.
-- `createStore(name, dataStore = null)`: Creates a new data store.
-- `prune(name)`: Removes a data store.
-- `on(event, listener)`: Registers an event listener.
-- `off(event, listener)`: Removes an event listener.
-- `emit(event, ...args)`: Emits an event.
-- `loadImage(key, src)`: Loads an image asset.
-- `loadSound(key, src)`: Loads a sound asset.
-- `loadJSON(key, src)`: Loads a JSON asset.
-- `getAsset(key)`: Retrieves an asset.
-- `setProgressHandler(callback)`: Sets a progress handler for asset loading.
-- `setCompleteHandler(callback)`: Sets a complete handler for asset loading.
-- `loadAudio(key, src)`: Loads an audio asset.
-- `playAudio(key, loop = false)`: Plays an audio asset.
-- `pauseAudio(key)`: Pauses an audio asset.
-- `stopAudio(key)`: Stops an audio asset.
-- `getAudio(key)`: Retrieves an audio asset.
-- `registerInputBindings(inputBindings)`: Registers input bindings.
-- `loadSpritesheet(key, imageUrl, frameWidth, frameHeight)`: Loads a spritesheet.
-- `getSpritesheet(key)`: Retrieves a spritesheet.
-- `addEntity(entity, type)`: Adds an entity.
-- `removeEntity(entity)`: Removes an entity.
-- `getEntity(id)`: Retrieves an entity by ID.
-- `getEntitiesByType(type)`: Retrieves entities by type.
-- `queryEntitiesInArea(area)`: Queries entities within a specific area.
-- `getEntitiesByProperty(property, value)`: Retrieves entities by a property value.
-- `addScene(scene, sceneName = null, sceneGroup = 'main', container = null)`: Adds a scene to the default or specified
-  scene manager.
-- `stack(name, setupCallback, options = {})`: Sets up scenes with specific configuration.
-- `switchScene(sceneName, sceneGroup = 'main')`: Switches to a specific scene within a scene manager.
-- `initService(name)`: Initializes a service.
-
-#### SceneDirector
-
-Manages multiple `SceneManager` instances and facilitates scene switching and stacking.
-
-**Methods:**
-
-- `constructor()`: Initializes the `SceneDirector`.
-- `addSceneManager(name, sceneManager)`: Adds a `SceneManager` instance to the director.
-- `getSceneManager(name)`: Retrieves a `SceneManager` by name.
-- `update(deltaTime, tickCount, totalTime)`: Updates all scenes managed by the `SceneManagers`.
-- `render(deltaTime, tickCount, totalTime)`: Renders all scenes managed by the `SceneManagers`.
-- `addScene(scene, sceneName = null, sceneGroup = 'main', container = null)`: Adds a scene to the default or
-  specified `SceneManager`.
-- `stack(name, setupCallback, options = {})`: Sets up scenes with specific configuration.
-- `switchScene(sceneName, sceneGroup = 'main')`: Switches to a specific scene within a `SceneManager`.
-

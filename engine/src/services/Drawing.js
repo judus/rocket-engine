@@ -1,43 +1,42 @@
 export default class Drawing {
-    constructor(color) {
-        this.color = color;
-        this.transformMatrix = this.identityMatrix();
-    }
-
-    identityMatrix() {
+    static identityMatrix() {
         return [1, 0, 0, 1, 0, 0];
     }
 
-    resetTransform() {
-        this.transformMatrix = this.identityMatrix();
+    static resetTransform() {
+        return Drawing.identityMatrix();
     }
 
-    scale(sx, sy) {
-        this.transformMatrix[0] *= sx;
-        this.transformMatrix[3] *= sy;
+    static scale(transformMatrix, sx, sy) {
+        const newMatrix = transformMatrix.slice();
+        newMatrix[0] *= sx;
+        newMatrix[3] *= sy;
+        return newMatrix;
     }
 
-    translate(tx, ty) {
-        this.transformMatrix[4] += tx;
-        this.transformMatrix[5] += ty;
+    static translate(transformMatrix, tx, ty) {
+        const newMatrix = transformMatrix.slice();
+        newMatrix[4] += tx;
+        newMatrix[5] += ty;
+        return newMatrix;
     }
 
-    applyTransform(vertices) {
+    static applyTransform(vertices, transformMatrix) {
         return vertices.map(vertex => {
-            const x = vertex.x * this.transformMatrix[0] + vertex.y * this.transformMatrix[2] + this.transformMatrix[4];
-            const y = vertex.x * this.transformMatrix[1] + vertex.y * this.transformMatrix[3] + this.transformMatrix[5];
+            const x = vertex.x * transformMatrix[0] + vertex.y * transformMatrix[2] + transformMatrix[4];
+            const y = vertex.x * transformMatrix[1] + vertex.y * transformMatrix[3] + transformMatrix[5];
             return {x, y};
         });
     }
 
-    applyCameraAndZoom(camera) {
-        this.resetTransform();
-        this.scale(camera.zoomLevel, camera.zoomLevel);
-        this.translate(-camera.pos.x * camera.zoomLevel, -camera.pos.y * camera.zoomLevel);
+    static applyCameraAndZoom(camera) {
+        let transformMatrix = Drawing.resetTransform();
+        transformMatrix = Drawing.scale(transformMatrix, camera.zoomLevel, camera.zoomLevel);
+        transformMatrix = Drawing.translate(transformMatrix, -camera.pos.x * camera.zoomLevel, -camera.pos.y * camera.zoomLevel);
+        return transformMatrix;
     }
 
-    drawPolygon(context, vertices) {
-
+    static drawPolygon(context, vertices, color) {
         context.beginPath();
         context.moveTo(vertices[0].x, vertices[0].y);
 
@@ -46,17 +45,17 @@ export default class Drawing {
         }
 
         context.closePath();
-        context.fillStyle = this.color;
+        context.fillStyle = color || '#755015';
         context.fill();
     }
 
-    draw(context, entity, camera) {
+    static draw(context, entity, camera, color) {
         const transformComponent = entity.getComponent('transform');
         if(transformComponent) {
-            this.applyCameraAndZoom(camera);
+            let transformMatrix = Drawing.applyCameraAndZoom(camera);
             const transformedVertices = transformComponent.applyTransform(entity.definition.vertices);
-            const finalVertices = this.applyTransform(transformedVertices);
-            this.drawPolygon(context, finalVertices);
+            const finalVertices = Drawing.applyTransform(transformedVertices, transformMatrix);
+            Drawing.drawPolygon(context, finalVertices, color);
         }
     }
 }

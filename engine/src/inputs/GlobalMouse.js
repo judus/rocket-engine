@@ -1,10 +1,19 @@
-export default class GlobalMouse {
+import EngineBase from "../abstracts/EngineBase.js";
+
+export default class GlobalMouse extends EngineBase {
     /**
      * GlobalMouse constructor.
      */
     constructor() {
+        super();
         this.pos = {x: 0, y: 0};
         this.buttonPressed = false;
+        this.engine = null;
+    }
+
+    init(engine) {
+        this.engine = engine;
+        console.log('GlobalMouse initialized');
     }
 
     /**

@@ -1,4 +1,4 @@
-import BaseLayer from "./rendering/BaseLayer.js";
+import BaseLayer from "../../../engine/src/scenes/BaseLayer.js";
 
 /**
  * ProjectileLayer is responsible for rendering projectiles (bullets) on the canvas.

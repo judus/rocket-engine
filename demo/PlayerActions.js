@@ -32,6 +32,13 @@ export default class PlayerActions {
         this.eventBus.on('entityDestroyed', (event) => this.die(event));
     }
 
+    onSceneEnter() {
+        this.sceneDirector = this.engine.sceneDirector();
+        this.sceneManager = this.sceneDirector.getSceneManager('world');
+        this.currentScene = this.sceneManager.getCurrentScene();
+        this.mainCamera = this.currentScene.cameraManager.getCamera('main');
+    }
+
     die(entity) {
         if(this.currentEntity && entity.id === this.currentEntity.id) {
             this.currentEntity = null;
@@ -44,11 +51,11 @@ export default class PlayerActions {
     }
 
     contextClick(scopedMouse) {
-        const camera = this.dataStore.getStore('cameras').get('main');
-        const entities = this.dataStore.getStore('entities').getEntitiesInArea(camera.getArea());
+        const entities = this.dataStore.getStore('entities').getEntitiesInArea(this.mainCamera.getArea());
 
         for(const entity of entities) {
             const clickableComponent = entity.getComponent('clickable');
+            console.log(scopedMouse);
 
             if(clickableComponent && this.isEntityClicked(entity, scopedMouse.world.x, scopedMouse.world.y)) {
                 clickableComponent.handleClick(scopedMouse);
@@ -65,11 +72,13 @@ export default class PlayerActions {
          */
     }
 
-    attack(event) {
+    attack(scopedMouse) {
+        console.log(scopedMouse);
+
         if(this.currentEntity) {
             const attack = this.currentEntity.getComponent('attack');
             if(attack) {
-                attack.attack(event);
+                attack.attack(scopedMouse, this.mainCamera);
             }
         }
     }

@@ -9,12 +9,9 @@ export default class BaseEntity {
         this.type = type || this.constructor.name
         this.components = {};
 
-
-
         this.pos = this.getComponent('position') ?
             new Vector2D(this.getComponent('position').x, this.getComponent('position').y) :
             new Vector2D(0,0);
-
     }
 
     addComponent(componentType, component) {

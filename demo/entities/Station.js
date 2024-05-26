@@ -10,6 +10,8 @@ import InventoryComponent from "../components/InventoryComponent.js";
 import RenderComponent from "../../engine/src/components/RenderComponent.js";
 import ClickableComponent from "../../engine/src/components/ClickableComponent.js";
 import FaceVelocityBehavior from "../../engine/src/behaviors/FaceVelocityBehavior.js";
+import EntityVerticesComponent from "../components/EntityVerticesComponent.js";
+import EntityHighlightRenderComponent from "../components/EntityHighlightRenderComponent.js";
 
 export default class Station extends SpatialECS2D {
     constructor(dataStoreManager, eventBus, definition, x = 0, y = 0, id, faction) {
@@ -24,7 +26,6 @@ export default class Station extends SpatialECS2D {
         this.ships = [];  // New property to track ships
 
         this.color = this.faction ? this.faction.getFactionColor() : this.definition.properties.color;
-        this.drawing = new Drawing(this.color);
 
         this.addComponent('inventory', new InventoryComponent({}));
 
@@ -53,9 +54,9 @@ export default class Station extends SpatialECS2D {
             // Define custom behavior here
         }));
 
-        this.addComponent('render', new RenderComponent((deltaTime, context, entity, camera) => {
-            this.drawing.draw(context, entity, camera);
-        }));
+        this.addComponent('render', new EntityVerticesComponent());
+        this.addComponent('highlight', new EntityHighlightRenderComponent());
+
 
         // Initialize behavior
         this.behavior = new FaceVelocityBehavior();

@@ -16,6 +16,8 @@ import ClickableComponent from "../../engine/src/components/ClickableComponent.j
 import AttackComponent from "../components/AttackComponent.js";
 import AutopilotComponent from "../components/AutopilotComponent.js";
 import {movementStateDefinitions} from "../../engine/src/components/movements/movementStateDefinitions.js";
+import EntityVerticesComponent from "../components/EntityVerticesComponent.js";
+import EntityHighlightRenderComponent from "../components/EntityHighlightRenderComponent.js";
 
 
 export default class Starship extends SpatialECS2D {
@@ -94,9 +96,9 @@ export default class Starship extends SpatialECS2D {
         this.addComponent('hangar', new HangarComponent());
 
         // Rendering
-        this.addComponent('render', new RenderComponent((deltaTime, context, entity, camera) => {
-            this.drawing.draw(context, entity, camera);
-        }, false));
+        this.addComponent('render', new EntityVerticesComponent());
+        this.addComponent('highlight', new EntityHighlightRenderComponent());
+
 
         // Initialize behavior
         const player = this.dataStoreManager.getStore('entities').get('player');

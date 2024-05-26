@@ -19,6 +19,8 @@ export default class Application {
         this.eventBus.on('pause', this.gameLogic.pause.bind(this.gameLogic));
         this.eventBus.on('resume', this.gameLogic.resume.bind(this.gameLogic));
         this.eventBus.on('gameOver', this.gameLogic.gameOver.bind(this.gameLogic));
+        this.eventBus.on('scene.enter', this.gameLogic.onSceneEnter.bind(this.gameLogic));
+        this.eventBus.on('scene.enter', this.playerActions.onSceneEnter.bind(this.playerActions));
     }
 
     initializeEntities() {

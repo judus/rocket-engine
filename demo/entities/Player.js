@@ -35,8 +35,8 @@ export default class Player extends SpatialECS2D {
         this.id = id;
         this.scale = 1;
 
-        this.color = '#FFFFFF';
-        this.drawing = new Drawing(this.definition.vertices, this.scale, this.color);
+        this.color = '#FF9900';
+        this.drawing = new Drawing(this.color);
 
         this.mousePosition = {x: 0, y: 0};
         this.eventBus.on('scopedMouseMove', (mouse) => {
@@ -104,7 +104,7 @@ export default class Player extends SpatialECS2D {
 
         // Rendering
         this.addComponent('render', new RenderComponent((deltaTime, context, entity, camera) => {
-            this.drawing.draw(context, entity, camera);
+            Drawing.draw(context, entity, camera, entity.color);
         }, false));
 
         // Initialize behavior

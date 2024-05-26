@@ -17,10 +17,7 @@ export default class GameLogic {
     }
 
     processGameLogic(deltaTime) {
-        this.sceneDirector = this.engine.sceneDirector();
-        this.sceneManager = this.sceneDirector.getSceneManager('world');
-        this.currentScene = this.sceneManager.getCurrentScene();
-        this.mainCamera = this.currentScene.cameraManager.getCamera('main');
+
 
         this.dataStore.getStore('entities').forEach(entity => {
             entity.update(deltaTime);
@@ -52,6 +49,15 @@ export default class GameLogic {
     resume() {
         this.isPaused = false;
     }
+
+    onSceneEnter(scene) {
+        this.sceneDirector = this.engine.sceneDirector();
+        this.sceneManager = this.sceneDirector.getSceneManager('world');
+        this.currentScene = this.sceneManager.getCurrentScene();
+        this.mainCamera = this.currentScene.cameraManager.getCamera('main');
+        this.resume();
+    }
+
 
     async gameOver() {
         await this.sceneManager.switchTo('GameOverScene');

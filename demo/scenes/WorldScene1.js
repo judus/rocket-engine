@@ -5,6 +5,9 @@ import BackgroundLayer from "../layers/shared/BackgroundLayer.js";
 import SeededRandom from "../../engine/src/utils/noise/SeededRandom.js";
 import AxisBackground from "../layers/shared/AxisBackground.js";
 import ParallaxBackground from "../layers/shared/stars/ParallaxBackground.js";
+import ProjectileLayer from "../layers/shared/ProjectileLayer.js";
+import HighlightBackground from "../layers/shared/HighlightBackground.js";
+import ParticleLayer from "../layers/shared/ParticleLayer.js";
 
 export default class WorldScene1 extends BaseScene {
     constructor() {
@@ -16,7 +19,10 @@ export default class WorldScene1 extends BaseScene {
         // Set up layers
         this.addLayer('backgroundLayer', BackgroundLayer);
         this.addLayer('ParallaxBackground', ParallaxBackground);
+        this.addLayer('highlight', HighlightBackground);
         this.addLayer('axisBackground', AxisBackground);
+        this.addLayer('ParticleLayer', ParticleLayer);
+        this.addLayer('ProjectileLayer', ProjectileLayer);
         this.addLayer('foregroundLayer', ExampleLayer);
     }
 
