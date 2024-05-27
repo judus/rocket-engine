@@ -18,10 +18,12 @@ import AttackComponent from "../components/AttackComponent.js";
 import AutopilotComponent from "../components/AutopilotComponent.js";
 import {movementStateDefinitions} from "../../engine/src/components/movements/movementStateDefinitions.js";
 import PositionComponent from "../../engine/src/components/PositionComponent.js";
+import SpriteComponent from "../../engine/src/sprites/SpriteComponent.js";
 
 export default class Player extends SpatialECS2D {
-    constructor(dataStoreManager, eventBus, x = 0, y = 0, id = null) {
+    constructor(engine, dataStoreManager, eventBus, x = 0, y = 0, id = null) {
         super(dataStoreManager.getStore('entities'), x, y, id);
+        this.engine = engine;
 
         this.eventBus = eventBus;
         this.dataStoreManager = dataStoreManager;
@@ -106,6 +108,14 @@ export default class Player extends SpatialECS2D {
         this.addComponent('render', new RenderComponent((deltaTime, context, entity, camera) => {
             Drawing.draw(context, entity, camera, entity.color);
         }, false));
+
+        // Load single-frame sprite sheet and add SpriteComponent
+        const spriteSheetManager = this.engine.spriteSheetManager();
+        const heroSpriteSheet = spriteSheetManager.loadSpriteSheet('hero', 'demo/assets/images/gunship-fighter-3.png', 280, 119).then(heroSpriteSheet => {
+            heroSpriteSheet.addFrame(0, 0); // Add a single frame
+            const spriteComponent = new SpriteComponent(heroSpriteSheet, 0);
+            this.addComponent('sprite', spriteComponent);
+        });
 
         // Initialize behavior
         this.behavior = new FaceVelocityBehavior();

@@ -46,7 +46,7 @@ export default class PlayerActions {
     showContextMenu(scopedMouse) {
         const actions = ['Action 1', 'Action 2', 'Action 3']; // Example actions
         if(this.contextMenuLayer) {
-            this.contextMenuLayer.showContextMenu(scopedMouse.world.x, scopedMouse.world.y, actions);
+            //this.contextMenuLayer.showContextMenu(scopedMouse.world.x, scopedMouse.world.y, actions);
         }
     }
 

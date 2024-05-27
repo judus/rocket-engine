@@ -8,6 +8,8 @@ import ParticleLayer from "../layers/shared/ParticleLayer.js";
 import MouseSelectionLayer from "../layers/shared/MouseSelectionLayer.js";
 import AxisBackground from "../layers/shared/AxisBackground.js";
 import DynamicContextMenuLayer from "../layers/shared/context-menu/DynamicContextMenuLayer.js";
+import StarBackground from "../layers/shared/stars/StarBackground.js";
+import SpriteLayer from "../layers/SpriteLayer.js";
 
 export default class WorldScene1 extends BaseScene {
     constructor() {
@@ -17,10 +19,11 @@ export default class WorldScene1 extends BaseScene {
     init(engine) {
         super.init(engine);
         // Set up layers
-        this.addLayer('backgroundLayer', BackgroundLayer);
+        this.addLayer('backgroundLayer', StarBackground);
         this.addLayer('ParallaxBackground', ParallaxBackground);
         this.addLayer('highlight', HighlightBackground);
         this.addLayer('axisBackground', AxisBackground);
+        this.addLayer('spriteLayer', SpriteLayer); // Add the new sprite layer
         this.addLayer('ParticleLayer', ParticleLayer);
         this.addLayer('ProjectileLayer', ProjectileLayer);
         this.addLayer('foregroundLayer', ExampleLayer);

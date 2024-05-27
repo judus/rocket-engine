@@ -53,7 +53,7 @@ export default class EntityFactory {
     }
 
     createPlayer(x, y) {
-        const player = new Player(this.dataStoreManager, this.eventBus, x, y, 'player');
+        const player = new Player(this.engine, this.dataStoreManager, this.eventBus, x, y, 'player');
         this.dataStoreManager.getStore('entities').set(player.id, player);
         return player;
     }
