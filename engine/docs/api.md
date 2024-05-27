@@ -1,3 +1,5 @@
+### Updated API Documentation
+
 ### Context Overview
 
 We are building a modular game engine using an Entity-Component-System (ECS) architecture. The engine is designed to be
@@ -171,13 +173,31 @@ Manages loading and retrieving assets.
 
 **Methods:**
 
-- `constructor()`: Initializes the asset manager.
+- `constructor(eventBus)`: Initializes the asset manager with an event bus.
+- `setBinaryManager(binaryManager)`: Sets the binary manager.
+- `loadManifestAndBinaryData(manifestUrl, binaryUrl)`: Loads assets from a manifest and binary data.
+- `loadBinary(key)`: Loads a binary file using the binary manager.
+- `decodeArrayBufferImage(buffer, width, height)`: Decodes an ArrayBuffer into an image.
+- `decodeArrayBufferAudio(buffer)`: Decodes an ArrayBuffer into audio.
 - `loadImage(key, src)`: Loads an image asset.
 - `loadSound(key, src)`: Loads a sound asset.
 - `loadJSON(key, src)`: Loads a JSON asset.
+- `assetLoaded()`: Handles the successful loading of an asset.
+- `assetError(src)`: Handles the error in loading an asset.
 - `getAsset(key)`: Retrieves an asset.
 - `setProgressHandler(callback)`: Sets a progress handler for asset loading.
 - `setCompleteHandler(callback)`: Sets a complete handler for asset loading.
+
+#### BinaryManager
+
+Manages binary asset packaging and retrieval.
+
+**Methods:**
+
+- `constructor()`: Initializes the binary manager.
+- `addBinary(key, manifestPath, binaryPath)`: Adds a binary with its manifest and binary paths.
+- `getBinaryPaths(key)`: Retrieves the manifest and binary paths for a given key.
+- `static createBinaryPackage(outputPath, assets)`: Creates a binary package from the given assets.
 
 #### AudioManager
 
@@ -186,7 +206,10 @@ Manages loading and playing audio assets.
 **Methods:**
 
 - `constructor()`: Initializes the audio manager.
-- `loadSound(key, src)`: Loads a sound asset.
+- `loadSound(key, src)`: Loads a sound asset
+
+.
+
 - `playSound(key, loop = false)`: Plays a sound asset.
 - `pauseSound(key)`: Pauses a sound asset.
 - `stopSound(key)`: Stops a sound asset.
@@ -208,9 +231,7 @@ Handles input events and state.
 - `normalizeKey(key)`: Normalizes the key to a standard representation.
 - `setupGlobalMouseListeners()`: Sets up global mouse event listeners.
 - `setupScopedMouseListeners()`: Sets up scoped mouse event listeners.
-- `emitMouseButtonEvent(eventBus
-
-, eventType, scopedMouse, event)`: Emits mouse button events.
+- `emitMouseButtonEvent(eventBus, eventType, scopedMouse, event)`: Emits mouse button events.
 
 #### InputBindingsManager
 
@@ -427,7 +448,10 @@ Provides methods for handling image operations.
 - `loadImage(url)`: Loads an image from a URL.
 - `resizeImage(img, width, height)`: Resizes an image to the specified width and height.
 - `imageToBase64(img)`: Converts an image to a base64 data URL.
-- `base64ToImage(base64)`: Converts a base64 data URL to an image.
+- `base64ToImage(base64)`: Converts
+
+a base64 data URL to an image.
+
 - `createImage(width, height, src)`: Creates an image element with the specified width, height, and source.
 - `drawImagePortion(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)`: Draws a rectangular portion of an image
   onto a canvas.
@@ -442,9 +466,7 @@ Provides methods for drawing various shapes on a canvas.
 - `drawCircle(ctx, x, y, radius, fillColor, strokeColor, lineWidth)`: Draws a circle on the canvas.
 - `drawPolygon(ctx, vertices, fillColor, strokeColor, lineWidth)`: Draws a polygon on the canvas.
 - `drawLine(ctx, x1, y1, x2, y2, color, width)`: Draws a line on the canvas.
-- `drawText(ctx, text, x,
-
-y, color, font)`: Draws text on the canvas.
+- `drawText(ctx, text, x, y, color, font)`: Draws text on the canvas.
 
 #### SVGHelper
 
@@ -540,3 +562,170 @@ Represents an item in the dynamic context menu.
 - `constructor(text, callback)`: Initializes the panel item with text and a callback.
 - `calculateDimensions(context)`: Calculates the dimensions of the item.
 - `render(context, x, y)`: Renders the item.
+
+#### Terminal
+
+An interactive terminal for logging messages, updating progress, and executing commands.
+
+**Methods:**
+
+- `constructor(logElementId, progressElementId, inputElementId)`: Initializes the terminal with HTML elements for
+  logging, progress, and command input.
+- `log(message, type = 'info', status = null, id = null)`: Logs a message to the terminal with optional status and ID
+  for updating specific lines.
+- `updateProgress(progress)`: Updates the progress bar.
+- `executeCommand(command)`: Executes a command entered by the user.
+
+#### EventHandlers
+
+Handles events for asset loading and logs them to the terminal.
+
+**Methods:**
+
+- `handleLoadingBinary(terminal, binaryUrl)`: Logs the loading of a binary file.
+- `handleUnpackingBinary(terminal, binaryUrl)`: Logs the unpacking of a binary file.
+- `handleAssetRegistered(terminal, assetKey)`: Logs the registration of an asset.
+- `handleError(terminal, error)`: Logs an error message.
+- `registerEventHandlers(eventBus, terminal)`: Registers the event handlers with the event bus.
+
+### Example Usage
+
+#### Loading and Displaying an Image with AssetManager and Terminal
+
+**HTML Setup:**
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Canvas Example</title>
+    <style>
+        #canvas {
+            border: 1px solid #000;
+        }
+        #loading-log {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #000;
+            overflow-y: auto;
+            padding: 10px;
+            font-family: monospace;
+        }
+        .log-entry {
+            margin-bottom: 5px;
+        }
+        .log-entry.info {
+            color: #000;
+        }
+        .log-entry.error {
+            color: red;
+        }
+        #loading-progress {
+            width: 100%;
+            background-color: #ddd;
+        }
+        #loading-bar {
+            width: 0;
+            height: 20px;
+            background-color: #4caf50;
+        }
+        #command-input {
+            width: 100%;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 14px;
+            border: 1px solid #000;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <div id="loading-progress">
+        <div id="loading-bar"></div>
+    </div>
+    <div id="loading-log"></div>
+    <input type="text" id="command-input" placeholder="Enter command...">
+    <script src="path/to/EventBus.js"></script>
+    <script src="path/to/AssetManager.js"></script>
+    <script src="path/to/BinaryManager.js"></script>
+    <script src="path/to/Terminal.js"></script>
+    <script src="path/to/EventHandlers.js"></script>
+    <script src="path/to/ExampleScene.js"></script>
+</body>
+</html>
+```
+
+**ExampleScene.js:**
+
+```javascript
+// ExampleScene.js
+
+import AssetManager from './AssetManager.js';
+import BinaryManager from './BinaryManager.js';
+import EventBus from './EventBus.js';
+import Terminal from './Terminal.js';
+import { registerEventHandlers } from './EventHandlers.js';
+
+class ExampleScene {
+    constructor(assetManager) {
+        this.assetManager = assetManager;
+    }
+
+    async loadAssets() {
+        const binaryPromises = [
+            this.assetManager.loadBinary('shared'),
+            this.assetManager.loadBinary('season1'),
+            this.assetManager.loadBinary('season2')
+        ];
+        await Promise.all(binaryPromises);
+
+        const webAssetPromises = [
+            this.assetManager.loadImage('webImage', 'https://example.com/image.png'),
+            this.assetManager.loadSound('webSound', 'https://example.com/sound.mp3')
+        ];
+        await Promise.all(webAssetPromises);
+    }
+
+    start() {
+        this.loadAssets()
+            .then(() => {
+                console.log('All assets loaded, starting scene...');
+            })
+            .catch(error => {
+                console.error('Error loading assets:', error);
+            });
+    }
+}
+
+const eventBus = new EventBus();
+const assetManager = new AssetManager(eventBus);
+const binaryManager = new BinaryManager();
+
+binaryManager.addBinary('shared', 'output/assets.json', 'output/shared.bin');
+binaryManager.addBinary('season1', 'output/season1_assets.json', 'output/season1.bin');
+binaryManager.addBinary('season2', 'output/season2_assets.json', 'output/season2.bin');
+
+assetManager.setBinaryManager(binaryManager);
+
+assetManager.setProgressHandler(progress => {
+    terminal.updateProgress(progress);
+    console.log(`Loading progress: ${progress * 100}%`);
+});
+
+assetManager.setCompleteHandler(() => {
+    console.log('All assets loaded successfully');
+});
+
+const exampleScene = new ExampleScene(assetManager);
+exampleScene.start();
+
+const terminal = new Terminal('loading-log', 'loading-bar', 'command-input');
+registerEventHandlers(eventBus, terminal);
+```
+
+This comprehensive overview includes the updated API documentation with new classes and methods introduced during the
+session
+
+, providing a robust and flexible framework for managing assets, logging, and real-time command execution.

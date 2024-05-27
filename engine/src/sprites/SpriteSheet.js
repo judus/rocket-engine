@@ -11,15 +11,19 @@ export default class SpriteSheet {
     }
 
     async loadImage() {
-        const image = new Image();
-        image.src = this.imageUrl;
-        await new Promise((resolve, reject) => {
-            image.onload = resolve;
-            image.onerror = reject;
-        });
-        this.imageBitmap = await createImageBitmap(image);
-        this.loaded = true;
-        this.addFrame(0, 0); // Add a single frame for now
+        try {
+            const image = new Image();
+            image.src = this.imageUrl;
+            await new Promise((resolve, reject) => {
+                image.onload = resolve;
+                image.onerror = reject;
+            });
+            this.imageBitmap = await createImageBitmap(image);
+            this.loaded = true;
+            this.addFrame(0, 0); // Add a single frame for now
+        } catch(error) {
+            console.error('Error loading image:', error);
+        }
     }
 
     addFrame(x, y) {
