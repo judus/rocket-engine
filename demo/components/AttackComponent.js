@@ -10,9 +10,6 @@ export default class AttackComponent extends BaseComponent {
     }
 
     attack(scopedMouse, camera, projectileType) {
-
-        console.log(camera);
-
         const currentTime = performance.now() / 1000; // Convert to seconds
         if(currentTime - this.lastFireTime < 1 / this.fireRate) return;
         this.lastFireTime = currentTime;

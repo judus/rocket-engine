@@ -1,5 +1,6 @@
 import ScopedMouse from "./ScopedMouse.js";
 import EngineBase from "../abstracts/EngineBase.js";
+import EngineParts from "../EngineParts.js";
 
 export default class InputManager extends EngineBase {
     /**
@@ -22,18 +23,23 @@ export default class InputManager extends EngineBase {
      */
     init(engine) {
         this.engine = engine;
-        this.eventBus = engine.eventBus();
-        this.globalMouse = engine.globalMouse();
+        this.eventBus = engine.service(EngineParts.EVENT_BUS);
+        this.globalMouse = engine.service(EngineParts.GLOBAL_MOUSE);
 
         this.setupKeyboardListeners();
         this.setupGlobalMouseListeners();
 
         // Get all canvases from the scene managers
-        const director = this.engine.sceneDirector();
+        const director = this.engine.service(EngineParts.SCENE_DIRECTOR);
         director.sceneManagers.forEach(sceneManager => {
             const renderer = sceneManager.renderer;
             if(renderer && renderer.canvas) {
-                const scopedMouse = new ScopedMouse(renderer.canvas, this.engine.service('dataStoreManager'));
+                const scopedMouse = this.engine.create(
+                    EngineParts.SCOPED_MOUSE,
+                    renderer.canvas,
+                    this.engine.service(EngineParts.DATA_STORE_MANAGER)
+                );
+                scopedMouse.init(this.engine);
                 this.addScopedMouse(scopedMouse);
             }
         });
@@ -64,6 +70,7 @@ export default class InputManager extends EngineBase {
             });
         }
     }
+
     /**
      * Handles the key down event.
      * @param {KeyboardEvent} event - The key down event.
@@ -187,6 +194,13 @@ export default class InputManager extends EngineBase {
         });
     }
 
+    /**
+     * Emits a mouse button event.
+     * @param {EventBus} eventBus - The event bus instance.
+     * @param {string} eventType - The type of event.
+     * @param {ScopedMouse} scopedMouse - The scoped mouse instance.
+     * @param {MouseEvent} event - The mouse event.
+     */
     emitMouseButtonEvent(eventBus, eventType, scopedMouse, event) {
         eventBus.emit(eventType, scopedMouse);
 

@@ -27,13 +27,13 @@ import defaults from "./defaults.js";
 
 export default class Rocket {
     constructor(config) {
-        this.config = new Config(config, defaults); // Use the Config class with defaults
+        this.config = new Config(config, defaults);
         this.serviceContainer = new BaseContainer();
         this.pluginContainer = new BaseContainer();
         this.engine = new Engine(this);
         this.engine.config = this.config;
 
-        (new EngineInit(this)).initializeServices();
+        (new EngineInit()).initializeServices(this.engine);
         this.serviceContainer.initAll(this.engine);
         this.pluginContainer.initAll(this.engine);
 
@@ -91,6 +91,8 @@ export default class Rocket {
      * Starts the engine, setting up the update and render callbacks.
      */
     start() {
+        // All services should be initialized by now
+        console.log("Starting Rocket...");
         this.inputManager().init(this.engine);
 
         let updateCallback = () => {};

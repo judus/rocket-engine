@@ -1,6 +1,16 @@
 import EngineBase from "../abstracts/EngineBase.js";
+import EngineParts from "../EngineParts.js";
 
+/**
+ * Manages scenes within a specific context or stack.
+ */
 export default class SceneManager extends EngineBase {
+    /**
+     * Creates an instance of SceneManager.
+     * @param {Renderer} renderer - The renderer instance to be used.
+     * @param {number} width - The width of the scene.
+     * @param {number} height - The height of the scene.
+     */
     constructor(renderer, width, height) {
         super();
         this.scenes = new Map();
@@ -10,6 +20,14 @@ export default class SceneManager extends EngineBase {
         this.height = height;
         this.currentSceneIndex = -1; // Initialize to -1 to indicate no scene is active yet
         this.sceneOrder = []; // To keep track of the order of scenes added
+    }
+
+    /**
+     * Initializes the SceneManager with the engine instance.
+     * @param {Engine} engine - The engine instance.
+     */
+    init(engine) {
+        this.engine = engine;
     }
 
     /**
@@ -95,12 +113,20 @@ export default class SceneManager extends EngineBase {
         }
     }
 
+    /**
+     * Transitions into a scene.
+     * @param {BaseScene} scene - The scene to transition into.
+     */
     async transitionInScene(scene) {
         if(scene && scene.transitionInScene) {
             await scene.transitionInScene(this.renderer);
         }
     }
 
+    /**
+     * Transitions out of a scene.
+     * @param {BaseScene} scene - The scene to transition out of.
+     */
     async transitionOutScene(scene) {
         if(scene && scene.transitionOutScene) {
             await scene.transitionOutScene(this.renderer);

@@ -14,4 +14,8 @@ export default class EngineParts {
     static ENTITY_MANAGER = 'entityManager';
     static GLOBAL_MOUSE = 'globalMouse';
     static SCOPED_MOUSE = 'scopedMouse';
+    static CAMERA_MANAGER = 'cameraManager';
+    static DEFAULT_RENDERER = 'defaultRenderer';
+    static ENTITY_SELECTOR = 'entitySelector';
+    static ENTITY_CONTROLLER = 'entityController';
 }

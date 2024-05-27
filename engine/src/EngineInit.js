@@ -8,99 +8,90 @@ import InputBindingsManager from "./inputs/InputBindingManager.js";
 import SpriteSheetManager from "./sprites/SpriteSheetManager.js";
 import EntityManager from "./entities/EntityManager.js";
 import GlobalMouse from "./inputs/GlobalMouse.js";
-import ScopedMouse from "./inputs/ScopedMouse.js";
 import SceneManager from "./scenes/SceneManager.js";
 import SceneDirector from "./scenes/SceneDirector.js";
 import CompositeRenderer from "./rendering/CompositeRenderer.js";
 import LayerManager from "./scenes/LayerManager.js";
 import InputBindings from "./inputs/InputBindings.js";
-import CameraManager from "./cameras/CameraManager.js"; // Assuming the file is named CameraManager.js
+import CameraManager from "./cameras/CameraManager.js";
+import EngineParts from "./EngineParts.js";
+import ScopedMouse from "./inputs/ScopedMouse.js";
+import EntitySelector from "./services/EntitySelector.js";
+import EntityController from "./services/EntityController.js";
 
 export default class EngineInit {
-    constructor(rocket) {
-        this.rocket = rocket;
-    }
+    initializeServices(engine) {
+        this.engine = engine;
+        this.engine.service(EngineParts.TIMER, this.engine.service(EngineParts.TIMER) || this.defaultTimer());
+        this.engine.service(EngineParts.DEFAULT_RENDERER, this.engine.config.defaultRenderer);
+        this.engine.service(EngineParts.DATA_STORE_MANAGER, this.engine.config.defaultDataStore);
+        this.engine.service(EngineParts.ENTITY_SELECTOR, this.engine.service(EngineParts.ENTITY_SELECTOR) || this.defaultEntitySelector());
+        this.engine.service(EngineParts.ENTITY_CONTROLLER, this.engine.service(EngineParts.ENTITY_CONTROLLER) || this.defaultEntityController()); // Add this line
 
-    initializeServices() {
-        this.service('timer', this.service('timer') || this.defaultTimer());
-        this.service('defaultRenderer', this.rocket.config.defaultRenderer);
-        this.service('defaultDataStore', this.rocket.config.defaultDataStore);
 
-        if(!this.rocket.config.disableEventBus) {
-            this.service('eventBus', this.service('eventBus') || this.defaultEventBus());
+        if(!this.engine.config.disableEventBus) {
+            this.engine.service(EngineParts.EVENT_BUS, this.engine.service(EngineParts.EVENT_BUS) || this.defaultEventBus());
         }
 
-        if(!this.rocket.config.disableRenderSystem) {
-            this.service('renderSystem', this.service('renderSystem') || this.defaultRenderSystem());
+        if(!this.engine.config.disableRenderSystem) {
+            this.engine.service(EngineParts.RENDER_SYSTEM, this.engine.service(EngineParts.RENDER_SYSTEM) || this.defaultRenderSystem());
         }
 
-        if(!this.rocket.config.disableSceneDirector) {
-            this.service('sceneDirector', this.service('sceneDirector') || this.defaultSceneDirector());
+        if(!this.engine.config.disableSceneDirector) {
+            this.engine.service(EngineParts.SCENE_DIRECTOR, this.engine.service(EngineParts.SCENE_DIRECTOR) || this.defaultSceneDirector());
         }
 
-        if(!this.rocket.config.disableSceneManager) {
-            this.service('sceneManager', this.service('sceneManager') || this.defaultSceneManager());
+        if(!this.engine.config.disableSceneManager) {
+            this.engine.service(EngineParts.SCENE_MANAGER, this.engine.service(EngineParts.SCENE_MANAGER) || this.defaultSceneManager());
         }
 
-        if(!this.rocket.config.disableLayerManager) {
-            this.service('layerManager', this.service('layerManager') || this.defaultLayerManager());
+        if(!this.engine.config.disableLayerManager) {
+            this.engine.service(EngineParts.LAYER_MANAGER, this.engine.service(EngineParts.LAYER_MANAGER) || this.defaultLayerManager());
         }
 
-        if(!this.rocket.config.disableCameraManager) {
-            this.service('cameraManager', this.service('cameraManager') || this.defaultCameraManager());
+        if(!this.engine.config.disableCameraManager) {
+            this.engine.service(EngineParts.CAMERA_MANAGER, this.engine.service(EngineParts.CAMERA_MANAGER) || this.defaultCameraManager());
         }
 
-        if(!this.rocket.config.disableDataStoreManager) {
-            this.service('dataStoreManager', this.service('dataStoreManager') || this.defaultDataStoreManager());
+        if(!this.engine.config.disableDataStoreManager) {
+            this.engine.service(EngineParts.DATA_STORE_MANAGER, this.engine.service(EngineParts.DATA_STORE_MANAGER) || this.defaultDataStoreManager());
         }
 
-        if(!this.rocket.config.disableAssetManager) {
-            this.service('assetManager', this.service('assetManager') || this.defaultAssetManager());
+        if(!this.engine.config.disableAssetManager) {
+            this.engine.service(EngineParts.ASSET_MANAGER, this.engine.service(EngineParts.ASSET_MANAGER) || this.defaultAssetManager());
         }
 
-        if(!this.rocket.config.disableAudioManager) {
-            this.service('audioManager', this.service('audioManager') || this.defaultAudioManager());
+        if(!this.engine.config.disableAudioManager) {
+            this.engine.service(EngineParts.AUDIO_MANAGER, this.engine.service(EngineParts.AUDIO_MANAGER) || this.defaultAudioManager());
         }
 
-        if(!this.rocket.config.disableInputManager) {
-            this.service('inputManager', this.service('inputManager') || this.defaultInputManager());
+        if(!this.engine.config.disableInputManager) {
+            this.engine.service(EngineParts.INPUT_MANAGER, this.engine.service(EngineParts.INPUT_MANAGER) || this.defaultInputManager());
         }
 
-        if(!this.rocket.config.disableInputBindingsManager) {
-            this.service('inputBindingsManager', this.service('inputBindingsManager') || this.defaultInputBindingsManager());
+        if(!this.engine.config.disableInputBindingsManager) {
+            this.engine.service(EngineParts.INPUT_BINDINGS_MANAGER, this.engine.service(EngineParts.INPUT_BINDINGS_MANAGER) || this.defaultInputBindingsManager());
         }
 
-        if(!this.rocket.config.disableSpriteSheetManager) {
-            this.service('spriteSheetManager', this.service('spriteSheetManager') || this.defaultSpriteSheetManager());
+        if(!this.engine.config.disableSpriteSheetManager) {
+            this.engine.service(EngineParts.SPRITE_SHEET_MANAGER, this.engine.service(EngineParts.SPRITE_SHEET_MANAGER) || this.defaultSpriteSheetManager());
         }
 
-        if(!this.rocket.config.disableEntityManager) {
-            this.service('entityManager', this.service('entityManager') || this.defaultEntityManager());
+        if(!this.engine.config.disableEntityManager) {
+            this.engine.service(EngineParts.ENTITY_MANAGER, this.engine.service(EngineParts.ENTITY_MANAGER) || this.defaultEntityManager());
         }
 
-        if(!this.rocket.config.disableGlobalMouse) {
-            this.service('globalMouse', this.service('globalMouse') || this.defaultGlobalMouse());
+        if(!this.engine.config.disableGlobalMouse) {
+            this.engine.service(EngineParts.GLOBAL_MOUSE, this.engine.service(EngineParts.GLOBAL_MOUSE) || this.defaultGlobalMouse());
         }
 
-        if(!this.rocket.config.disableScopedMouse) {
-            this.service('scopedMouse', this.service('scopedMouse') || this.defaultScopedMouse());
-        }
-
-
-    }
-
-    service(name, instance = null) {
-        if(instance === null) {
-            return this.rocket.serviceContainer.get(name);
-        } else if(instance === undefined) {
-            this.rocket.serviceContainer.remove(name);
-        } else {
-            this.rocket.serviceContainer.add(name, instance);
+        if(!this.engine.config.disableScopedMouse) {
+            this.engine.service(EngineParts.SCOPED_MOUSE, this.engine.service(EngineParts.SCOPED_MOUSE) || this.defaultScopedMouse());
         }
     }
 
     defaultTimer() {
-        return new Timer(this.rocket.config.fps, this.rocket.config.showPerformanceMonitor);
+        return new Timer(this.engine.config.fps, this.engine.config.showPerformanceMonitor);
     }
 
     defaultSceneDirector() {
@@ -124,7 +115,7 @@ export default class EngineInit {
     }
 
     defaultDataStoreManager() {
-        return new DataStoreManager(this.rocket.create('defaultDataStore', this.rocket.service('eventBus'))); // get a new instance
+        return new DataStoreManager(this.engine.create(EngineParts.DATA_STORE_MANAGER, this.engine.service(EngineParts.EVENT_BUS)));
     }
 
     defaultEventBus() {
@@ -144,14 +135,14 @@ export default class EngineInit {
     }
 
     defaultInputBindings() {
-        return new InputBindings(this.service('eventBus'));
+        return new InputBindings(this.engine.service(EngineParts.EVENT_BUS));
     }
 
     defaultInputBindingsManager() {
-        this.rocket.config.inputBindings.init(this.rocket.engine)
+        this.engine.config.inputBindings.init(this.engine);
         return new InputBindingsManager(
-            this.service('eventBus'),
-            this.rocket.config.inputBindings
+            this.engine.service(EngineParts.EVENT_BUS),
+            this.engine.config.inputBindings
         );
     }
 
@@ -160,7 +151,7 @@ export default class EngineInit {
     }
 
     defaultEntityManager() {
-        return new EntityManager(this.service('dataStoreManager'));
+        return new EntityManager(this.engine.service(EngineParts.DATA_STORE_MANAGER));
     }
 
     defaultGlobalMouse() {
@@ -168,7 +159,14 @@ export default class EngineInit {
     }
 
     defaultScopedMouse() {
-        return new ScopedMouse(this.rocket.config.targetElement, this.service('dataStoreManager'));
+        return ScopedMouse;
     }
 
+    defaultEntitySelector() {
+        return EntitySelector; // The main camera will be set later
+    }
+
+    defaultEntityController() {
+        return EntityController;
+    }
 }
