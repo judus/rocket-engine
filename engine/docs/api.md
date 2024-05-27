@@ -262,6 +262,7 @@ Handles scoped mouse events relative to a specific element.
 - `constructor(element, dataStoreManager)`: Initializes the scoped mouse.
 - `updatePosition(event)`: Updates the mouse position relative to the scoped element.
 - `updateButton(event)`: Updates the mouse button state.
+- `getArea()`: Retrieves the selected area based on the initial and final positions.
 
 #### EntityManager
 
@@ -441,7 +442,9 @@ Provides methods for drawing various shapes on a canvas.
 - `drawCircle(ctx, x, y, radius, fillColor, strokeColor, lineWidth)`: Draws a circle on the canvas.
 - `drawPolygon(ctx, vertices, fillColor, strokeColor, lineWidth)`: Draws a polygon on the canvas.
 - `drawLine(ctx, x1, y1, x2, y2, color, width)`: Draws a line on the canvas.
-- `drawText(ctx, text, x, y, color, font)`: Draws text on the canvas.
+- `drawText(ctx, text, x,
+
+y, color, font)`: Draws text on the canvas.
 
 #### SVGHelper
 
@@ -457,3 +460,83 @@ Provides methods for creating and manipulating SVG elements.
 - `createText(textContent, x, y, fill, fontSize, fontFamily)`: Creates an SVG text element.
 - `setAttributes(element, attributes)`: Sets multiple attributes on an SVG element.
 - `clear(svg)`: Clears all child elements from an SVG element.
+
+### New Classes and Methods Added:
+
+#### DynamicContextMenu
+
+Renders a dynamic context menu on the canvas.
+
+**Methods:**
+
+- `constructor(x, y, items, config = new DynamicBoxConfig())`: Initializes the context menu with position, items, and
+  configuration.
+- `render(context, posX, posY)`: Renders the context menu on the canvas.
+- `handleClick(mouseX, mouseY)`: Handles click events on the context menu.
+
+#### DynamicBoxConfig
+
+Configuration class for dynamic context menu boxes.
+
+**Properties:**
+
+- `borderBox`: Configuration for the outer border box.
+- `mainBox`: Configuration for the main box.
+- `itemBox`: Configuration for the item boxes.
+
+**Methods:**
+
+- `constructor()`: Initializes the configuration with default values.
+
+#### DynamicContextMenuLayer
+
+Layer class for rendering the dynamic context menu.
+
+**Methods:**
+
+- `constructor(canvas, context)`: Initializes the layer with the canvas and context.
+- `showContextMenu(worldX, worldY, items)`: Shows the context menu at the specified world coordinates with the given
+  items.
+- `hideContextMenu()`: Hides the context menu.
+- `render(scene)`: Renders the context menu layer.
+- `handleClick(mouseX, mouseY)`: Handles click events on the context menu.
+
+#### Panel
+
+Represents a collection of rows in the dynamic context menu.
+
+**Methods:**
+
+- `constructor(rows)`: Initializes the panel with an array of rows.
+- `calculateDimensions(context)`: Calculates the dimensions of the panel.
+- `render(context, x, y)`: Renders the panel.
+
+#### Row
+
+Represents a collection of columns in the dynamic context menu.
+
+**Methods:**
+
+- `constructor(columns)`: Initializes the row with an array of columns.
+- `calculateDimensions(context)`: Calculates the dimensions of the row.
+- `render(context, x, y)`: Renders the row.
+
+#### Column
+
+Represents a collection of items in the dynamic context menu.
+
+**Methods:**
+
+- `constructor(items, config)`: Initializes the column with an array of items and configuration.
+- `calculateDimensions(context)`: Calculates the dimensions of the column.
+- `render(context, x, y)`: Renders the column.
+
+#### PanelItem
+
+Represents an item in the dynamic context menu.
+
+**Methods:**
+
+- `constructor(text, callback)`: Initializes the panel item with text and a callback.
+- `calculateDimensions(context)`: Calculates the dimensions of the item.
+- `render(context, x, y)`: Renders the item.
