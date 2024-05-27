@@ -1,10 +1,12 @@
 import Vector2D from "../utils/maths/Vector2D.js";
+import EngineBase from "../abstracts/EngineBase.js";
 
 function generateUUID() {
     return `${Date.now()}-${Math.floor(Math.random() * 1e9)}`;
 }
-export default class BaseEntity {
+export default class BaseEntity extends EngineBase {
     constructor(id, type) {
+        super();
         this.id = id || generateUUID();
         this.type = type || this.constructor.name
         this.components = {};

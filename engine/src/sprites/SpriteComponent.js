@@ -1,6 +1,6 @@
 import BaseComponent from "../abstracts/BaseComponent.js";
 
-class SpriteComponent extends BaseComponent {
+export default class SpriteComponent extends BaseComponent {
     constructor(spriteSheet, frameIndex = 0) {
         super();
         this.spriteSheet = spriteSheet;

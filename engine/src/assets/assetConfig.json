@@ -1,0 +1,18 @@
+{
+  "localDirectories": [
+    "./assets/images",
+    "./assets/audio"
+  ],
+  "remoteFiles": [
+    {
+      "key": "remoteImage",
+      "type": "image",
+      "url": "https://example.com/image.png"
+    },
+    {
+      "key": "remoteSound",
+      "type": "audio",
+      "url": "https://example.com/sound.mp3"
+    }
+  ]
+}

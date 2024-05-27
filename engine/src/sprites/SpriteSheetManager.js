@@ -5,8 +5,9 @@ export default class SpriteSheetManager {
         this.spriteSheets = new Map();
     }
 
-    loadSpriteSheet(key, imageUrl, frameWidth, frameHeight) {
+    async loadSpriteSheet(key, imageUrl, frameWidth, frameHeight) {
         const spriteSheet = new SpriteSheet(imageUrl, frameWidth, frameHeight);
+        await spriteSheet.loadImage(); // Ensure the image is loaded
         this.spriteSheets.set(key, spriteSheet);
         return spriteSheet;
     }
