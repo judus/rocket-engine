@@ -8,7 +8,6 @@ export default class InputHandler {
 
         this.selectionStartWorld = null;
         this.selectionEndWorld = null;
-        this.selectionArea = new Area(0, 0, 0, 0);
     }
 
     setupEventListeners() {

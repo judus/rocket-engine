@@ -34,11 +34,13 @@ export default class MouseSelectionLayer extends BaseLayer {
     render(scene) {
         this.clear();
         if(this.selectionStart && this.selectionEnd) {
-            const cameraPos = scene.camera.pos;
-            const x = Math.min(this.selectionStart.x, this.selectionEnd.x) - cameraPos.x;
-            const y = Math.min(this.selectionStart.y, this.selectionEnd.y) - cameraPos.y;
-            const width = Math.abs(this.selectionStart.x - this.selectionEnd.x);
-            const height = Math.abs(this.selectionStart.y - this.selectionEnd.y);
+            const camera = scene.camera;
+            const zoomLevel = camera.zoomLevel;
+            const cameraPos = camera.pos;
+            const x = (Math.min(this.selectionStart.x, this.selectionEnd.x) - cameraPos.x) * zoomLevel;
+            const y = (Math.min(this.selectionStart.y, this.selectionEnd.y) - cameraPos.y) * zoomLevel;
+            const width = Math.abs(this.selectionStart.x - this.selectionEnd.x) * zoomLevel;
+            const height = Math.abs(this.selectionStart.y - this.selectionEnd.y) * zoomLevel;
 
             this.context.strokeStyle = 'rgba(0, 255, 0, 0.5)';
             this.context.lineWidth = 2;
