@@ -13,6 +13,8 @@ export default class PlayerActions {
         this.entitySelector = this.engine.create(EngineParts.ENTITY_SELECTOR, this.dataStoreManager);
         this.entityController = this.engine.create(EngineParts.ENTITY_CONTROLLER, this.dataStoreManager);
         this.mouseSelectionLayer = null;
+
+        this.selectedEntities = new Set();
     }
 
     onSceneEnter() {
@@ -40,13 +42,7 @@ export default class PlayerActions {
     handleAreaSelection(area) {
         console.log("Area selection: ", area);
         const entities = this.entitySelector.selectEntitiesInArea(area);
-        entities.forEach(entity => {
-            const clickableComponent = entity.getComponent('clickable');
-            if(clickableComponent) {
-                console.log(`Entity ${entity.id} clicked`);
-                clickableComponent.handleClick();
-            }
-        });
+        this.enableHighlighting(entities);
 
         // Clear selection area after handling
         if(this.mouseSelectionLayer) {
@@ -57,13 +53,7 @@ export default class PlayerActions {
     handleClickSelection(scopedMouse) {
         console.log("Click selection at: ", scopedMouse.world);
         const entities = this.entitySelector.selectEntitiesAtPoint(scopedMouse.world.x, scopedMouse.world.y);
-        entities.forEach(entity => {
-            const clickableComponent = entity.getComponent('clickable');
-            if(clickableComponent) {
-                console.log(`Entity ${entity.id} clicked`);
-                clickableComponent.handleClick();
-            }
-        });
+        this.enableHighlighting(entities);
     }
 
     handleMouseSelection(selection, scopedMouse) {
@@ -79,13 +69,31 @@ export default class PlayerActions {
         }
 
         const entities = this.entitySelector.selectEntitiesInArea(selection);
+        this.enableHighlighting(entities);
+    }
+
+    enableHighlighting(entities) {
+        // Disable highlighting for previously selected entities
+        this.disableHighlighting();
+
+        // Enable highlighting for newly selected entities
         entities.forEach(entity => {
-            const clickableComponent = entity.getComponent('clickable');
-            if(clickableComponent) {
-                console.log(`Entity ${entity.id} clicked`);
-                clickableComponent.handleClick(scopedMouse);
+            const highlightComponent = entity.getComponent('highlight');
+            if(highlightComponent) {
+                highlightComponent.enableHighlight();
+                this.selectedEntities.add(entity);
             }
         });
+    }
+
+    disableHighlighting() {
+        this.selectedEntities.forEach(entity => {
+            const highlightComponent = entity.getComponent('highlight');
+            if(highlightComponent) {
+                highlightComponent.disableHighlight();
+            }
+        });
+        this.selectedEntities.clear();
     }
 
     handleEntityDestroyed(entity) {

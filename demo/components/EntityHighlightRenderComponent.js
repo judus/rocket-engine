@@ -4,6 +4,10 @@ import StaticColorHelper from "../../engine/src/utils/StaticColorHelper.js"; // 
 export default class EntityHighlightRenderComponent extends RenderComponent {
     constructor(config = {}) {
         super((deltaTime, context, entity, camera) => {
+            if(!this.highlightEnabled) {
+                return;
+            }
+
             const baseColor = StaticColorHelper.setHex(entity.color || "#00FF77"); // Default to green
 
             this.filledCircleColor = StaticColorHelper.setOpacity(baseColor, 0.5);
@@ -27,8 +31,16 @@ export default class EntityHighlightRenderComponent extends RenderComponent {
             this.healthBarBorderColor = config.healthBarBorderColor || "rgb(0, 133, 0)";
             this.healthBarBorderWidth = config.healthBarBorderWidth || 2;
 
+            this.dashedCircleBaseSpeed = config.dashedCircleBaseSpeed || 1;
+            this.dottedCircleBaseSpeed = config.dottedCircleBaseSpeed || 0.5;
+
+            this.dashedCircleAngle = (this.dashedCircleAngle || 0) + (deltaTime * this.dashedCircleBaseSpeed / this.dashedCircleRadius);
+            this.dottedCircleAngle = (this.dottedCircleAngle || 0) + (deltaTime * this.dottedCircleBaseSpeed / this.dottedCircleRadius);
+
             this.drawHighlight(context, entity, camera);
         });
+
+        this.highlightEnabled = config.highlightEnabled || false;
     }
 
     drawHighlight(context, entity, camera) {
@@ -43,6 +55,10 @@ export default class EntityHighlightRenderComponent extends RenderComponent {
         context.closePath();
 
         // Draw dashed line circle
+        context.save();
+        context.translate(posX, posY);
+        context.rotate(this.dashedCircleAngle);
+        context.translate(-posX, -posY);
         context.beginPath();
         context.setLineDash(this.dashedLineDash);
         context.arc(posX, posY, this.dashedCircleRadius * camera.zoomLevel, 0, 2 * Math.PI);
@@ -51,8 +67,13 @@ export default class EntityHighlightRenderComponent extends RenderComponent {
         context.stroke();
         context.setLineDash([]);
         context.closePath();
+        context.restore();
 
         // Draw dotted line circle
+        context.save();
+        context.translate(posX, posY);
+        context.rotate(this.dottedCircleAngle);
+        context.translate(-posX, -posY);
         context.beginPath();
         context.setLineDash(this.dottedLineDash);
         context.arc(posX, posY, this.dottedCircleRadius * camera.zoomLevel, 0, 2 * Math.PI);
@@ -61,6 +82,7 @@ export default class EntityHighlightRenderComponent extends RenderComponent {
         context.stroke();
         context.setLineDash([]);
         context.closePath();
+        context.restore();
 
         // Draw health bar
         const healthComponent = entity.getComponent('health');
@@ -82,5 +104,13 @@ export default class EntityHighlightRenderComponent extends RenderComponent {
             context.lineWidth = this.healthBarBorderWidth;
             context.strokeRect(healthBarX - 1, healthBarY - 1, this.healthBarWidth * camera.zoomLevel + 2, this.healthBarHeight * camera.zoomLevel + 2);
         }
+    }
+
+    enableHighlight() {
+        this.highlightEnabled = true;
+    }
+
+    disableHighlight() {
+        this.highlightEnabled = false;
     }
 }
