@@ -19,7 +19,7 @@ export default class WorldScene1 extends BaseScene {
     init(engine) {
         super.init(engine);
         // Set up layers
-        this.addLayer('backgroundLayer', StarBackground);
+        this.addLayer('backgroundLayer', BackgroundLayer);
         this.addLayer('ParallaxBackground', ParallaxBackground);
         this.addLayer('highlight', HighlightBackground);
         this.addLayer('axisBackground', AxisBackground);

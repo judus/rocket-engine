@@ -15,7 +15,7 @@ const minimap = document.getElementById('rocket-minimap');
 
 const rocket = new Rocket({
     targetElement: main,
-    showPerformanceMonitor: true,
+    showPerformanceMonitor: false,
     inputBindings: new MyInputBindings(),
 });
 
@@ -23,17 +23,17 @@ rocket.service('application', new Application());
 
 rocket.stack('world', (stack) => {
     stack.addScene(new WorldScene1());
-    stack.addScene(new GameOverScene());
-    stack.addScene(new WorldScene3());
+    // stack.addScene(new GameOverScene());
+    // stack.addScene(new WorldScene3());
 }, {width: 1920, height: 1080});
-
-rocket.stack('target', (stack) => {
-    stack.addScene(new Cockpit());
-}, {container: target, width: 200, height: 200 });
-
-rocket.stack('minimap', (stack) => {
-    stack.addScene(new Settings());
-}, {container: minimap, width: 200, height: 200});
+//
+// rocket.stack('target', (stack) => {
+//     stack.addScene(new Cockpit());
+// }, {container: target, width: 200, height: 200 });
+//
+// rocket.stack('minimap', (stack) => {
+//     stack.addScene(new Settings());
+// }, {container: minimap, width: 200, height: 200});
 
 
 rocket.start();

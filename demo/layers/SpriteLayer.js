@@ -13,7 +13,7 @@ export default class SpriteLayer extends BaseLayer {
     render(scene, deltaTime, tickCount, totalTime) {
         this.clear();
         this.getEntities(scene).forEach(entity => {
-            const spriteComponent = entity.getComponent(SpriteComponent);
+            const spriteComponent = entity.getComponent('sprite');
             if(spriteComponent) {
                 const spriteSheet = spriteComponent.spriteSheet;
                 if(spriteSheet.isLoaded()) {
@@ -22,21 +22,31 @@ export default class SpriteLayer extends BaseLayer {
                     const zoomLevel = camera.zoomLevel;
                     const cameraPos = camera.pos;
 
-                    const x = (entity.position.x - cameraPos.x) * zoomLevel;
-                    const y = (entity.position.y - cameraPos.y) * zoomLevel;
+                    // Calculate draw position
+                    const drawX = (entity.pos.x - cameraPos.x) * zoomLevel;
+                    const drawY = (entity.pos.y - cameraPos.y) * zoomLevel;
+
                     const width = spriteSheet.frameWidth * zoomLevel;
                     const height = spriteSheet.frameHeight * zoomLevel;
 
+                    // Save context state
+                    this.context.save();
+
+                    // Translate to the entity's position
+                    this.context.translate(drawX, drawY);
+
+                    // Rotate the context
+                    this.context.rotate(entity.rotation);
+
+                    // Draw the sprite centered on the entity's position
                     this.context.drawImage(
-                        spriteSheet.image,
+                        spriteSheet.imageBitmap,
                         frame.x, frame.y, spriteSheet.frameWidth, spriteSheet.frameHeight,
-                        x, y, width, height
+                        -width / 2, -height / 2, width, height
                     );
-                } else {
-                    // Retry rendering after the image has loaded
-                    spriteSheet.image.onload = () => {
-                        this.render(scene, deltaTime, tickCount, totalTime);
-                    };
+
+                    // Restore context state
+                    this.context.restore();
                 }
             }
         });
