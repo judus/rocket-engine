@@ -6,7 +6,8 @@ import ProjectileLayer from "../layers/shared/ProjectileLayer.js";
 import HighlightBackground from "../layers/shared/HighlightBackground.js";
 import ParticleLayer from "../layers/shared/ParticleLayer.js";
 import MouseSelectionLayer from "../layers/shared/MouseSelectionLayer.js";
-import AxisBackground from "../layers/shared/AxisBackground.js"; // Add this import
+import AxisBackground from "../layers/shared/AxisBackground.js";
+import DynamicContextMenuLayer from "../layers/shared/context-menu/DynamicContextMenuLayer.js";
 
 export default class WorldScene1 extends BaseScene {
     constructor() {
@@ -24,6 +25,7 @@ export default class WorldScene1 extends BaseScene {
         this.addLayer('ProjectileLayer', ProjectileLayer);
         this.addLayer('foregroundLayer', ExampleLayer);
         this.addLayer('mouseSelectionLayer', MouseSelectionLayer); // Add the new layer
+        this.addLayer('contextMenuLayer', DynamicContextMenuLayer); // Add context menu layer
     }
 
     load(callback) {

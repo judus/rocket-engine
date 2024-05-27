@@ -28,6 +28,9 @@ export default class PlayerActions {
 
         // Get the mouse selection layer
         this.mouseSelectionLayer = this.currentScene.layerManager.getLayer('mouseSelectionLayer');
+        // Get the context menu layer
+        this.contextMenuLayer = this.currentScene.layerManager.getLayer('contextMenuLayer');
+
     }
 
     handleContextClick(scopedMouse) {
@@ -35,9 +38,18 @@ export default class PlayerActions {
         if(area) {
             this.handleAreaSelection(area);
         } else {
-            this.handleClickSelection(scopedMouse);
+            //this.handleClickSelection(scopedMouse);
+            this.showContextMenu(scopedMouse);
         }
     }
+
+    showContextMenu(scopedMouse) {
+        const actions = ['Action 1', 'Action 2', 'Action 3']; // Example actions
+        if(this.contextMenuLayer) {
+            this.contextMenuLayer.showContextMenu(scopedMouse.world.x, scopedMouse.world.y, actions);
+        }
+    }
+
 
     handleAreaSelection(area) {
         console.log("Area selection: ", area);
