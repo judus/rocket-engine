@@ -33,7 +33,7 @@ export default class EntityFactory {
     }
 
     createShipFromDefinition(definition, x, y, id, faction, station) {
-        const ship = new definition.entityClass(this.dataStoreManager, this.eventBus, definition, x, y, id, faction, station);
+        const ship = new definition.entityClass(this.engine, definition, x, y, id, faction, station);
         this.dataStoreManager.getStore('entities').set(ship.id, ship);
         faction.addShip(ship);
         station.addShip(ship);

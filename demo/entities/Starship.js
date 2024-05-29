@@ -19,13 +19,19 @@ import {movementStateDefinitions} from "../../engine/src/components/movements/mo
 import EntityVerticesComponent from "../components/EntityVerticesComponent.js";
 import EntityHighlightRenderComponent from "../components/EntityHighlightRenderComponent.js";
 import RoamingBehavior from "../../spacem/behaviors/RoamingBehavior.js";
+import SpriteComponent from "../../engine/src/sprites/SpriteComponent.js";
 
 
 export default class Starship extends SpatialECS2D {
-    constructor(dataStoreManager, eventBus, definition, x = 0, y = 0, id, faction, station, scale = 1) {
+    constructor(engine, definition, x = 0, y = 0, id = null, faction, station, scale = 1) {
+        const dataStoreManager = engine.dataStoreManager();
+
         super(dataStoreManager.getStore('entities'), x, y, id);
 
-        this.eventBus = eventBus;
+        this.engine = engine;
+
+
+        this.eventBus = engine.eventBus();
         this.dataStoreManager = dataStoreManager;
         this.definition = definition; // the vertices are contained in here; this.definition.vertices
         this.faction = faction;
@@ -60,6 +66,9 @@ export default class Starship extends SpatialECS2D {
         this.addComponent('movement', movementComponent);
         this.addComponent('transform', new TransformComponent(x, y, 0, this.scale));
 
+        const particleSystem = dataStoreManager.getStore('global').get('particleSystem');
+        this.addComponent('collision', new CollisionComponent(new DefaultCollisionResponse(particleSystem), false));
+
         // Collision detection
         // const collisionType = this.definition.collisionType || 'box';
         // const particleSystem = dataStoreManager.getStore('global').get('particleSystem');
@@ -83,7 +92,7 @@ export default class Starship extends SpatialECS2D {
         this.addComponent('health', new HealthComponent(100));
 
         // Ship systems
-        this.addComponent('attack', new AttackComponent(eventBus, this.dataStoreManager.getStore('bullets')));
+        this.addComponent('attack', new AttackComponent(this.eventBus, this.dataStoreManager.getStore('bullets')));
 
         // Ship has an inventory, capacity can be upgraded at shipyard
         this.addComponent('inventory', new InventoryComponent());
@@ -100,6 +109,11 @@ export default class Starship extends SpatialECS2D {
         this.addComponent('render', new EntityVerticesComponent());
         this.addComponent('highlight', new EntityHighlightRenderComponent());
 
+        //Load single-frame sprite sheet and add SpriteComponent
+        const spriteSheetManager = this.engine.spriteSheetManager();
+        const heroSpriteSheet = spriteSheetManager.getSpriteSheet('gunship-fighter-3');
+        const spriteComponent = new SpriteComponent(heroSpriteSheet, 0);
+        this.addComponent('sprite', spriteComponent);
 
         // Initialize behavior
         //const player = this.dataStoreManager.getStore('entities').get('player');

@@ -46,7 +46,6 @@ export default class PolygonTracer {
         return context.getImageData(0, 0, imageBitmap.width, imageBitmap.height);
     }
 
-
     static detectEdges(imageData, alphaThreshold = 0.1) {
         const {width, height, data} = imageData;
         const edges = [];

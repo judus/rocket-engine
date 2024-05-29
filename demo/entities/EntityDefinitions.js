@@ -54,6 +54,7 @@ export default class EntityDefinitions {
             stations: {
                 station_type_1: {
                     entityClass: Station,
+                    collisionDetection: DetectionTypes.POLYGON,
                     polygon: {
                         orientation: 0,
                         fillColor: '#FF0000',
@@ -69,6 +70,7 @@ export default class EntityDefinitions {
                 },
                 station_type_2: {
                     entityClass: Station,
+                    collisionDetection: DetectionTypes.POLYGON,
                     polygon: {
                         orientation: 0,
                         fillColor: '#00FF00',
@@ -86,6 +88,7 @@ export default class EntityDefinitions {
                 },
                 station_type_3: {
                     entityClass: Station,
+                    collisionDetection: DetectionTypes.POLYGON,
                     polygon: {
                         orientation: 0,
                         fillColor: '#0000FF',
@@ -101,6 +104,7 @@ export default class EntityDefinitions {
             asteroids: {
                 asteroid_type_1: {
                     entityClass: Asteroid,
+                    collisionDetection: DetectionTypes.POLYGON,
                     polygon: {
                         orientation: 0,
                         fillColor: '#A9A9A9',
@@ -118,6 +122,7 @@ export default class EntityDefinitions {
                 },
                 asteroid_type_2: {
                     entityClass: Asteroid,
+                    collisionDetection: DetectionTypes.POLYGON,
                     polygon: {
                         orientation: 0,
                         fillColor: '#696969',
@@ -135,6 +140,7 @@ export default class EntityDefinitions {
                 },
                 asteroid_type_3: {
                     entityClass: Asteroid,
+                    collisionDetection: DetectionTypes.POLYGON,
                     polygon: {
                         orientation: 0,
                         fillColor: '#808080',
@@ -154,6 +160,15 @@ export default class EntityDefinitions {
             starships: {
                 starship_type_1: {
                     entityClass: Starship,
+                    collisionDetection: DetectionTypes.FRAME_POLYGON,
+                    sprite: {
+                        orientation: Math.PI / 2,
+                        name: 'gunship-fighter-3',
+                        image: 'demo/assets/images/gunship-fighter-3.png',
+                        width: 119,
+                        height: 280,
+                        frames: 1
+                    },
                     polygon: {
                         orientation: Math.PI / 2,
                         fillColor: '#FFD700',
@@ -167,6 +182,15 @@ export default class EntityDefinitions {
                 },
                 starship_type_2: {
                     entityClass: Starship,
+                    collisionDetection: DetectionTypes.FRAME_POLYGON,
+                    sprite: {
+                        orientation: Math.PI / 2,
+                        name: 'gunship-fighter-3',
+                        image: 'demo/assets/images/gunship-fighter-3.png',
+                        width: 119,
+                        height: 280,
+                        frames: 1
+                    },
                     polygon: {
                         orientation: Math.PI / 2,
                         fillColor: '#FF4500',

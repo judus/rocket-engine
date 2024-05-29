@@ -1,7 +1,6 @@
 import DetectionTypes from './DetectionTypes.js';
 import PolygonTracer from "./PolygonTracer.js";
 
-
 export default class CollisionShapeGenerator {
     static async generateCollisionData(spriteSheet, detectionLevel) {
         const {imageBitmap, frameWidth, frameHeight} = spriteSheet;

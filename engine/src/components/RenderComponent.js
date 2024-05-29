@@ -24,6 +24,9 @@ export default class RenderComponent extends BaseComponent {
         }
         if(this.drawBoundingBoxes) {
             this.drawDebugBoundingBoxes(context, camera);
+            this.drawDebugSubBoundingBoxes(context, camera);
+            this.drawDebugPolygon(context, camera);
+            this.drawDebugFramePolygons(context, camera);
         }
     }
 
@@ -60,24 +63,147 @@ export default class RenderComponent extends BaseComponent {
     }
 
     drawDebugBoundingBoxes(context, camera) {
-        const boundingBoxComponent = this.entity.getComponent('boundingBox');
+        const collisionData = this.entity.definition.collisionData;
         const transformComponent = this.entity.getComponent('transform');
 
-        if(boundingBoxComponent && transformComponent) {
-            const bounds = boundingBoxComponent.getBounds(this.entity.pos, this.entity.rotation);
+        if(collisionData && collisionData.boundingBox && transformComponent) {
+            const {width, height} = collisionData.boundingBox;
+            const vertices = [
+                {x: -width / 2, y: -height / 2},
+                {x: width / 2, y: -height / 2},
+                {x: width / 2, y: height / 2},
+                {x: -width / 2, y: height / 2}
+            ];
 
-            for(const bound of bounds) {
-                context.save();
-                context.strokeStyle = 'lime';
-                context.lineWidth = 1;
-                context.strokeRect(
-                    (bound.left - camera.pos.x) * camera.zoomLevel,
-                    (bound.top - camera.pos.y) * camera.zoomLevel,
-                    (bound.right - bound.left) * camera.zoomLevel,
-                    (bound.bottom - bound.top) * camera.zoomLevel
+            const transformedVertices = transformComponent.applyTransform(vertices);
+
+            context.save();
+            context.strokeStyle = 'lime';
+            context.lineWidth = 1;
+
+            context.beginPath();
+            context.moveTo(
+                (transformedVertices[0].x - camera.pos.x) * camera.zoomLevel,
+                (transformedVertices[0].y - camera.pos.y) * camera.zoomLevel
+            );
+
+            for(let i = 1; i < transformedVertices.length; i++) {
+                context.lineTo(
+                    (transformedVertices[i].x - camera.pos.x) * camera.zoomLevel,
+                    (transformedVertices[i].y - camera.pos.y) * camera.zoomLevel
                 );
-                context.restore();
             }
+
+            context.closePath();
+            context.stroke();
+            context.restore();
+        }
+    }
+
+    drawDebugSubBoundingBoxes(context, camera) {
+        const collisionData = this.entity.definition.collisionData;
+        const transformComponent = this.entity.getComponent('transform');
+
+        if(collisionData && collisionData.subBoundingBoxes && transformComponent) {
+            context.save();
+            context.strokeStyle = 'blue';
+            context.lineWidth = 1;
+
+            for(const subBox of collisionData.subBoundingBoxes) {
+                const vertices = [
+                    {x: subBox.x - subBox.width / 2, y: subBox.y - subBox.height / 2},
+                    {x: subBox.x + subBox.width / 2, y: subBox.y - subBox.height / 2},
+                    {x: subBox.x + subBox.width / 2, y: subBox.y + subBox.height / 2},
+                    {x: subBox.x - subBox.width / 2, y: subBox.y + subBox.height / 2}
+                ];
+
+                const transformedVertices = transformComponent.applyTransform(vertices);
+
+                context.beginPath();
+                context.moveTo(
+                    (transformedVertices[0].x - camera.pos.x) * camera.zoomLevel,
+                    (transformedVertices[0].y - camera.pos.y) * camera.zoomLevel
+                );
+
+                for(let i = 1; i < transformedVertices.length; i++) {
+                    context.lineTo(
+                        (transformedVertices[i].x - camera.pos.x) * camera.zoomLevel,
+                        (transformedVertices[i].y - camera.pos.y) * camera.zoomLevel
+                    );
+                }
+
+                context.closePath();
+                context.stroke();
+            }
+
+            context.restore();
+        }
+    }
+
+    drawDebugPolygon(context, camera) {
+        const collisionData = this.entity.definition.collisionData;
+        const transformComponent = this.entity.getComponent('transform');
+
+        if(collisionData && collisionData.polygon && transformComponent) {
+            const transformedVertices = transformComponent.applyTransform(collisionData.polygon);
+
+            context.save();
+            context.strokeStyle = 'red';
+            context.lineWidth = 1;
+            context.beginPath();
+
+            context.moveTo(
+                (transformedVertices[0].x - camera.pos.x) * camera.zoomLevel,
+                (transformedVertices[0].y - camera.pos.y) * camera.zoomLevel
+            );
+
+            for(let i = 1; i < transformedVertices.length; i++) {
+                context.lineTo(
+                    (transformedVertices[i].x - camera.pos.x) * camera.zoomLevel,
+                    (transformedVertices[i].y - camera.pos.y) * camera.zoomLevel
+                );
+            }
+
+            context.closePath();
+            context.stroke();
+            context.restore();
+        }
+    }
+
+    drawDebugFramePolygons(context, camera) {
+        const collisionData = this.entity.definition.collisionData;
+        const transformComponent = this.entity.getComponent('transform');
+
+        if(collisionData && collisionData.framePolygons && transformComponent) {
+            context.save();
+            context.strokeStyle = 'yellow';
+            context.fillStyle = 'rgba(255, 255, 0, 0.5)'; // Semi-transparent yellow
+            context.lineWidth = 1;
+
+            for(const framePolygon of collisionData.framePolygons) {
+                if(framePolygon.length > 0) {
+                    const transformedVertices = transformComponent.applyTransform(framePolygon);
+
+                    context.beginPath();
+                    context.moveTo(
+                        (transformedVertices[0].x - camera.pos.x) * camera.zoomLevel,
+                        (transformedVertices[0].y - camera.pos.y) * camera.zoomLevel
+                    );
+
+                    for(let i = 1; i < transformedVertices.length; i++) {
+                        context.lineTo(
+                            (transformedVertices[i].x - camera.pos.x) * camera.zoomLevel,
+                            (transformedVertices[i].y - camera.pos.y) * camera.zoomLevel
+                        );
+                    }
+
+                    context.closePath();
+                    context.fill(); // Fill the polygon
+                    context.stroke(); // Draw the contour
+                }
+            }
+
+            context.restore();
         }
     }
 }

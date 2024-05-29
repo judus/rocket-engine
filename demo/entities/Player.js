@@ -37,12 +37,7 @@ export default class Player extends SpatialECS2D {
         this.scale = 1;
         this.initialRotation = 0;
 
-        this.definition = {
-            vertices: this.getShape(),
-            collisionType: 'box',
-            collisionBoxes: this.getBoundingBoxes(),
-            ...definition
-        }; // The vertices are contained in here
+        this.definition = definition; // The vertices are contained in here
 
         //console.log(definition);
 
@@ -74,10 +69,9 @@ export default class Player extends SpatialECS2D {
 
         // Collision detection
         // const collisionType = this.definition.collisionType || 'box';
-        // const particleSystem = dataStoreManager.getStore('global').get('particleSystem');
-        // this.addComponent('collision', new CollisionComponent(
-        //     collisionType, false, new DefaultCollisionResponse(particleSystem))
-        // );
+        const particleSystem = dataStoreManager.getStore('global').get('particleSystem');
+        this.addComponent('collision', new CollisionComponent(new DefaultCollisionResponse(particleSystem), false)
+        );
         //
         // if(collisionType === 'box') {
         //     // Add multiple bounding boxes
@@ -143,33 +137,8 @@ export default class Player extends SpatialECS2D {
         super.render(deltaTime); // Render components and children
     }
 
-    getShape() {
-        return [{"x": 140, "y": 2}, {"x": 121, "y": 38}, {"x": 87, "y": 24}, {"x": 18, "y": 32}, {
-            "x": 2,
-            "y": 50
-        }, {"x": 1, "y": 59}, {"x": 30, "y": 69}, {"x": 125, "y": 78}, {"x": 133, "y": 101}, {
-            "x": 148,
-            "y": 102
-        }, {"x": 163, "y": 76}, {"x": 252, "y": 69}, {"x": 279, "y": 60}, {"x": 279, "y": 50}, {
-            "x": 264,
-            "y": 34
-        }, {"x": 195, "y": 25}, {"x": 175, "y": 34}, {"x": 170, "y": 49}, {"x": 159, "y": 49}, {"x": 143, "y": 3}]
-        // [
-        //     {x: 0, y: -10},  // Nose
-        //     {x: 5, y: 5},    // Right wing tip
-        //     {x: 3, y: 2},    // Right wing inner
-        //     {x: -3, y: 2},   // Left wing inner
-        //     {x: -5, y: 5}    // Left wing tip
-        // ];
-    }
 
-    getBoundingBoxes() {
-        return [
-            {x: 0, y: 0, width: 10, height: 30}, // Body box
-            {x: -15, y: 0, width: 10, height: 5}, // Left wing box
-            {x: 15, y: 0, width: 10, height: 5}  // Right wing box
-        ];
-    }
+
 
     onCollision(otherEntity, collisionResult) {
         const collisionComponent = this.getComponent('collision');

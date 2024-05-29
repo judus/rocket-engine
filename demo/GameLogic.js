@@ -1,5 +1,6 @@
 import UnifiedCollisionSystem from "../engine/src/physics/collisions/UnifiedCollisionSystem.js";
 import SceneDirector from "../engine/src/scenes/SceneDirector.js";
+import CollisionSystem from "../engine/src/physics/collisions/CollisionSystem.js";
 
 export default class GameLogic {
     constructor(engine) {
@@ -40,8 +41,11 @@ export default class GameLogic {
         // Combine entities and projectiles
         const allObjects = [...entities, ...projectiles];
 
+        allObjects.forEach(object => {
+            CollisionSystem.check(object, allObjects);
+        });
         //this.movementSystem.update(deltaTime, allObjects);
-        this.unifiedCollisionSystem.update(allObjects);
+        //this.unifiedCollisionSystem.update(allObjects);
 
         // Update the particle system
         this.dataStore.getStore('particles').update(deltaTime);

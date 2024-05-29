@@ -16,8 +16,8 @@ export default class DefaultCollisionResponse extends CollisionResponse {
     }
 
     handleCollision(entity, otherEntity, collisionResult) {
-        if (otherEntity.owner === entity) return;
-        //console.log(`${entity.id} collided with ${otherEntity.id}`);
+        //if (otherEntity.owner === entity) return;
+        console.log(`${entity.id} collided with ${otherEntity.id}`);
         this.behavior.perform(entity);
     }
 }

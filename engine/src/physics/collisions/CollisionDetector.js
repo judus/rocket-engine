@@ -1,100 +1,119 @@
-import {isCollidingSAT} from './collisionUtils.js';
+import Polygon from "../../utils/maths/Polygon.js";
 
 export default class CollisionDetector {
-    static checkCollision(entityA, entityB) {
-        const collisionComponentA = entityA.getComponent('collision');
-        const collisionComponentB = entityB.getComponent('collision');
-
-        if(!collisionComponentA || !collisionComponentB) {
+    /**
+     * Checks for bounding box collision between two entities
+     * @param {Entity} entityA - The first entity
+     * @param {Entity} entityB - The second entity
+     * @returns {Object} - Collision result
+     */
+    static checkBoundingBoxCollision(entityA, entityB) {
+        if(!entityB.definition.collisionData) {
+            console.log(entityB.definition);
             return {collided: false};
         }
 
-        if(collisionComponentA.type === 'box' && collisionComponentB.type === 'box') {
-            return this.checkBoxCollision(entityA, entityB);
-        } else if(collisionComponentA.type === 'polygon' && collisionComponentB.type === 'polygon') {
-            return this.checkPolygonCollision(entityA, entityB);
-        } else if(collisionComponentA.type === 'box' && collisionComponentB.type === 'polygon') {
-            return this.checkBoxPolygonCollision(entityA, entityB);
-        } else if(collisionComponentA.type === 'polygon' && collisionComponentB.type === 'box') {
-            return this.checkPolygonBoxCollision(entityA, entityB);
-        }
+        const boxA = entityA.definition.collisionData.boundingBox;
+        const boxB = entityB.definition.collisionData.boundingBox;
 
+        const collided = !(boxA.x + boxA.width < boxB.x ||
+            boxA.x > boxB.x + boxB.width ||
+            boxA.y + boxA.height < boxB.y ||
+            boxA.y > boxB.y + boxB.height);
+
+        return {collided};
+    }
+
+    /**
+     * Checks for collision between sub-boxes of two entities
+     * @param {Entity} entityA - The first entity
+     * @param {Entity} entityB - The second entity
+     * @returns {Object} - Collision result
+     */
+    static checkSubBoxCollision(entityA, entityB) {
+        for(const boxA of entityA.definition.collisionData.subBoundingBoxes) {
+            for(const boxB of entityB.definition.collisionData.subBoundingBoxes) {
+                const collided = !(boxA.x + boxA.width < boxB.x ||
+                    boxA.x > boxB.x + boxB.width ||
+                    boxA.y + boxA.height < boxB.y ||
+                    boxA.y > boxB.y + boxB.height);
+
+                if(collided) {
+                    return {collided};
+                }
+            }
+        }
         return {collided: false};
     }
 
-    static checkBoxCollision(entityA, entityB) {
-        const boundingBoxA = entityA.getComponent('boundingBox');
-        const boundingBoxB = entityB.getComponent('boundingBox');
-        const transformComponentA = entityA.getComponent('transform');
-        const transformComponentB = entityB.getComponent('transform');
+    /**
+     * Checks for polygon collision between two entities
+     * @param {Entity} entityA - The first entity
+     * @param {Entity} entityB - The second entity
+     * @returns {Object} - Collision result
+     */
+    static checkPolygonCollision(entityA, entityB) {
+        const polygonA = new Polygon(entityA.definition.polygon.vertices);
+        const polygonB = new Polygon(entityB.definition.polygon.vertices);
 
-        if(boundingBoxA && boundingBoxB && transformComponentA && transformComponentB) {
-            const boundsA = boundingBoxA.getBounds(entityA.pos, entityA.rotation);
-            const boundsB = boundingBoxB.getBounds(entityB.pos, entityB.rotation);
+        const collided = this.polygonCollision(polygonA, polygonB);
+        return {collided};
+    }
 
-            if(!boundsA || !boundsB) {
-                console.error(`Bounding box not found for entities ${entityA.id} or ${entityB.id}`);
-                return {collided: false};
-            }
+    /**
+     * Checks for frame polygon collision between two entities
+     * @param {Entity} entityA - The first entity
+     * @param {Entity} entityB - The second entity
+     * @returns {Object} - Collision result
+     */
+    static checkFramePolygonCollision(entityA, entityB) {
+        const frameIndex = entityA.getComponent('sprite').getFrame();
+        const polygonA = new Polygon(entityA.definition.collisionData.framePolygons[frameIndex]);
+        const polygonB = new Polygon(entityB.definition.collisionData.framePolygons[frameIndex]);
 
-            for(const boxA of boundsA) {
-                for(const boxB of boundsB) {
-                    if(
-                        boxA.left < boxB.right &&
-                        boxA.right > boxB.left &&
-                        boxA.top < boxB.bottom &&
-                        boxA.bottom > boxB.top
-                    ) {
-                        return {collided: true, boxA: boxA.id, boxB: boxB.id};
+        const collided = this.polygonCollision(polygonA, polygonB);
+        return {collided};
+    }
+
+    /**
+     * Checks for polygon collision using the Separating Axis Theorem (SAT)
+     * @param {Polygon} polygonA - The first polygon
+     * @param {Polygon} polygonB - The second polygon
+     * @returns {boolean} - Whether the polygons collided
+     */
+    static polygonCollision(polygonA, polygonB) {
+        const polygons = [polygonA, polygonB];
+        for(let i = 0; i < polygons.length; i++) {
+            const polygon = polygons[i];
+            for(let i1 = 0; i1 < polygon.vertices.length; i1++) {
+                const i2 = (i1 + 1) % polygon.vertices.length;
+                const p1 = polygon.vertices[i1];
+                const p2 = polygon.vertices[i2];
+                const normal = {x: p2.y - p1.y, y: p1.x - p2.x};
+                let minA, maxA, minB, maxB;
+                for(let j = 0; j < polygonA.vertices.length; j++) {
+                    const projected = normal.x * polygonA.vertices[j].x + normal.y * polygonA.vertices[j].y;
+                    if(minA === undefined || projected < minA) {
+                        minA = projected;
+                    }
+                    if(maxA === undefined || projected > maxA) {
+                        maxA = projected;
                     }
                 }
-            }
-        }
-        return {collided: false};
-    }
-
-    static checkPolygonCollision(entityA, entityB) {
-        const transformComponentA = entityA.getComponent('transform');
-        const transformComponentB = entityB.getComponent('transform');
-
-        if(transformComponentA && transformComponentB) {
-            const verticesA = transformComponentA.applyTransform(entityA.definition.vertices);
-            const verticesB = transformComponentB.applyTransform(entityB.definition.vertices);
-
-            return {collided: isCollidingSAT(verticesA, verticesB)};
-        }
-        return {collided: false};
-    }
-
-    static checkBoxPolygonCollision(entityA, entityB) {
-        const polygonEntity = entityA.getComponent('collision').type === 'polygon' ? entityA : entityB;
-        const boxEntity = entityA.getComponent('collision').type === 'box' ? entityA : entityB;
-
-        const polygonTransform = polygonEntity.getComponent('transform');
-        const boxTransform = boxEntity.getComponent('transform');
-        const boundingBox = boxEntity.getComponent('boundingBox');
-
-        if(polygonTransform && boxTransform && boundingBox) {
-            const verticesA = polygonTransform.applyTransform(polygonEntity.definition.vertices);
-            const boxBounds = boundingBox.getBounds(boxEntity.pos, boxEntity.rotation);
-
-            for(const box of boxBounds) {
-                const verticesB = [
-                    {x: box.left, y: box.top},
-                    {x: box.right, y: box.top},
-                    {x: box.right, y: box.bottom},
-                    {x: box.left, y: box.bottom}
-                ];
-
-                if(isCollidingSAT(verticesA, verticesB)) {
-                    return {collided: true};
+                for(let j = 0; j < polygonB.vertices.length; j++) {
+                    const projected = normal.x * polygonB.vertices[j].x + normal.y * polygonB.vertices[j].y;
+                    if(minB === undefined || projected < minB) {
+                        minB = projected;
+                    }
+                    if(maxB === undefined || projected > maxB) {
+                        maxB = projected;
+                    }
+                }
+                if(maxA < minB || maxB < minA) {
+                    return false;
                 }
             }
         }
-        return {collided: false};
-    }
-
-    static checkPolygonBoxCollision(entityA, entityB) {
-        return this.checkBoxPolygonCollision(entityA, entityB);
+        return true;
     }
 }

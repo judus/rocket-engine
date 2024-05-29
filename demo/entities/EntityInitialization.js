@@ -101,24 +101,24 @@ export default class EntityInitialization {
             const stationId = `station-${i}`;
             const station = this.entityFactory.createStationFromDefinition(stationDefinition, stationX, stationY, stationId, randomFaction);
 
-            for(let j = 0; j < 5; j++) {
-                const shipX = this.seededRandom.between(stationX - 500, stationX + 500);
-                const shipY = this.seededRandom.between(stationY - 500, stationY + 500);
-                const shipDefinition = this.seededRandom.from(Object.values(this.entityDefinitions.definitions.starships));
-                const shipId = `ship-${i}-${j}`;
-
-                this.entityFactory.createShipFromDefinition(shipDefinition, shipX, shipY, shipId, randomFaction, station);
-            }
+            // for(let j = 0; j < 5; j++) {
+            //     const shipX = this.seededRandom.between(stationX - 500, stationX + 500);
+            //     const shipY = this.seededRandom.between(stationY - 500, stationY + 500);
+            //     const shipDefinition = this.seededRandom.from(Object.values(this.entityDefinitions.definitions.starships));
+            //     const shipId = `ship-${i}-${j}`;
+            //
+            //     this.entityFactory.createShipFromDefinition(shipDefinition, shipX, shipY, shipId, randomFaction, station);
+            // }
         }
 
-        for(let i = 0; i < 5000; i++) {
-            const asteroidX = this.seededRandom.between(-10000, 10000);
-            const asteroidY = this.seededRandom.between(-10000, 10000);
-            const asteroidDefinition = this.seededRandom.from(Object.values(this.entityDefinitions.definitions.asteroids));
-            const asteroidId = `asteroid-${i}`;
-            const scale = this.seededRandom.from([0.3, 0.4, 10, 15], [1000, 1000, 50, 10]);
-
-            this.entityFactory.createAsteroidFromDefinition(asteroidDefinition, asteroidX, asteroidY, asteroidId, scale);
-        }
+        // for(let i = 0; i < 5000; i++) {
+        //     const asteroidX = this.seededRandom.between(-10000, 10000);
+        //     const asteroidY = this.seededRandom.between(-10000, 10000);
+        //     const asteroidDefinition = this.seededRandom.from(Object.values(this.entityDefinitions.definitions.asteroids));
+        //     const asteroidId = `asteroid-${i}`;
+        //     const scale = this.seededRandom.from([0.3, 0.4, 10, 15], [1000, 1000, 50, 10]);
+        //
+        //     this.entityFactory.createAsteroidFromDefinition(asteroidDefinition, asteroidX, asteroidY, asteroidId, scale);
+        // }
     }
 }
