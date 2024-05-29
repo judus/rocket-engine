@@ -12,7 +12,6 @@ export default class PlayerActions {
         this.inputHandler = new InputHandler(this.eventBus, this);
         this.entitySelector = this.engine.create(EngineParts.ENTITY_SELECTOR, this.dataStoreManager);
         this.entityController = this.engine.create(EngineParts.ENTITY_CONTROLLER, this.dataStoreManager);
-        console.log(this.entityController);
         this.mouseSelectionLayer = null;
 
         this.selectedEntities = new Set();
@@ -127,7 +126,6 @@ export default class PlayerActions {
     }
 
     handleMoveEvent(axis, value, state, isStarting) {
-        console.log("Move event: ", axis, value, state, isStarting);
         this.entityController.handleMoveEvent(axis, value, state, isStarting);
     }
 
