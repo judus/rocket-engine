@@ -41,31 +41,29 @@ export default class EntityInitialization {
     }
 
     async initializeEntityDefinition(entityDefinition) {
-        if(entityDefinition.sprite) {
-            let collisionData = entityDefinition.collisionData;
+        let collisionData = entityDefinition.collisionData;
 
-            if(!collisionData) {
-                const spriteSheetManager = this.engine.service('spriteSheetManager');
-                const sprite = entityDefinition.sprite;
+        if(!collisionData) {
+            const spriteSheetManager = this.engine.service('spriteSheetManager');
+            const sprite = entityDefinition.sprite;
+
+            if(sprite && sprite.name) {
                 const spriteSheet = spriteSheetManager.getSpriteSheet(sprite.name);
 
                 if(spriteSheet) {
                     console.log(`Generating collision data for sprite: ${sprite.name}`);
                     collisionData = await CollisionShapeGenerator.generateCollisionData(spriteSheet, entityDefinition.collisionDetection);
-                    entityDefinition.collisionData = collisionData;
                 } else {
                     console.error(`Sprite sheet not found: ${sprite.name}`);
                 }
+            } else {
+                // Generate default bounding box data if no sprite is available
+                console.log(`Generating default collision data`);
+                collisionData = CollisionShapeGenerator.generateDefaultCollisionData(entityDefinition.collisionDetection);
             }
-        }
 
-        if(entityDefinition.polygon && entityDefinition.polygon.vertices && entityDefinition.polygon.orientation) {
-            const polygon = new Polygon(entityDefinition.polygon.vertices);
-            polygon.rotate(entityDefinition.polygon.orientation);
-            entityDefinition.polygon.vertices = polygon.vertices;
+            entityDefinition.collisionData = collisionData;
         }
-
-        console.log('Entity definition initialized:', entityDefinition);
     }
 
     async initializeEntityDefinitions() {

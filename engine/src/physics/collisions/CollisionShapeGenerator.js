@@ -11,6 +11,43 @@ export default class CollisionShapeGenerator {
             framePolygons: []
         };
 
+        // Always generate bounding box data
+        collisionData.boundingBox = {width: frameWidth, height: frameHeight};
+
+        if(detectionLevel >= DetectionTypes.SUB_BOXES) {
+            collisionData.subBoundingBoxes = this.generateBoundingBoxes([{x: 0, y: 0}, {
+                x: frameWidth,
+                y: frameHeight
+            }], frameWidth, frameHeight);
+        }
+
+        if(detectionLevel >= DetectionTypes.POLYGON) {
+            const polygon = await PolygonTracer.getVerticesFromImageBitmap(imageBitmap, 2);
+            collisionData.polygon = this.centerFramePolygon(polygon, frameWidth, frameHeight);
+        }
+
+        if(detectionLevel >= DetectionTypes.FRAME_POLYGON) {
+            for(let i = 0; i < spriteSheet.frames.length; i++) {
+                const frame = spriteSheet.getFrame(i);
+                const frameImageBitmap = await createImageBitmap(imageBitmap, frame.x, frame.y, frameWidth, frameHeight);
+                const framePolygon = await PolygonTracer.getVerticesFromImageBitmap(frameImageBitmap, 2);
+                collisionData.framePolygons.push(this.centerFramePolygon(framePolygon, frameWidth, frameHeight));
+            }
+        }
+
+        return collisionData;
+    }
+
+    static generateDefaultCollisionData(detectionLevel) {
+        const frameWidth = 50; // Default width
+        const frameHeight = 50; // Default height
+        const collisionData = {
+            boundingBox: {width: frameWidth, height: frameHeight},
+            subBoundingBoxes: [],
+            polygon: [],
+            framePolygons: []
+        };
+
         if(detectionLevel >= DetectionTypes.OUTER_BOX) {
             collisionData.boundingBox = {width: frameWidth, height: frameHeight};
         }
@@ -23,19 +60,34 @@ export default class CollisionShapeGenerator {
         }
 
         if(detectionLevel >= DetectionTypes.POLYGON) {
-            collisionData.polygon = await PolygonTracer.getVerticesFromImageBitmap(imageBitmap, 2);
+            collisionData.polygon = this.generateDefaultPolygon(frameWidth, frameHeight);
         }
 
         if(detectionLevel >= DetectionTypes.FRAME_POLYGON) {
-            for(let i = 0; i < spriteSheet.frames.length; i++) {
-                const frame = spriteSheet.getFrame(i);
-                const frameImageBitmap = await createImageBitmap(imageBitmap, frame.x, frame.y, frameWidth, frameHeight);
-                const framePolygon = await PolygonTracer.getVerticesFromImageBitmap(frameImageBitmap, 2);
-                collisionData.framePolygons.push(framePolygon);
-            }
+            collisionData.framePolygons = [this.generateDefaultPolygon(frameWidth, frameHeight)];
         }
 
         return collisionData;
+    }
+
+    static generateDefaultPolygon(width, height) {
+        // Simple default polygon (a rectangle)
+        return [
+            {x: 0, y: 0},
+            {x: width, y: 0},
+            {x: width, y: height},
+            {x: 0, y: height}
+        ];
+    }
+
+    static centerFramePolygon(vertices, frameWidth, frameHeight) {
+        const offsetX = frameWidth / 2;
+        const offsetY = frameHeight / 2;
+
+        return vertices.map(vertex => ({
+            x: vertex.x - offsetX,
+            y: vertex.y - offsetY
+        }));
     }
 
     static async loadImageBitmap(url) {
@@ -51,65 +103,7 @@ export default class CollisionShapeGenerator {
         });
     }
 
-    static generateOuterBox(width, height) {
-        return {
-            type: 'box',
-            width,
-            height,
-            boxes: [{id: 0, x: 0, y: 0, width, height}]
-        };
-    }
-
-    static generateSubBoxes(imageBitmap, width, height) {
-        const vertices = PolygonTracer.getVerticesFromImageBitmap(imageBitmap);
-        const boxes = this.generateBoundingBoxes(vertices, width, height);
-
-        return {
-            type: 'multipleBoxes',
-            boxes
-        };
-    }
-
-    static generatePolygon(imageBitmap) {
-        const vertices = PolygonTracer.getVerticesFromImageBitmap(imageBitmap);
-        return {
-            type: 'polygon',
-            vertices
-        };
-    }
-
-    static generateFramePolygons(imageBitmap, frames = 1, width, height) {
-        const frameWidth = width / frames;
-        const polygons = [];
-
-        for(let i = 0; i < frames; i++) {
-            console.log('ImageBitmap', imageBitmap);
-
-            const frameBitmap = this.getFrameBitmap(imageBitmap, i, frameWidth, height);
-            console.log('frameBitmap', imageBitmap);
-
-            const vertices = PolygonTracer.getVerticesFromImageBitmap(frameBitmap);
-            polygons.push(vertices);
-        }
-
-        return {
-            type: 'framePolygons',
-            polygons
-        };
-    }
-
-    static getFrameBitmap(imageBitmap, frameIndex, frameWidth, height) {
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.width = frameWidth;
-        canvas.height = height;
-        context.drawImage(imageBitmap, -frameIndex * frameWidth, 0);
-        return createImageBitmap(canvas);
-    }
-
     static generateBoundingBoxes(vertices, width, height) {
-        // Implement the logic to create multiple bounding boxes from vertices
-        // This is a placeholder logic; you'll need to refine it based on your requirements
         const boxes = [];
         const boxWidth = width / 2;
         const boxHeight = height / 2;

@@ -27,6 +27,7 @@ export default class RenderComponent extends BaseComponent {
             this.drawDebugSubBoundingBoxes(context, camera);
             this.drawDebugPolygon(context, camera);
             this.drawDebugFramePolygons(context, camera);
+            this.drawDebugQuadTree(context, camera);
         }
     }
 
@@ -78,7 +79,7 @@ export default class RenderComponent extends BaseComponent {
             const transformedVertices = transformComponent.applyTransform(vertices);
 
             context.save();
-            context.strokeStyle = 'lime';
+            context.strokeStyle = '#84ff18';
             context.lineWidth = 1;
 
             context.beginPath();
@@ -106,7 +107,7 @@ export default class RenderComponent extends BaseComponent {
 
         if(collisionData && collisionData.subBoundingBoxes && transformComponent) {
             context.save();
-            context.strokeStyle = 'blue';
+            context.strokeStyle = '#00c4ff';
             context.lineWidth = 1;
 
             for(const subBox of collisionData.subBoundingBoxes) {
@@ -204,6 +205,13 @@ export default class RenderComponent extends BaseComponent {
             }
 
             context.restore();
+        }
+    }
+
+    drawDebugQuadTree(context, camera) {
+        const quadTree = this.entity.quadTree;
+        if(quadTree) {
+            quadTree.draw(context, camera);
         }
     }
 }

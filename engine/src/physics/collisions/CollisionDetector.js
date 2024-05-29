@@ -8,6 +8,11 @@ export default class CollisionDetector {
      * @returns {Object} - Collision result
      */
     static checkBoundingBoxCollision(entityA, entityB) {
+        if(!entityB.definition) {
+            console.log(entityB);
+            return {collided: false};
+        }
+
         if(!entityB.definition.collisionData) {
             console.log(entityB.definition);
             return {collided: false};

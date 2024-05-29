@@ -61,4 +61,26 @@ export default class QuadTree {
 
         return found;
     }
+
+    draw(context, camera) {
+        // Draw the boundary of this quad
+        context.save();
+        context.strokeStyle = '#9a5702';
+        context.lineWidth = 1;
+        context.strokeRect(
+            (this.boundary.x - camera.pos.x) * camera.zoomLevel,
+            (this.boundary.y - camera.pos.y) * camera.zoomLevel,
+            this.boundary.width * camera.zoomLevel,
+            this.boundary.height * camera.zoomLevel
+        );
+        context.restore();
+
+        // If this quadtree is subdivided, draw the subdivisions
+        if(this.divided) {
+            this.northeast.draw(context, camera);
+            this.northwest.draw(context, camera);
+            this.southeast.draw(context, camera);
+            this.southwest.draw(context, camera);
+        }
+    }
 }

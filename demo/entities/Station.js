@@ -54,8 +54,12 @@ export default class Station extends SpatialECS2D {
             // Define custom behavior here
         }));
 
-        this.addComponent('render', new EntityVerticesComponent());
+        this.addComponent('render', new RenderComponent((deltaTime, context, entity, camera) => {
+            Drawing.draw(context, entity, camera, entity.color);
+        }, true));
+
         this.addComponent('highlight', new EntityHighlightRenderComponent());
+
 
 
         // Initialize behavior
