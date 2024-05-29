@@ -16,7 +16,8 @@ export default class SpriteLayer extends BaseLayer {
             const spriteComponent = entity.getComponent('sprite');
             if(spriteComponent) {
                 const spriteSheet = spriteComponent.spriteSheet;
-                if(spriteSheet.isLoaded()) {
+
+                if(spriteSheet && spriteSheet.isLoaded) {
                     const frame = spriteComponent.getFrame();
                     const camera = scene.camera;
                     const zoomLevel = camera.zoomLevel;

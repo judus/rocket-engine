@@ -35,7 +35,7 @@ export default class SceneDirector extends EngineBase {
         this.setupScene(scene, sceneManager, sceneName);
 
         if(!sceneManager.getCurrentScene()) {
-            sceneManager.first();
+            //sceneManager.first();
         }
     }
 
@@ -63,11 +63,6 @@ export default class SceneDirector extends EngineBase {
         };
 
         setupCallback(stackApi);
-
-        // Ensure the first scene is loaded
-        if(!sceneManager.getCurrentScene()) {
-            sceneManager.first();
-        }
 
         return sceneManager; // Return the created sceneManager
     }
@@ -107,5 +102,11 @@ export default class SceneDirector extends EngineBase {
         scene.setCameraManager(cameraManager);
 
         sceneManager.addScene(sceneName || scene.constructor.name, scene);
+    }
+
+    loadFirstScene() {
+        this.sceneManagers.forEach(sceneManager => {
+            sceneManager.first();
+        });
     }
 }

@@ -22,11 +22,8 @@ export default class BoundingBoxComponent extends BaseComponent {
                 {x: x - width / 2, y: y + height / 2}
             ];
 
-            // Adjust rotation by 90 degrees (π/2 radians)
-            const adjustedRotation = entityRotation - Math.PI / 2;
-
-            const cos = Math.cos(adjustedRotation);
-            const sin = Math.sin(adjustedRotation);
+            const cos = Math.cos(entityRotation);
+            const sin = Math.sin(entityRotation);
 
             const rotatedCorners = corners.map(corner => {
                 return {

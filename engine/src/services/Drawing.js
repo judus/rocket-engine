@@ -53,7 +53,7 @@ export default class Drawing {
         const transformComponent = entity.getComponent('transform');
         if(transformComponent) {
             let transformMatrix = Drawing.applyCameraAndZoom(camera);
-            const transformedVertices = transformComponent.applyTransform(entity.definition.vertices);
+            const transformedVertices = transformComponent.applyTransform(entity.definition.polygon.vertices);
             const finalVertices = Drawing.applyTransform(transformedVertices, transformMatrix);
             Drawing.drawPolygon(context, finalVertices, color);
         }

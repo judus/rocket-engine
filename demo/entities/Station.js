@@ -36,18 +36,18 @@ export default class Station extends SpatialECS2D {
         this.addComponent('health', new HealthComponent(100));
 
         // Collision detection
-        const collisionType = this.definition.collisionType || 'box';
-        const particleSystem = dataStoreManager.getStore('global').get('particleSystem');
-        this.addComponent('collision', new CollisionComponent(
-            collisionType, false, new DefaultCollisionResponse(particleSystem))
-        );
-
-        if(collisionType === 'box') {
-            // Add multiple bounding boxes
-            this.addComponent('boundingBox', new BoundingBoxComponent(
-                ...this.definition.collisionBoxes
-            ));
-        }
+        // const collisionType = this.definition.collisionType || 'box';
+        // const particleSystem = dataStoreManager.getStore('global').get('particleSystem');
+        // this.addComponent('collision', new CollisionComponent(
+        //     collisionType, false, new DefaultCollisionResponse(particleSystem))
+        // );
+        //
+        // if(collisionType === 'box') {
+        //     // Add multiple bounding boxes
+        //     this.addComponent('boundingBox', new BoundingBoxComponent(
+        //         ...this.definition.collisionBoxes
+        //     ));
+        // }
 
         this.addComponent('clickable', new ClickableComponent((event, entity) => {
             console.log(`${entity.id} clicked`, entity);

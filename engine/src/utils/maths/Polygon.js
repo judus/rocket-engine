@@ -3,29 +3,14 @@ export default class Polygon {
         this.vertices = vertices;
     }
 
-    /**
-     * Sets the vertices of the polygon.
-     * @param {Array} vertices - The vertices of the polygon as an array of {x, y} objects.
-     */
     setVertices(vertices) {
         this.vertices = vertices;
     }
 
-    /**
-     * Adds a vertex to the polygon.
-     * @param {number} x - The x coordinate of the vertex.
-     * @param {number} y - The y coordinate of the vertex.
-     */
     addVertex(x, y) {
         this.vertices.push({x, y});
     }
 
-    /**
-     * Checks if a point is contained within the polygon using the ray-casting algorithm.
-     * @param {number} px - The x coordinate of the point.
-     * @param {number} py - The y coordinate of the point.
-     * @returns {boolean} True if the point is within the polygon, false otherwise.
-     */
     containsPoint(px, py) {
         let inside = false;
         for(let i = 0, j = this.vertices.length - 1; i < this.vertices.length; j = i++) {
@@ -39,10 +24,6 @@ export default class Polygon {
         return inside;
     }
 
-    /**
-     * Calculates the area of the polygon using the shoelace formula.
-     * @returns {number} The area of the polygon.
-     */
     area() {
         let area = 0;
         for(let i = 0, j = this.vertices.length - 1; i < this.vertices.length; j = i++) {
@@ -51,10 +32,6 @@ export default class Polygon {
         return Math.abs(area / 2);
     }
 
-    /**
-     * Calculates the perimeter of the polygon.
-     * @returns {number} The perimeter of the polygon.
-     */
     perimeter() {
         let perimeter = 0;
         for(let i = 0, j = this.vertices.length - 1; i < this.vertices.length; j = i++) {
@@ -65,27 +42,23 @@ export default class Polygon {
         return perimeter;
     }
 
-    /**
-     * Creates a copy of this polygon.
-     * @returns {Polygon} The copy of the polygon.
-     */
+    rotate(angle) {
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
+        this.vertices = this.vertices.map(({x, y}) => ({
+            x: x * cos - y * sin,
+            y: x * sin + y * cos
+        }));
+    }
+
     clone() {
         return new Polygon(this.vertices.map(v => ({x: v.x, y: v.y})));
     }
 
-    /**
-     * Returns a string representation of this polygon.
-     * @returns {string} The string representation.
-     */
     toString() {
         return `Polygon(vertices: ${JSON.stringify(this.vertices)})`;
     }
 
-    /**
-     * Checks if this polygon is equal to another polygon.
-     * @param {Polygon} polygon - The other polygon.
-     * @returns {boolean} True if the polygons are equal, false otherwise.
-     */
     equals(polygon) {
         if(this.vertices.length !== polygon.vertices.length) {
             return false;

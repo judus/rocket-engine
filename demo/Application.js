@@ -3,7 +3,7 @@ import GameLogic from './GameLogic.js';
 import EntityInitialization from "./entities/EntityInitialization.js";
 import EngineBase from "../engine/src/abstracts/EngineBase.js";
 
-export default class Application {
+export default class Application extends EngineBase {
     init(engine) {
         this.engine = engine;
         this.eventBus = this.engine.eventBus();
@@ -11,8 +11,7 @@ export default class Application {
         this.entityInitialization = new EntityInitialization(this.engine);
         this.playerActions = new PlayerActions(this.engine);
         this.gameLogic = new GameLogic(this.engine);
-        this.setupEventListeners();
-        this.initializeEntities();
+        console.log('Application initialized.');
     }
 
     setupEventListeners() {
@@ -21,10 +20,32 @@ export default class Application {
         this.eventBus.on('gameOver', this.gameLogic.gameOver.bind(this.gameLogic));
         this.eventBus.on('scene.enter', this.gameLogic.onSceneEnter.bind(this.gameLogic));
         this.eventBus.on('scene.enter', this.playerActions.onSceneEnter.bind(this.playerActions));
+        console.log('Event listeners set up.');
     }
 
-    initializeEntities() {
+    async onLoad() {
+        console.log('Starting onLoad...');
+        this.setupEventListeners();
+
+        console.log('Preloading sprites...');
+        await this.entityInitialization.preloadSprites();
+        console.log('Sprites preloaded.');
+
+        console.log('Initializing entity definitions...');
+        await this.entityInitialization.initializeEntityDefinitions();
+        console.log('Entity definitions ready.');
+
+        console.log('Creating factions...');
+        this.entityInitialization.initializeFactions();
+        console.log('Factions created.');
+
+        console.log('Creating entities...');
         this.entityInitialization.createEntities();
+        console.log('Entities created.');
+
+        this.playerActions.inputHandler.setupEventListeners();
+
+
     }
 
     update(deltaTime) {

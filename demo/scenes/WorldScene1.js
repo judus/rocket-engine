@@ -43,6 +43,7 @@ export default class WorldScene1 extends BaseScene {
     }
 
     onEnter() {
+        console.log('WorldScene1: onEnter...');
         super.onEnter();
 
         const player = this.dataStoreManager.getStore('entities').get('player');

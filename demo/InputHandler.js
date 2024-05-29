@@ -4,13 +4,13 @@ export default class InputHandler {
     constructor(eventBus, playerActions) {
         this.eventBus = eventBus;
         this.playerActions = playerActions;
-        this.setupEventListeners();
 
         this.selectionStartWorld = null;
         this.selectionEndWorld = null;
     }
 
     setupEventListeners() {
+        console.log('Setting up input handler...');
         const moveEvents = [
             {start: "moveForward", stop: "stopMoveForward", axis: "y", value: -1},
             {start: "moveBackward", stop: "stopMoveBackward", axis: "y", value: 1},

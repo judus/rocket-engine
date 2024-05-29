@@ -18,6 +18,7 @@ import AutopilotComponent from "../components/AutopilotComponent.js";
 import {movementStateDefinitions} from "../../engine/src/components/movements/movementStateDefinitions.js";
 import EntityVerticesComponent from "../components/EntityVerticesComponent.js";
 import EntityHighlightRenderComponent from "../components/EntityHighlightRenderComponent.js";
+import RoamingBehavior from "../../spacem/behaviors/RoamingBehavior.js";
 
 
 export default class Starship extends SpatialECS2D {
@@ -60,18 +61,18 @@ export default class Starship extends SpatialECS2D {
         this.addComponent('transform', new TransformComponent(x, y, 0, this.scale));
 
         // Collision detection
-        const collisionType = this.definition.collisionType || 'box';
-        const particleSystem = dataStoreManager.getStore('global').get('particleSystem');
-        this.addComponent('collision', new CollisionComponent(
-            collisionType, false, new DefaultCollisionResponse(particleSystem))
-        );
-
-        if(collisionType === 'box') {
-            // Add multiple bounding boxes
-            this.addComponent('boundingBox', new BoundingBoxComponent(
-                ...this.definition.collisionBoxes
-            ));
-        }
+        // const collisionType = this.definition.collisionType || 'box';
+        // const particleSystem = dataStoreManager.getStore('global').get('particleSystem');
+        // this.addComponent('collision', new CollisionComponent(
+        //     collisionType, false, new DefaultCollisionResponse(particleSystem))
+        // );
+        //
+        // if(collisionType === 'box') {
+        //     // Add multiple bounding boxes
+        //     this.addComponent('boundingBox', new BoundingBoxComponent(
+        //         ...this.definition.collisionBoxes
+        //     ));
+        // }
 
         this.addComponent('clickable', new ClickableComponent((event, entity) => {
             console.log(`${entity.id} clicked`, entity);
@@ -101,8 +102,8 @@ export default class Starship extends SpatialECS2D {
 
 
         // Initialize behavior
-        const player = this.dataStoreManager.getStore('entities').get('player');
-        //this.behavior = new RoamingBehavior({ pos: {x, y}}, 6000, 50);
+        //const player = this.dataStoreManager.getStore('entities').get('player');
+        this.behavior = new RoamingBehavior({ pos: {x, y}}, 6000, 50);
     }
 
     setBehavior(behavior) {

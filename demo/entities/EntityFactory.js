@@ -52,8 +52,8 @@ export default class EntityFactory {
         return asteroid;
     }
 
-    createPlayer(x, y) {
-        const player = new Player(this.engine, this.dataStoreManager, this.eventBus, x, y, 'player');
+    createPlayer(definition, x, y) {
+        const player = new Player(this.engine, definition, x, y, 'player');
         this.dataStoreManager.getStore('entities').set(player.id, player);
         return player;
     }

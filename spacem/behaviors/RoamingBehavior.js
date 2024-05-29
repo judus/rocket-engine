@@ -1,4 +1,3 @@
-import Behavior from "./Behavior.js";
 
 /*
 const player = new Player(dataStoreManager, eventBus, x, y, id);
@@ -7,6 +6,8 @@ const player = new Player(dataStoreManager, eventBus, x, y, id);
 const originalPosition = { x: player.pos.x, y: player.pos.y };
 player.setBehavior(new RoamingBehavior(originalPosition, 100, 50));
  */
+
+import Behavior from "../../engine/src/behaviors/Behavior.js";
 
 export default class RoamingBehavior extends Behavior {
     constructor(originalPosition, roamingRadius, returnSpeed) {

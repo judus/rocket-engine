@@ -20,7 +20,7 @@ export default class Asteroid extends SpatialECS2D {
         this.id = id;
         this.scale = scale;
 
-        this.drawing = new Drawing(this.definition.properties.color);
+        this.drawing = new Drawing(this.definition.polygon.fillColor);
 
         this.addComponent('movement', new MovementComponent());
 
@@ -29,23 +29,23 @@ export default class Asteroid extends SpatialECS2D {
         // Collision detection
         if (this.scale > 8) {
             // Collision detection
-            const collisionType = this.definition.collisionType || 'box';
-            const particleSystem = dataStoreManager.getStore('global').get('particleSystem');
-            this.addComponent('collision', new CollisionComponent(
-                collisionType, false, new DefaultCollisionResponse(particleSystem))
-            );
-
-            if(collisionType === 'box') {
-                // Add multiple bounding boxes
-                this.addComponent('boundingBox', new BoundingBoxComponent(
-                    ...this.definition.collisionBoxes
-                ));
-            }
-
-            this.addComponent('clickable', new ClickableComponent((event, entity) => {
-                console.log(`${entity.id} clicked`, entity);
-                // Define custom behavior here
-            }));
+            // const collisionType = this.definition.collisionType || 'box';
+            // const particleSystem = dataStoreManager.getStore('global').get('particleSystem');
+            // this.addComponent('collision', new CollisionComponent(
+            //     collisionType, false, new DefaultCollisionResponse(particleSystem))
+            // );
+            //
+            // if(collisionType === 'box') {
+            //     // Add multiple bounding boxes
+            //     this.addComponent('boundingBox', new BoundingBoxComponent(
+            //         ...this.definition.collisionBoxes
+            //     ));
+            // }
+            //
+            // this.addComponent('clickable', new ClickableComponent((event, entity) => {
+            //     console.log(`${entity.id} clicked`, entity);
+            //     // Define custom behavior here
+            // }));
         }
 
         this.addComponent('health', new HealthComponent(100));

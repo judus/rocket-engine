@@ -36,4 +36,4 @@ rocket.stack('world', (stack) => {
 // }, {container: minimap, width: 200, height: 200});
 
 
-rocket.start();
+rocket.launch();

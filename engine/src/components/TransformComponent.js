@@ -1,4 +1,3 @@
-import Spatial2D from "../utils/spatial/Spatial2D.js";
 import BaseComponent from "../abstracts/BaseComponent.js";
 
 export default class TransformComponent extends BaseComponent {
@@ -16,20 +15,17 @@ export default class TransformComponent extends BaseComponent {
     }
 
     applyTransform(vertices) {
-        const rotationOffset = Math.PI / 2; // 90 degrees in radians
-
         return vertices.map(vertex => {
             const scaledX = vertex.x * this.entity.scale;
             const scaledY = vertex.y * this.entity.scale;
-            const rotatedX = scaledX * Math.cos(this.entity.rotation + rotationOffset) - scaledY * Math.sin(this.entity.rotation + rotationOffset);
-            const rotatedY = scaledX * Math.sin(this.entity.rotation + rotationOffset) + scaledY * Math.cos(this.entity.rotation + rotationOffset);
+            const rotatedX = scaledX * Math.cos(this.entity.rotation) - scaledY * Math.sin(this.entity.rotation);
+            const rotatedY = scaledX * Math.sin(this.entity.rotation) + scaledY * Math.cos(this.entity.rotation);
             return {
                 x: rotatedX + this.entity.pos.x,
                 y: rotatedY + this.entity.pos.y
             };
         });
     }
-
 
     faceVelocity(velocity) {
         if(velocity.x !== 0 || velocity.y !== 0) {

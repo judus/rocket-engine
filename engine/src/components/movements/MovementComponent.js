@@ -1,4 +1,3 @@
-
 import AccelerationProfile from './AccelerationProfile.js';
 import DecelerationProfile from './DecelerationProfile.js';
 import BaseComponent from "../../abstracts/BaseComponent.js";
@@ -12,7 +11,7 @@ export default class MovementComponent extends BaseComponent {
         this.acc = options.acc || {x: 0, y: 0}; // Acceleration
         this.drag = options.drag || 0.99; // Drag (friction)
         this.rotation = 0; // Current rotation angle in radians
-        this.rotationSpeed = options.rotationSpeed || Math.PI * 2; // Rotation speed in radians per second
+        this.rotationSpeed = options.rotationSpeed || Math.PI * 5; // Rotation speed in radians per second
 
         // Initialize movement states
         this.states = {};
@@ -82,25 +81,27 @@ export default class MovementComponent extends BaseComponent {
         );
 
         // Update the rotation towards the direction of velocity
-        const targetRotation = Math.atan2(this.vel.y, this.vel.x);
-        let rotationDiff = targetRotation - this.rotation;
+        if(this.vel.x !== 0 || this.vel.y !== 0) {
+            const targetRotation = Math.atan2(this.vel.y, this.vel.x); // Ensure no offset
+            let rotationDiff = targetRotation - this.rotation;
 
-        // Normalize the rotation difference to the range [-PI, PI]
-        rotationDiff = (rotationDiff + Math.PI) % (2 * Math.PI) - Math.PI;
+            // Normalize the rotation difference to the range [-PI, PI]
+            rotationDiff = (rotationDiff + Math.PI) % (2 * Math.PI) - Math.PI;
 
-        // Apply the rotation speed to the current rotation
-        if(Math.abs(rotationDiff) > this.rotationSpeed * deltaTime) {
-            if(rotationDiff > 0) {
-                this.rotation += this.rotationSpeed * deltaTime;
+            // Apply the rotation speed to the current rotation
+            if(Math.abs(rotationDiff) > this.rotationSpeed * deltaTime) {
+                if(rotationDiff > 0) {
+                    this.rotation += this.rotationSpeed * deltaTime;
+                } else {
+                    this.rotation -= this.rotationSpeed * deltaTime;
+                }
             } else {
-                this.rotation -= this.rotationSpeed * deltaTime;
+                this.rotation = targetRotation; // If close enough, snap to target rotation
             }
-        } else {
-            this.rotation = targetRotation; // If close enough, snap to target rotation
-        }
 
-        // Normalize the rotation angle to the range [-PI, PI]
-        this.rotation = (this.rotation + Math.PI) % (2 * Math.PI) - Math.PI;
+            // Normalize the rotation angle to the range [-PI, PI]
+            this.rotation = (this.rotation + Math.PI) % (2 * Math.PI) - Math.PI;
+        }
     }
 
     setDirection(dx, dy) {

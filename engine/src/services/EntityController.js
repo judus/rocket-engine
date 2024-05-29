@@ -20,6 +20,7 @@ export default class EntityController {
     }
 
     handleMoveEvent(axis, value, state, isStarting) {
+
         if(!this.currentEntity) return;
 
         const movement = this.currentEntity.getComponent("movement");

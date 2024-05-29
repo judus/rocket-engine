@@ -9,8 +9,17 @@ export default class GameLogic {
         this.isPaused = false;
     }
 
+    onSceneEnter(scene) {
+        console.log('GameLogic: onSceneEnter...');
+        this.sceneDirector = this.engine.sceneDirector();
+        this.sceneManager = this.sceneDirector.getSceneManager('world');
+        this.currentScene = this.sceneManager.getCurrentScene();
+        this.mainCamera = this.currentScene.cameraManager.getCamera('main');
+        this.resume();
+    }
+
     update(deltaTime) {
-        if(!this.isPaused) {
+        if(!this.isPaused && this.mainCamera) {
             this.processGameLogic(deltaTime);
             this.checkGameConditions();
         }
@@ -50,13 +59,7 @@ export default class GameLogic {
         this.isPaused = false;
     }
 
-    onSceneEnter(scene) {
-        this.sceneDirector = this.engine.sceneDirector();
-        this.sceneManager = this.sceneDirector.getSceneManager('world');
-        this.currentScene = this.sceneManager.getCurrentScene();
-        this.mainCamera = this.currentScene.cameraManager.getCamera('main');
-        this.resume();
-    }
+
 
 
     async gameOver() {

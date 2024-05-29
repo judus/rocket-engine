@@ -21,24 +21,32 @@ import PositionComponent from "../../engine/src/components/PositionComponent.js"
 import SpriteComponent from "../../engine/src/sprites/SpriteComponent.js";
 
 export default class Player extends SpatialECS2D {
-    constructor(engine, dataStoreManager, eventBus, x = 0, y = 0, id = null) {
+    constructor(engine, definition, x = 0, y = 0, id = null) {
+        const dataStoreManager = engine.dataStoreManager();
+
         super(dataStoreManager.getStore('entities'), x, y, id);
+
         this.engine = engine;
 
-        this.eventBus = eventBus;
+        this.eventBus = engine.eventBus();
         this.dataStoreManager = dataStoreManager;
-        this.definition = {
-            vertices: this.getShape(),
-            collisionType: 'box',
-            collisionBoxes: this.getBoundingBoxes()
-        }; // The vertices are contained in here
+        this.definition = definition;
         this.faction = null;
         this.station = null;
         this.id = id;
         this.scale = 1;
+        this.initialRotation = 0;
 
-        this.color = '#FF9900';
-        this.drawing = new Drawing(this.color);
+        this.definition = {
+            vertices: this.getShape(),
+            collisionType: 'box',
+            collisionBoxes: this.getBoundingBoxes(),
+            ...definition
+        }; // The vertices are contained in here
+
+        //console.log(definition);
+
+        this.drawing = new Drawing(this.definition.polygon.fillColor);
 
         this.mousePosition = {x: 0, y: 0};
         this.eventBus.on('scopedMouseMove', (mouse) => {
@@ -62,25 +70,25 @@ export default class Player extends SpatialECS2D {
 
         // Positioning, movement, and transformations
         this.addComponent('movement', movementComponent);
-        this.addComponent('transform', new TransformComponent(x, y, 0, this.scale));
+        this.addComponent('transform', new TransformComponent(x, y, this.initialRotation, this.scale));
 
-        // Collision detection - to be replaced by Matter.js?
-        const collisionType = this.definition.collisionType || 'box';
-        const particleSystem = dataStoreManager.getStore('global').get('particleSystem');
-        this.addComponent('collision', new CollisionComponent(
-            collisionType, false, new DefaultCollisionResponse(particleSystem))
-        );
-
-        if(collisionType === 'box') {
-            // Add multiple bounding boxes
-            this.addComponent('boundingBox', new BoundingBoxComponent(
-                ...this.definition.collisionBoxes
-            ));
-        }
+        // Collision detection
+        // const collisionType = this.definition.collisionType || 'box';
+        // const particleSystem = dataStoreManager.getStore('global').get('particleSystem');
+        // this.addComponent('collision', new CollisionComponent(
+        //     collisionType, false, new DefaultCollisionResponse(particleSystem))
+        // );
+        //
+        // if(collisionType === 'box') {
+        //     // Add multiple bounding boxes
+        //     this.addComponent('boundingBox', new BoundingBoxComponent(
+        //         ...this.definition.collisionBoxes
+        //     ));
+        // }
 
         // Weapon systems
-        this.addComponent('weaponSystem', new WeaponSystemComponent(eventBus, dataStoreManager));
-        this.addComponent('attack', new AttackComponent(eventBus, this.dataStoreManager));
+        this.addComponent('weaponSystem', new WeaponSystemComponent(this.eventBus, dataStoreManager));
+        this.addComponent('attack', new AttackComponent(this.eventBus, this.dataStoreManager));
 
         const weaponSystem = this.getComponent('weaponSystem');
         weaponSystem.addWeapon(0, 'laserCannon');
@@ -107,15 +115,14 @@ export default class Player extends SpatialECS2D {
         // Rendering
         this.addComponent('render', new RenderComponent((deltaTime, context, entity, camera) => {
             Drawing.draw(context, entity, camera, entity.color);
-        }, false));
+        }, true));
 
-        // Load single-frame sprite sheet and add SpriteComponent
+        //Load single-frame sprite sheet and add SpriteComponent
         const spriteSheetManager = this.engine.spriteSheetManager();
-        const heroSpriteSheet = spriteSheetManager.loadSpriteSheet('hero', 'demo/assets/images/gunship-fighter-3.png', 280, 119).then(heroSpriteSheet => {
-            heroSpriteSheet.addFrame(0, 0); // Add a single frame
-            const spriteComponent = new SpriteComponent(heroSpriteSheet, 0);
-            this.addComponent('sprite', spriteComponent);
-        });
+        const heroSpriteSheet = spriteSheetManager.getSpriteSheet('gunship-fighter-3');
+        const spriteComponent = new SpriteComponent(heroSpriteSheet, 0);
+        this.addComponent('sprite', spriteComponent);
+
 
         // Initialize behavior
         this.behavior = new FaceVelocityBehavior();
@@ -137,13 +144,23 @@ export default class Player extends SpatialECS2D {
     }
 
     getShape() {
-        return [
-            {x: 0, y: -10},  // Nose
-            {x: 5, y: 5},    // Right wing tip
-            {x: 3, y: 2},    // Right wing inner
-            {x: -3, y: 2},   // Left wing inner
-            {x: -5, y: 5}    // Left wing tip
-        ];
+        return [{"x": 140, "y": 2}, {"x": 121, "y": 38}, {"x": 87, "y": 24}, {"x": 18, "y": 32}, {
+            "x": 2,
+            "y": 50
+        }, {"x": 1, "y": 59}, {"x": 30, "y": 69}, {"x": 125, "y": 78}, {"x": 133, "y": 101}, {
+            "x": 148,
+            "y": 102
+        }, {"x": 163, "y": 76}, {"x": 252, "y": 69}, {"x": 279, "y": 60}, {"x": 279, "y": 50}, {
+            "x": 264,
+            "y": 34
+        }, {"x": 195, "y": 25}, {"x": 175, "y": 34}, {"x": 170, "y": 49}, {"x": 159, "y": 49}, {"x": 143, "y": 3}]
+        // [
+        //     {x: 0, y: -10},  // Nose
+        //     {x: 5, y: 5},    // Right wing tip
+        //     {x: 3, y: 2},    // Right wing inner
+        //     {x: -3, y: 2},   // Left wing inner
+        //     {x: -5, y: 5}    // Left wing tip
+        // ];
     }
 
     getBoundingBoxes() {

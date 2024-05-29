@@ -38,6 +38,7 @@ export default class Rocket {
         this.pluginContainer.initAll(this.engine);
 
         this.isInitialized = true;
+        this.loadCallbacks = [];
     }
 
     /**
@@ -80,6 +81,28 @@ export default class Rocket {
     }
 
     /**
+     * Register a callback to be called during the loading phase.
+     * @param {Function} callback - The callback function to register.
+     */
+    onLoad(callback) {
+        this.loadCallbacks.push(callback);
+    }
+
+    async loadResources() {
+        // Call registered onLoad callbacks
+        for(const callback of this.loadCallbacks) {
+            await callback(this.engine);
+        }
+
+        // Call application onLoad if exists
+        const application = this.service('application');
+        if(application && typeof application.onLoad === 'function') {
+            console.log('Loading application resources...');
+            await application.onLoad();
+        }
+    }
+
+    /**
      * Manages services within the engine.
      * @template {keyof Services} T
      * @param {T} name - The name of the service.
@@ -90,13 +113,26 @@ export default class Rocket {
     /**
      * Starts the engine, setting up the update and render callbacks.
      */
-    start() {
+    async start() {
         // All services should be initialized by now
-        console.log("Starting Rocket...");
-        this.inputManager().init(this.engine);
+        console.log("✅ Rocket Engine: All systems initialized...");
 
-        let updateCallback = () => {};
-        let renderCallback = () => {};
+        console.log("🔄 Rocket Engine: Initializing input manager...");
+        this.inputManager().init(this.engine);
+        console.log("✅ Rocket Engine: Input manager initialized...");
+
+        // Load application resources asynchronously
+        console.log("🔄 Rocket Engine: Commencing resource loading...");
+        await this.loadResources();
+        console.log("✅ Rocket Engine: Resource loading complete...");
+
+        // Set up the update and render callbacks
+        console.log("🔄 Rocket Engine: Setting up update and render callbacks...");
+
+        let updateCallback = () => {
+        };
+        let renderCallback = () => {
+        };
 
         const renderSystem = this.service('renderSystem');
         const sceneDirector = this.service('sceneDirector');
@@ -107,32 +143,54 @@ export default class Rocket {
         const shouldRenderApp = application && typeof application.render === 'function';
 
         if(shouldUpdateApp || sceneDirector) {
+            console.log(`🔄 Rocket Engine: Updating with ${sceneDirector ? 'SceneDirector' : 'Application'}...`);
+
             updateCallback = (deltaTime, tickCount, totalTime) => {
                 try {
                     if(shouldUpdateApp) application.update(deltaTime);
                     if(sceneDirector) sceneDirector.update(deltaTime, tickCount, totalTime);
                 } catch(error) {
-                    console.error("Update error:", error);
+                    console.error("❌ Rocket Engine: Update error:", error);
                 }
             };
         }
 
         if(renderSystem && (sceneDirector || shouldRenderApp)) {
-            console.log(`Rendering with ${sceneDirector ? 'SceneDirector' : 'Application'}`);
+            console.log(`🔄 Rocket Engine: Rendering with ${sceneDirector ? 'SceneDirector' : 'Application'}...`);
 
             renderCallback = (deltaTime, tickCount, totalTime) => {
                 try {
                     if(shouldRenderApp) application.render(deltaTime);
                     if(sceneDirector) sceneDirector.render(deltaTime, tickCount, totalTime);
                 } catch(error) {
-                    console.error("Render error:", error);
+                    console.error("❌ Rocket Engine: Render error:", error);
                 }
             };
         }
 
+        // Load the first scene
+        if(sceneDirector && (shouldUpdateApp || shouldRenderApp)) {
+            console.log("✅ Rocket Engine: Setting course for first scene...");
+            sceneDirector.loadFirstScene();
+        }
+
+        console.log("🚀 Rocket Engine: Launching...");
         const timer = this.service('timer');
         timer.start(updateCallback, renderCallback);
+
+
+        // Return a resolved promise to satisfy the IDE warning
+        return Promise.resolve();
     }
+
+    launch() {
+        this.start().then(() => {
+            console.log("✅ Rocket Engine: All system nominal, congratulation!");
+        }).catch(error => {
+            console.error("Error starting Rocket:", error);
+        });
+    }
+
 
     /**
      * Stops the engine by stopping the timer.
@@ -216,8 +274,8 @@ export default class Rocket {
         return this.engine.addScene(scene, sceneName, sceneGroup, container);
     }
 
-    switchScene(sceneName, sceneGroup = 'main') {
-        return this.engine.switchScene(sceneName, sceneGroup);
+    switchTo(sceneName, sceneGroup = 'main') {
+        return this.engine.switchTo(sceneName, sceneGroup);
     }
 
     create(name, ...params) {

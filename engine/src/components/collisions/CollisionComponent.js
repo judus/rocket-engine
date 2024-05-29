@@ -47,7 +47,7 @@ export default class CollisionComponent extends BaseComponent {
         otherEntity.onCollision(this.entity, collisionResult);
 
         if(this.debug) {
-            console.log(`${this.entity.id} collided with ${otherEntity.id}`);
+            //console.log(`${this.entity.id} collided with ${otherEntity.id}`);
             const renderComponent = this.entity.getComponent('render');
             if(renderComponent) {
                 renderComponent.color = 'red'; // Example visual feedback for collision
