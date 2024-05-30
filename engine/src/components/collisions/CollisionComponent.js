@@ -43,7 +43,8 @@ export default class CollisionComponent extends BaseComponent {
             return {collided: false};
         }
 
-        const detectionLevel = entity.definition.collisionDetection || DetectionTypes.OUTER_BOX;
+        console.log(entity);
+        const detectionLevel = entity.collisionDetection || DetectionTypes.OUTER_BOX;
         let collisionResult = {collided: false};
 
         // Check outer bounding box
@@ -73,7 +74,7 @@ export default class CollisionComponent extends BaseComponent {
     }
 
     updateBoundingBox(entity) {
-        EntityTransform.updateVertices(entity, entity.boundingBox);
+        EntityTransform.updateBoundingBox(entity, entity.boundingBox);
     }
 
     updateSubBoundingBoxes(entity) {

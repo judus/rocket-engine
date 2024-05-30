@@ -20,17 +20,17 @@ export default class SpatialHashGrid2DDataStore extends BaseDataStore {
 
     set(id, entity) {
         super.set(id, entity); // Use BaseDataStore's set method
-        if(entity instanceof SpatialEntity2D) {
+        //if(entity instanceof SpatialEntity2D) {
             this.setSpatial(entity.pos.x, entity.pos.y, entity);
-        }
+       // }
     }
 
     delete(id) {
         const entity = this.get(id); // Use BaseDataStore's get method
         if(entity) {
-            if(entity instanceof SpatialEntity2D) {
+            //f(entity instanceof SpatialEntity2D) {
                 this.deleteSpatial(entity.pos.x, entity.pos.y, entity);
-            }
+           // }
             super.delete(id); // Use BaseDataStore's delete method
         } else {
             console.warn(`Entity with ID '${id}' not found.`);
@@ -92,20 +92,25 @@ export default class SpatialHashGrid2DDataStore extends BaseDataStore {
             y2: cameraY + updateRadius,
         });
         for(const entity of entitiesToUpdate) {
-            if(entity instanceof SpatialEntity2D) {
+            //if(entity instanceof SpatialEntity2D) {
                 this.updateEntity(entity);
-            }
+            //}
         }
     }
 
     updateEntity(entity) {
-        if(entity instanceof SpatialEntity2D) {
+        if (!entity.pos) {
+            console.log(entity);
+            throw new Error('Entity does not have a position');
+        }
+
+        //if(entity instanceof SpatialEntity2D) {
             const newHash = hashCoordinates(entity.pos.x, entity.pos.y, this.cellSize);
             if(entity.spatialHash !== newHash) {
                 this.deleteSpatial(entity.pos.x, entity.pos.y, entity);
                 this.setSpatial(entity.pos.x, entity.pos.y, entity);
                 this.eventBus.emit(entity.id, entity);
             }
-        }
+        //}
     }
 }

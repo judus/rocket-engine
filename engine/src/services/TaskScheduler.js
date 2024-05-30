@@ -3,20 +3,20 @@ export default class TaskScheduler {
         this.tasks = [];
     }
 
-    addTask(task, frequency = 1, priority = 0) {
-        this.tasks.push({task, frequency, counter: 0, priority});
+    addTask(task, taskName, frequency = 0.1, priority = 0) {
+        this.tasks.push({task, name: taskName, frequency, counter: 0, priority});
         this.tasks.sort((a, b) => b.priority - a.priority);
-        console.log(`Task added with priority ${priority} and frequency ${frequency}`);
+        console.log(`Task '${taskName}' added with priority ${priority} and frequency ${frequency}`);
     }
 
-    runTasks(deltaTime) {
+    runTasks(deltaTime, ...args) {
         this.tasks.forEach(taskInfo => {
             taskInfo.counter += deltaTime;
             if(taskInfo.counter >= taskInfo.frequency) {
                 try {
-                    taskInfo.task(deltaTime);
+                    taskInfo.task(deltaTime, ...args);
                 } catch(error) {
-                    console.error(`Error running task: ${error}`);
+                    console.error(`Error running task '${taskInfo.name}': ${error}`);
                 }
                 taskInfo.counter = 0;
             }
@@ -27,12 +27,15 @@ export default class TaskScheduler {
         const taskInfo = this.tasks.find(t => t.task === task);
         if(taskInfo) {
             taskInfo.frequency = newFrequency;
-            console.log(`Task frequency adjusted to ${newFrequency}`);
+            console.log(`Task '${taskInfo.name}' frequency adjusted to ${newFrequency}`);
         }
     }
 
     removeTask(task) {
-        this.tasks = this.tasks.filter(t => t.task !== task);
-        console.log('Task removed');
+        const taskInfo = this.tasks.find(t => t.task === task);
+        if(taskInfo) {
+            this.tasks = this.tasks.filter(t => t.task !== task);
+            console.log(`Task '${taskInfo.name}' removed`);
+        }
     }
 }

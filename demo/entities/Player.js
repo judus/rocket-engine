@@ -19,29 +19,37 @@ import AutopilotComponent from "../components/AutopilotComponent.js";
 import {movementStateDefinitions} from "../../engine/src/components/movements/movementStateDefinitions.js";
 import PositionComponent from "../../engine/src/components/PositionComponent.js";
 import SpriteComponent from "../../engine/src/sprites/SpriteComponent.js";
+import Entity from "../../engine/src/entities/Entity.js";
+import EntityTransform from "../../engine/src/services/EntityTransform.js";
+import Polygon from "../../engine/src/utils/maths/Polygon.js";
 
-export default class Player extends SpatialECS2D {
-    constructor(engine, definition, x = 0, y = 0, id = null) {
+export default class Player extends Entity {
+    constructor(engine, config, x, y, id = null) {
         const dataStoreManager = engine.dataStoreManager();
 
-        super(dataStoreManager.getStore('entities'), x, y, id);
+        super(engine, config, id);
 
-        this.engine = engine;
-
-        this.eventBus = engine.eventBus();
-        this.dataStoreManager = dataStoreManager;
-        this.definition = definition;
+        this.definition = config;
         this.faction = null;
         this.station = null;
-        this.id = id;
-        this.scale = 1;
-        this.initialRotation = 0;
 
+        this.dataStoreManager = dataStoreManager;
         this.spiteSheet = this.engine.spriteSheetManager().getSpriteSheet('gunship-fighter-3');
         this.particleSystem = this.dataStoreManager.getStore('global').get('particleSystem');
-        this.definition = definition; // The vertices are contained in here
 
-        //console.log(definition);
+        this.collisionBoxes = config.collisionBoxes || [];
+        this.boundingBox = this.createBoundingBox();
+        this.polygon = new Polygon(config.polygon.vertices)
+            .offsetToCenter()
+            .rotate(config.polygon.orientation)
+            .vertices;
+
+        this.frames = config.collisionData.framePolygons || {};
+
+        this.width = config.width || 0;
+        this.height = config.height || 0;
+        this.scale = config.scale || 1;
+        this.rotation = 0;
 
         this.drawing = new Drawing(this.definition.polygon.fillColor);
 
@@ -50,38 +58,39 @@ export default class Player extends SpatialECS2D {
             this.mousePosition = {x: mouse.pos.x, y: mouse.pos.y};
         });
 
+        EntityTransform.updateVertices(this, this.polygon);
 
         // Handles velocity, acceleration, drag, rotation and rotation speed
         // Needs constant update, even outside of view port
-        this.addComponent('movement', new MovementComponent(movementStateDefinitions).setState('walk'));
+        this.addComponent('movement', new MovementComponent(movementStateDefinitions).setState('walk'), 1 / 60);
 
         // Handles position, rotation and scale
         // Needs update only when in view port
-        this.addComponent('transform', new TransformComponent(x, y, this.initialRotation, this.scale));
+        this.addComponent('transform', new TransformComponent(0, 0, this.rotation, this.scale), 1 / 60);
 
         // Handles sprite sheet according to the movement component
         // Needs update only when moving and in view port
-        this.addComponent('sprite', new SpriteComponent(this.spriteSheet, false));
+        this.addComponent('sprite', new SpriteComponent(this.spriteSheet, false), 1 / 60);
 
         // Handles the polygon representation of the entity according to the movement component
         // Needs update only when moving and in view port
-        this.addComponent('polygon', new SpriteComponent(this.definition.polygon, false));
+        //this.addComponent('polygon', new SpriteComponent(this.definition.polygon, false));
 
         // Handles the quad tree of the entity according to the movement component
         // Needs update only when moving and in view port
-        this.addComponent('quadTree', new SpriteComponent(false));
+        //this.addComponent('quadTree', new SpriteComponent(false));
 
         // Handles the calculated effective bounding box based on the alpha channel of the entity's sprite according to the movement component
         // Needs update only when in view port and quad tree has results
-        this.addComponent('boundingBox', new SpriteComponent(this.definition.collisionData.boundingBox, false));
+        //this.addComponent('boundingBox', new SpriteComponent(this.definition.collisionData.boundingBox, false));
 
         // Handles the composited sub bounding boxes of the entity according to the movement component
         // Needs update only when in view port and bounding box triggers an immediate collision
-        this.addComponent('subBoxes', new SpriteComponent(this.definition.collisionData.subBoundingBoxes, false));
+        //this.addComponent('subBoxes', new SpriteComponent(this.definition.collisionData.subBoundingBoxes, false));
 
         // Handles the current sprite frame index calculated polygon of the entity according to the movement component
         // Needs update only when in view port and one of the sub bounding boxes triggers an immediate collision
-        this.addComponent('framePolygon', new SpriteComponent(this.definition.collisionData.subBoundingBoxes, false));
+        //this.addComponent('framePolygon', new SpriteComponent(this.definition.collisionData.subBoundingBoxes, false));
 
         // Handles the collision detection and responses in the following order:
         // 1. Bounding box collision detection
@@ -92,7 +101,7 @@ export default class Player extends SpatialECS2D {
 
         // Weapon systems
         this.addComponent('weaponSystem', new WeaponSystemComponent(this.eventBus, dataStoreManager));
-        this.addComponent('attack', new AttackComponent(this.eventBus, this.dataStoreManager));
+        //this.addComponent('attack', new AttackComponent(this.eventBus, this.dataStoreManager));
 
         const weaponSystem = this.getComponent('weaponSystem');
         weaponSystem.addWeapon(0, 'laserCannon');
@@ -119,10 +128,7 @@ export default class Player extends SpatialECS2D {
         // Rendering
         this.addComponent('render', new RenderComponent((deltaTime, context, entity, camera) => {
             Drawing.draw(context, entity, camera, entity.color);
-        }, true));
-
-
-
+        }, false));
 
         // Initialize behavior
         this.behavior = new FaceVelocityBehavior();

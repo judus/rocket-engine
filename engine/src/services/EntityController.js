@@ -43,7 +43,7 @@ export default class EntityController {
             }
 
             // Update the entity in the SpatialHashGrid
-            this.entities.updateEntity(this.currentEntity.id, this.currentEntity);
+            this.entities.updateEntity(this.currentEntity);
         }
     }
 

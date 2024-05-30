@@ -8,13 +8,13 @@ export default class CollisionDetector {
      * @returns {Object} - Collision result
      */
     static checkBoundingBoxCollision(entityA, entityB) {
-        if(!entityB || !entityB.definition || !entityB.definition.collisionData) {
-            console.error("Invalid entity or collision data for bounding box collision check");
+        if(!entityB || !entityB.boundingBox) {
+            console.error("Invalid entity or collision data for bounding box collision check", entityB);
             return {collided: false};
         }
 
-        const boxA = entityA.definition.collisionData.boundingBox;
-        const boxB = entityB.definition.collisionData.boundingBox;
+        const boxA = entityA.boundingBox;
+        const boxB = entityB.boundingBox;
 
         const collided = !(boxA.x + boxA.width < boxB.x ||
             boxA.x > boxB.x + boxB.width ||
@@ -31,13 +31,13 @@ export default class CollisionDetector {
      * @returns {Object} - Collision result
      */
     static checkSubBoxCollision(entityA, entityB) {
-        if(!entityA || !entityB || !entityA.definition || !entityB.definition) {
+        if(!entityA || !entityB || !entityA.collisionBoxes || !entityB.collisionBoxes) {
             console.error("Invalid entity or collision data for sub-box collision check");
             return {collided: false};
         }
 
-        for(const boxA of entityA.definition.collisionData.subBoundingBoxes) {
-            for(const boxB of entityB.definition.collisionData.subBoundingBoxes) {
+        for(const boxA of entityA.collisionBoxes) {
+            for(const boxB of entityB.collisionBoxes) {
                 const collided = !(boxA.x + boxA.width < boxB.x ||
                     boxA.x > boxB.x + boxB.width ||
                     boxA.y + boxA.height < boxB.y ||
@@ -58,13 +58,13 @@ export default class CollisionDetector {
      * @returns {Object} - Collision result
      */
     static checkEntityPolygonCollision(entityA, entityB) {
-        if(!entityA || !entityB || !entityA.definition || !entityB.definition) {
+        if(!entityA || !entityB || !entityA.polygon || !entityB.polygon) {
             console.error("Invalid entity or collision data for polygon collision check");
             return {collided: false};
         }
 
-        const polygonA = new Polygon(entityA.definition.polygon.vertices);
-        const polygonB = new Polygon(entityB.definition.polygon.vertices);
+        const polygonA = new Polygon(entityA.polygon.vertices);
+        const polygonB = new Polygon(entityB.polygon.vertices);
 
         const collided = this.polygonCollision(polygonA, polygonB);
         return {collided};
@@ -77,14 +77,14 @@ export default class CollisionDetector {
      * @returns {Object} - Collision result
      */
     static checkFramePolygonCollision(entityA, entityB) {
-        if(!entityA || !entityB || !entityA.definition || !entityB.definition) {
+        if(!entityA || !entityB || !entityA.frames || !entityB.frames) {
             console.error("Invalid entity or collision data for frame polygon collision check");
             return {collided: false};
         }
 
         const frameIndex = entityA.getComponent('sprite').getFrame();
-        const polygonA = new Polygon(entityA.definition.collisionData.framePolygons[frameIndex]);
-        const polygonB = new Polygon(entityB.definition.collisionData.framePolygons[frameIndex]);
+        const polygonA = new Polygon(entityA.frames[frameIndex]);
+        const polygonB = new Polygon(entityB.frames[frameIndex]);
 
         const collided = this.polygonCollision(polygonA, polygonB);
         return {collided};

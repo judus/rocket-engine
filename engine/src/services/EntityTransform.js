@@ -56,4 +56,24 @@ export default class EntityTransform {
 
         return globalRotation;
     }
+
+    static faceVelocity(entity) {
+        if(entity.vel.x !== 0 || entity.vel.y !== 0) {
+            entity.rotation = Math.atan2(entity.vel.y, entity.vel.x);
+        }
+    }
+
+    static faceTarget(entity, target) {
+        const dx = target.pos.x - entity.pos.x;
+        const dy = target.pos.y - entity.pos.y;
+        entity.rotation = Math.atan2(dy, dx);
+    }
+
+    static faceMouse(entity, mousePosition, camera) {
+        const worldMouseX = (mousePosition.x / camera.zoomLevel) + camera.pos.x;
+        const worldMouseY = (mousePosition.y / camera.zoomLevel) + camera.pos.y;
+        const dx = worldMouseX - entity.pos.x;
+        const dy = worldMouseY - entity.pos.y;
+        entity.rotation = Math.atan2(dy, dx);
+    }
 }

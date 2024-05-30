@@ -11,6 +11,7 @@ export default class EntityFactory {
         this.engine = engine;
         this.eventBus = this.engine.eventBus();
         this.dataStoreManager = this.engine.dataStoreManager();
+        this.entityManager = this.engine.entityManager();
 
         this.dataStoreManager.create('global');
         this.dataStoreManager.create('entities', new SpatialHashGrid2DDataStore(this.eventBus, 100));
@@ -54,7 +55,7 @@ export default class EntityFactory {
 
     createPlayer(definition, x, y) {
         const player = new Player(this.engine, definition, x, y, 'player');
-        this.dataStoreManager.getStore('entities').set(player.id, player);
+        this.entityManager.addEntity(player);
         return player;
     }
 }

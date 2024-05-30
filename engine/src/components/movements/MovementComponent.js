@@ -7,13 +7,6 @@ export default class MovementComponent extends BaseComponent {
     constructor(movementStates = {}, options = {}) {
         super();
 
-        // Define default properties and override with options
-        this.vel = options.vel || {x: 0, y: 0}; // Velocity
-        this.acc = options.acc || {x: 0, y: 0}; // Acceleration
-        this.drag = options.drag || 0.99; // Drag (friction)
-        this.rotationSpeed = options.rotationSpeed || Math.PI * 5; // Rotation speed in radians per second
-        this.rotation = 0; // Current rotation angle in radians
-
         // Initialize movement states
         this.states = {};
         this.currentState = null;
@@ -43,81 +36,81 @@ export default class MovementComponent extends BaseComponent {
         }
 
         // Adjust acceleration using the AccelerationProfile
-        const adjustedAcc = this.currentState.accelerationProfile.adjustAcceleration(this.vel);
+        const adjustedAcc = this.currentState.accelerationProfile.adjustAcceleration(this.entity.vel);
 
         // Apply adjusted acceleration to velocity
-        this.vel.x += this.acc.x * adjustedAcc * deltaTime;
-        this.vel.y += this.acc.y * adjustedAcc * deltaTime;
+        this.entity.vel.x += this.entity.acc.x * adjustedAcc * deltaTime;
+        this.entity.vel.y += this.entity.acc.y * adjustedAcc * deltaTime;
 
         // Apply drag to velocity
-        this.vel.x *= this.drag;
-        this.vel.y *= this.drag;
+        this.entity.vel.x *= this.entity.drag;
+        this.entity.vel.y *= this.entity.drag;
 
         // Adjust deceleration using the DecelerationProfile
-        const adjustedDec = this.currentState.decelerationProfile.adjustDeceleration(this.vel);
+        const adjustedDec = this.currentState.decelerationProfile.adjustDeceleration(this.entity.vel);
 
         // Apply deceleration if there's no acceleration
-        if(this.acc.x === 0) {
-            if(this.vel.x > 0) {
-                this.vel.x = Math.max(this.vel.x - adjustedDec * deltaTime, 0);
+        if(this.entity.acc.x === 0) {
+            if(this.entity.vel.x > 0) {
+                this.entity.vel.x = Math.max(this.entity.vel.x - adjustedDec * deltaTime, 0);
             } else {
-                this.vel.x = Math.min(this.vel.x + adjustedDec * deltaTime, 0);
+                this.entity.vel.x = Math.min(this.entity.vel.x + adjustedDec * deltaTime, 0);
             }
         }
 
-        if(this.acc.y === 0) {
-            if(this.vel.y > 0) {
-                this.vel.y = Math.max(this.vel.y - adjustedDec * deltaTime, 0);
+        if(this.entity.acc.y === 0) {
+            if(this.entity.vel.y > 0) {
+                this.entity.vel.y = Math.max(this.entity.vel.y - adjustedDec * deltaTime, 0);
             } else {
-                this.vel.y = Math.min(this.vel.y + adjustedDec * deltaTime, 0);
+                this.entity.vel.y = Math.min(this.entity.vel.y + adjustedDec * deltaTime, 0);
             }
         }
 
         // Cap the velocity at the current state's maxSpeed
-        const speed = Math.sqrt(this.vel.x ** 2 + this.vel.y ** 2);
+        const speed = Math.sqrt(this.entity.vel.x ** 2 + this.entity.vel.y ** 2);
         if(speed > this.currentState.maxSpeed) {
             const scale = this.currentState.maxSpeed / speed;
-            this.vel.x *= scale;
-            this.vel.y *= scale;
+            this.entity.vel.x *= scale;
+            this.entity.vel.y *= scale;
         }
 
         // Update the entity's position based on velocity
         this.entity.pos.set(
-            this.entity.pos.x + this.vel.x * deltaTime,
-            this.entity.pos.y + this.vel.y * deltaTime
+            this.entity.pos.x + this.entity.vel.x * deltaTime,
+            this.entity.pos.y + this.entity.vel.y * deltaTime
         );
 
         // Update the rotation towards the direction of velocity
-        if(this.vel.x !== 0 || this.vel.y !== 0) {
-            const targetRotation = Math.atan2(this.vel.y, this.vel.x); // Ensure no offset
-            let rotationDiff = targetRotation - this.rotation;
+        if(this.entity.vel.x !== 0 || this.entity.vel.y !== 0) {
+            const targetRotation = Math.atan2(this.entity.vel.y, this.entity.vel.x); // Ensure no offset
+            let rotationDiff = targetRotation - this.entity.rotation;
 
             // Normalize the rotation difference to the range [-PI, PI]
             rotationDiff = (rotationDiff + Math.PI) % (2 * Math.PI) - Math.PI;
 
             // Apply the rotation speed to the current rotation
-            if(Math.abs(rotationDiff) > this.rotationSpeed * deltaTime) {
+            if(Math.abs(rotationDiff) > this.entity.rotationSpeed * deltaTime) {
                 if(rotationDiff > 0) {
-                    this.rotation += this.rotationSpeed * deltaTime;
+                    this.entity.rotation += this.entity.rotationSpeed * deltaTime;
                 } else {
-                    this.rotation -= this.rotationSpeed * deltaTime;
+                    this.entity.rotation -= this.entity.rotationSpeed * deltaTime;
                 }
             } else {
-                this.rotation = targetRotation; // If close enough, snap to target rotation
+                this.entity.rotation = targetRotation; // If close enough, snap to target rotation
             }
 
             // Normalize the rotation angle to the range [-PI, PI]
-            this.rotation = (this.rotation + Math.PI) % (2 * Math.PI) - Math.PI;
+            this.entity.rotation = (this.entity.rotation + Math.PI) % (2 * Math.PI) - Math.PI;
         }
     }
 
     setDirection(dx, dy) {
-        this.acc.x = dx;
-        this.acc.y = dy;
+        this.entity.acc.x = dx;
+        this.entity.acc.y = dy;
     }
 
     setAcceleration(ax, ay) {
-        this.acc.x = ax;
-        this.acc.y = ay;
+        this.entity.acc.x = ax;
+        this.entity.acc.y = ay;
     }
 }

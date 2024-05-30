@@ -5,26 +5,25 @@ export default class EntityManager {
         this.typeToStoreMap = new Map(); // Maps entity types to their respective stores
     }
 
-    addEntity(entity, type) {
+    addEntity(entity, type = null) {
         this.entities.set(entity.id, entity);
 
         // Determine the appropriate datastore for the entity
-        const storeName = this.getStoreNameForType(type);
+        const storeName = this.getStoreNameForType(type, entity);
         const store = this.dataStoreManager.getStore(storeName);
 
         if(!store) {
             throw new Error(`Data store for type ${type} not found`);
         }
-
         store.set(entity.id, entity);
         this.typeToStoreMap.set(type, storeName);
     }
 
-    removeEntity(entity) {
+    removeEntity(entity, type = null) {
         this.entities.delete(entity.id);
 
         // Determine the appropriate datastore for the entity
-        const storeName = this.typeToStoreMap.get(entity.type);
+        const storeName = this.getStoreNameForType(type, entity);
         const store = this.dataStoreManager.getStore(storeName);
 
         if(!store) {
@@ -38,8 +37,8 @@ export default class EntityManager {
         return this.entities.get(id);
     }
 
-    getEntitiesByType(type) {
-        const storeName = this.getStoreNameForType(type);
+    getEntitiesByType(entity, type) {
+        const storeName = this.getStoreNameForType(type, entity);
         const store = this.dataStoreManager.getStore(storeName);
 
         if(!store) {
@@ -79,8 +78,19 @@ export default class EntityManager {
         return results;
     }
 
-    getStoreNameForType(type) {
+    getStoreNameForType(type, entity) {
         // Logic to determine the store name based on the entity type or other criteria
-        return type;
+        return type ? type : entity.storeName;
+    }
+
+    updateEntity(entity, type = null) {
+        // Update the entity in the appropriate datastore
+        const storeName = this.getStoreNameForType(type, entity);
+        const store = this.dataStoreManager.getStore(storeName);
+
+        if(!store) {
+            throw new Error(`Data store for type ${entity.type} not found`);
+        }
+        store.updateEntity(entity);
     }
 }

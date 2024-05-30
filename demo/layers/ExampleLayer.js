@@ -1,4 +1,5 @@
 import BaseLayer from "../../engine/src/scenes/BaseLayer.js";
+import EngineParts from "../../engine/src/EngineParts.js";
 
 export default class ExampleLayer extends BaseLayer {
     constructor(canvas, context) {
@@ -6,7 +7,7 @@ export default class ExampleLayer extends BaseLayer {
     }
 
     getEntities(scene) {
-        return scene.dataStoreManager.getStore('entities').getEntitiesInArea(scene.camera.getArea());
+        return scene.dataStoreManager.getStore(EngineParts.ENTITY_STORE_NAME).getEntitiesInArea(scene.camera.getArea());
     }
 
     render(scene, deltaTime, tickCount, totalTime) {

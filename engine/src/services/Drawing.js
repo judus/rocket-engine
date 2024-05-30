@@ -1,3 +1,5 @@
+import EntityTransform from "./EntityTransform.js";
+
 export default class Drawing {
     static identityMatrix() {
         return [1, 0, 0, 1, 0, 0];
@@ -53,7 +55,7 @@ export default class Drawing {
         const transformComponent = entity.getComponent('transform');
         if(transformComponent) {
             let transformMatrix = Drawing.applyCameraAndZoom(camera);
-            const transformedVertices = transformComponent.applyTransform(entity.definition.polygon.vertices);
+            const transformedVertices = EntityTransform.updateVertices(entity, entity.polygon);
             const finalVertices = Drawing.applyTransform(transformedVertices, transformMatrix);
             Drawing.drawPolygon(context, finalVertices, color);
         }

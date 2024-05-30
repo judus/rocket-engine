@@ -16,7 +16,7 @@ export default class Entity {
         this.width = config.width || 0;
         this.height = config.height || 0;
         this.scale = config.scale || 1;
-        this.rotation = config.rotation || 0;
+        this.rotation = config.orientation || 0;
 
         // Physics
         this.vel = config.vel || {x: 0, y: 0};
@@ -25,13 +25,14 @@ export default class Entity {
         this.rotationSpeed = config.rotationSpeed || Math.PI * 5;
 
         // Functional
-        this.taskScheduler = engine.service(EngineParts.TASK_SCHEDULER);
+        this.taskScheduler = engine.create(EngineParts.TASK_SCHEDULER);
         this.eventBus = engine.service(EngineParts.EVENT_BUS);
         this.components = {};
         this.behavior = config.behavior || null;
         this.spriteSheet = config.spriteSheet || null;
 
         // Collision
+        this.collisionDetection = config.collisionDetection || null;
         this.boundingBox = this.createBoundingBox();
         this.collisionBoxes = config.collisionBoxes || [];
         this.polygon = config.polygon || [];
@@ -79,10 +80,10 @@ export default class Entity {
         component.onAdd(this);
 
         if(component.update) {
-            this.taskScheduler.addTask(component.update.bind(component), updateFrequency);
+            this.taskScheduler.addTask(component.update.bind(component), component.constructor.name, updateFrequency);
         }
         if(component.render) {
-            this.taskScheduler.addTask(component.render.bind(component), renderFrequency);
+            //this.taskScheduler.addTask(component.render.bind(component), component.constructor.name, renderFrequency);
         }
     }
 
@@ -128,7 +129,7 @@ export default class Entity {
         }
         this.behavior = behavior;
         if(behavior) {
-            this.taskScheduler.addTask(behavior.perform.bind(behavior, this), frequency);
+            this.taskScheduler.addTask(behavior.perform.bind(behavior, this), behavior.constructor.name, frequency);
         }
     }
 

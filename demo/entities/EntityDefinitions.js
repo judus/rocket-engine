@@ -216,12 +216,7 @@ export default class EntityDefinitions {
                     polygon: {
                         orientation: Math.PI / 2,
                         fillColor: '#1E90FF',
-                        vertices: [
-                            {x: 0, y: -15},
-                            {x: 15, y: 15},
-                            {x: 0, y: 7},
-                            {x: -15, y: 15},
-                        ],
+                        vertices: [{"x": 142, "y": 3}, {"x": 4, "y": 118}, {"x": 280, "y": 118}, {"x": 146, "y": 5}],
                     },
                 }
             }
