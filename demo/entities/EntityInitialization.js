@@ -86,18 +86,18 @@ export default class EntityInitialization {
         //Example: dynamically creating stations, ships, and asteroids
         const factionStore = this.dataStoreManager.getStore('global');
         for(let i = 0; i < 200; i++) {
-            const stationX = this.seededRandom.between(-10000, 10000);
-            const stationY = this.seededRandom.between(-10000, 10000);
-            const stationDefinition = this.seededRandom.from(Object.values(this.entityDefinitions.definitions.stations));
-            const randomFactionDefinition = this.seededRandom.from(Object.values(this.entityDefinitions.definitions.factions));
-            const randomFaction = factionStore.get(randomFactionDefinition.id);
-
-            if(!randomFaction) {
-                throw new Error(`Faction ${randomFactionDefinition.id} not found`);
-            }
-
-            const stationId = `station-${i}`;
-            const station = this.entityFactory.createStationFromDefinition(stationDefinition, stationX, stationY, stationId, randomFaction);
+            // const stationX = this.seededRandom.between(-10000, 10000);
+            // const stationY = this.seededRandom.between(-10000, 10000);
+            // const stationDefinition = this.seededRandom.from(Object.values(this.entityDefinitions.definitions.stations));
+            // const randomFactionDefinition = this.seededRandom.from(Object.values(this.entityDefinitions.definitions.factions));
+            // const randomFaction = factionStore.get(randomFactionDefinition.id);
+            //
+            // if(!randomFaction) {
+            //     throw new Error(`Faction ${randomFactionDefinition.id} not found`);
+            // }
+            //
+            // const stationId = `station-${i}`;
+            // const station = this.entityFactory.createStationFromDefinition(stationDefinition, stationX, stationY, stationId, randomFaction);
 
             // for(let j = 0; j < 5; j++) {
             //     const shipX = this.seededRandom.between(stationX - 500, stationX + 500);

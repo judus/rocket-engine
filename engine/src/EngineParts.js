@@ -18,4 +18,6 @@ export default class EngineParts {
     static DEFAULT_RENDERER = 'defaultRenderer';
     static ENTITY_SELECTOR = 'entitySelector';
     static ENTITY_CONTROLLER = 'entityController';
+    static TASK_SCHEDULER = 'taskScheduler';
+    static ENTITY_STORE_NAME = 'entities';
 }

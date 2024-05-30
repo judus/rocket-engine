@@ -23,10 +23,10 @@ export default class RenderComponent extends BaseComponent {
             this.renderFunction(deltaTime, context, this.entity, camera);
         }
         if(this.drawBoundingBoxes) {
-            this.drawDebugBoundingBoxes(context, camera);
-            this.drawDebugSubBoundingBoxes(context, camera);
             this.drawDebugPolygon(context, camera);
             this.drawDebugFramePolygons(context, camera);
+            this.drawDebugBoundingBoxes(context, camera);
+            this.drawDebugSubBoundingBoxes(context, camera);
             this.drawDebugQuadTree(context, camera);
         }
     }

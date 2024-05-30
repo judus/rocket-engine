@@ -1,21 +1,27 @@
 import AccelerationProfile from './AccelerationProfile.js';
 import DecelerationProfile from './DecelerationProfile.js';
 import BaseComponent from "../../abstracts/BaseComponent.js";
+import MovementState from "./MovementState.js";
 
 export default class MovementComponent extends BaseComponent {
-    constructor(options = {}) {
+    constructor(movementStates = {}, options = {}) {
         super();
 
         // Define default properties and override with options
         this.vel = options.vel || {x: 0, y: 0}; // Velocity
         this.acc = options.acc || {x: 0, y: 0}; // Acceleration
         this.drag = options.drag || 0.99; // Drag (friction)
-        this.rotation = 0; // Current rotation angle in radians
         this.rotationSpeed = options.rotationSpeed || Math.PI * 5; // Rotation speed in radians per second
+        this.rotation = 0; // Current rotation angle in radians
 
         // Initialize movement states
         this.states = {};
         this.currentState = null;
+
+        // Add movement states to MovementComponent
+        movementStates.forEach(state => {
+            this.addState(new MovementState(state));
+        });
     }
 
     addState(state) {
@@ -28,6 +34,7 @@ export default class MovementComponent extends BaseComponent {
         } else {
             console.warn(`State ${stateName} not found`);
         }
+        return this;
     }
 
     update(deltaTime) {

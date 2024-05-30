@@ -8,13 +8,8 @@ export default class CollisionDetector {
      * @returns {Object} - Collision result
      */
     static checkBoundingBoxCollision(entityA, entityB) {
-        if(!entityB.definition) {
-            console.log(entityB);
-            return {collided: false};
-        }
-
-        if(!entityB.definition.collisionData) {
-            console.log(entityB.definition);
+        if(!entityB || !entityB.definition || !entityB.definition.collisionData) {
+            console.error("Invalid entity or collision data for bounding box collision check");
             return {collided: false};
         }
 
@@ -36,6 +31,11 @@ export default class CollisionDetector {
      * @returns {Object} - Collision result
      */
     static checkSubBoxCollision(entityA, entityB) {
+        if(!entityA || !entityB || !entityA.definition || !entityB.definition) {
+            console.error("Invalid entity or collision data for sub-box collision check");
+            return {collided: false};
+        }
+
         for(const boxA of entityA.definition.collisionData.subBoundingBoxes) {
             for(const boxB of entityB.definition.collisionData.subBoundingBoxes) {
                 const collided = !(boxA.x + boxA.width < boxB.x ||
@@ -57,7 +57,12 @@ export default class CollisionDetector {
      * @param {Entity} entityB - The second entity
      * @returns {Object} - Collision result
      */
-    static checkPolygonCollision(entityA, entityB) {
+    static checkEntityPolygonCollision(entityA, entityB) {
+        if(!entityA || !entityB || !entityA.definition || !entityB.definition) {
+            console.error("Invalid entity or collision data for polygon collision check");
+            return {collided: false};
+        }
+
         const polygonA = new Polygon(entityA.definition.polygon.vertices);
         const polygonB = new Polygon(entityB.definition.polygon.vertices);
 
@@ -72,6 +77,11 @@ export default class CollisionDetector {
      * @returns {Object} - Collision result
      */
     static checkFramePolygonCollision(entityA, entityB) {
+        if(!entityA || !entityB || !entityA.definition || !entityB.definition) {
+            console.error("Invalid entity or collision data for frame polygon collision check");
+            return {collided: false};
+        }
+
         const frameIndex = entityA.getComponent('sprite').getFrame();
         const polygonA = new Polygon(entityA.definition.collisionData.framePolygons[frameIndex]);
         const polygonB = new Polygon(entityB.definition.collisionData.framePolygons[frameIndex]);

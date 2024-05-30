@@ -1,13 +1,11 @@
 import BaseEntity from './BaseEntity.js';
 import Spatial2D from "../utils/spatial/Spatial2D.js";
+import StringHelpers from "../utils/StringHelpers.js";
 
-function generateUUID() {
-    return `${Date.now()}-${Math.floor(Math.random() * 1e9)}`;
-}
 
 export default class SpatialEntity2D extends BaseEntity {
     constructor(spatialHashGrid, x = 0, y = 0, id = null) {
-        super(id || generateUUID(), 'SpatialEntity');
+        super(id || StringHelpers.generateUUID(), 'SpatialEntity');
         this.pos = new Spatial2D(x, y);
         this.spatialHash = null;
         this.spatialHashGrid = spatialHashGrid;
