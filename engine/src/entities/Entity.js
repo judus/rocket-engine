@@ -11,14 +11,14 @@ export default class Entity {
         this.id = id || config.id || StringHelpers.generateUUID();
         this.type = config.type || this.constructor.name;
 
-        // Geometry
+        // Geometry (provisional - to be extended or replaced)
         this.pos = config.pos ? new Spatial2D(config.pos.x, config.pos.y) : new Spatial2D(0, 0);
         this.width = config.width || 0;
         this.height = config.height || 0;
         this.scale = config.scale || 1;
         this.rotation = config.orientation || 0;
 
-        // Physics
+        // Physics (provisional - to be extended or replaced)
         this.vel = config.vel || {x: 0, y: 0};
         this.acc = config.acc || {x: 0, y: 0};
         this.drag = config.drag || 0.99;

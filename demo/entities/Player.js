@@ -1,11 +1,8 @@
-import SpatialECS2D from "../../engine/src/entities/SpatialECS2D.js";
 import Drawing from "../../engine/src/services/Drawing.js";
 import MovementComponent from "../../engine/src/components/movements/MovementComponent.js";
-import MovementState from "../../engine/src/components/movements/MovementState.js";
 import TransformComponent from "../../engine/src/components/TransformComponent.js";
 import CollisionComponent from "../../engine/src/components/collisions/CollisionComponent.js";
 import DefaultCollisionResponse from "../../engine/src/components/collisions/DefaultCollisionResponse.js";
-import BoundingBoxComponent from "../../engine/src/components/collisions/BoundingBoxComponent.js";
 import HealthComponent from "../../engine/src/components/HealthComponent.js";
 import InventoryComponent from "../components/InventoryComponent.js";
 import ScannerComponent from "../components/ScannerComponent.js";
@@ -14,14 +11,13 @@ import HangarComponent from "../components/HangarComponent.js";
 import RenderComponent from "../../engine/src/components/RenderComponent.js";
 import FaceVelocityBehavior from "../../engine/src/behaviors/FaceVelocityBehavior.js";
 import WeaponSystemComponent from "../components/WeaponSystemComponent.js";
-import AttackComponent from "../components/AttackComponent.js";
 import AutopilotComponent from "../components/AutopilotComponent.js";
 import {movementStateDefinitions} from "../../engine/src/components/movements/movementStateDefinitions.js";
-import PositionComponent from "../../engine/src/components/PositionComponent.js";
 import SpriteComponent from "../../engine/src/sprites/SpriteComponent.js";
 import Entity from "../../engine/src/entities/Entity.js";
 import EntityTransform from "../../engine/src/services/EntityTransform.js";
 import Polygon from "../../engine/src/utils/maths/Polygon.js";
+import ShipEngineComponent from "../../engine/src/components/movements/ShipEngineComponent.js";
 
 export default class Player extends Entity {
     constructor(engine, config, x, y, id = null) {

@@ -1,123 +1,72 @@
-import AccelerationProfile from './AccelerationProfile.js';
-import DecelerationProfile from './DecelerationProfile.js';
 import BaseComponent from "../../abstracts/BaseComponent.js";
 import MovementState from "./MovementState.js";
+import AdvancedMovementProfile from "./AdvancedMovementProfile.js";
+import {ArcadeMovementProfile} from "./ArcadeMovementProfile.js";
 
 export default class ShipEngineComponent extends BaseComponent {
     constructor(movementStates = {}, options = {}) {
         super();
-
-        // Define default properties and override with options
-        this.vel = options.vel || {x: 0, y: 0}; // Velocity
-        this.acc = options.acc || {x: 0, y: 0}; // Acceleration
-        this.drag = options.drag || 0.99; // Drag (friction)
-        this.rotationSpeed = options.rotationSpeed || Math.PI * 5; // Rotation speed in radians per second
-        this.rotation = 0; // Current rotation angle in radians
+        this.input = {dx: 0, dy: 0};
 
         // Initialize movement states
+        // Used for modifier keys to switch between states, walk, run, thrust, boost, etc.
         this.states = {};
         this.currentState = null;
 
-        // Add movement states to MovementComponent
+        // Add movement states to this component
         movementStates.forEach(state => {
             this.addState(new MovementState(state));
         });
+
+        this.arcadeProfile = new ArcadeMovementProfile();
+        this.advancedProfile = new AdvancedMovementProfile();
+
+        this.currentProfile = this.arcadeProfile;
+    }
+
+    onAdd(entity) {
+        this.entity = entity;
+        this.currentProfile.setEntity(this.entity)
     }
 
     addState(state) {
         this.states[state.name] = state;
     }
 
+    /**
+     * Used for modifier keys to switch between states, walk, run, thrust, boost, etc.
+     *
+     * @param stateName
+     * @returns {MovementComponent}
+     */
     setState(stateName) {
         if(this.states[stateName]) {
             this.currentState = this.states[stateName];
+            this.currentProfile.setState(this.currentState);
         } else {
             console.warn(`State ${stateName} not found`);
         }
         return this;
     }
 
+    setProfile(profileName) {
+        if(profileName === 'arcade') {
+            this.currentProfile = this.arcadeProfile;
+        } else if(profileName === 'advanced') {
+            this.currentProfile = this.advancedProfile;
+        } else {
+            console.warn(`Profile ${profileName} not found`);
+        }
+    }
+
     update(deltaTime) {
-        if(!this.entity || !this.entity.pos || !this.currentState) {
-            return;
-        }
-
-        // Adjust acceleration using the AccelerationProfile
-        const adjustedAcc = this.currentState.accelerationProfile.adjustAcceleration(this.vel);
-
-        // Apply adjusted acceleration to velocity
-        this.vel.x += this.acc.x * adjustedAcc * deltaTime;
-        this.vel.y += this.acc.y * adjustedAcc * deltaTime;
-
-        // Apply drag to velocity
-        this.vel.x *= this.drag;
-        this.vel.y *= this.drag;
-
-        // Adjust deceleration using the DecelerationProfile
-        const adjustedDec = this.currentState.decelerationProfile.adjustDeceleration(this.vel);
-
-        // Apply deceleration if there's no acceleration
-        if(this.acc.x === 0) {
-            if(this.vel.x > 0) {
-                this.vel.x = Math.max(this.vel.x - adjustedDec * deltaTime, 0);
-            } else {
-                this.vel.x = Math.min(this.vel.x + adjustedDec * deltaTime, 0);
-            }
-        }
-
-        if(this.acc.y === 0) {
-            if(this.vel.y > 0) {
-                this.vel.y = Math.max(this.vel.y - adjustedDec * deltaTime, 0);
-            } else {
-                this.vel.y = Math.min(this.vel.y + adjustedDec * deltaTime, 0);
-            }
-        }
-
-        // Cap the velocity at the current state's maxSpeed
-        const speed = Math.sqrt(this.vel.x ** 2 + this.vel.y ** 2);
-        if(speed > this.currentState.maxSpeed) {
-            const scale = this.currentState.maxSpeed / speed;
-            this.vel.x *= scale;
-            this.vel.y *= scale;
-        }
-
-        // Update the entity's position based on velocity
-        this.entity.pos.set(
-            this.entity.pos.x + this.vel.x * deltaTime,
-            this.entity.pos.y + this.vel.y * deltaTime
-        );
-
-        // Update the rotation towards the direction of velocity
-        if(this.vel.x !== 0 || this.vel.y !== 0) {
-            const targetRotation = Math.atan2(this.vel.y, this.vel.x); // Ensure no offset
-            let rotationDiff = targetRotation - this.rotation;
-
-            // Normalize the rotation difference to the range [-PI, PI]
-            rotationDiff = (rotationDiff + Math.PI) % (2 * Math.PI) - Math.PI;
-
-            // Apply the rotation speed to the current rotation
-            if(Math.abs(rotationDiff) > this.rotationSpeed * deltaTime) {
-                if(rotationDiff > 0) {
-                    this.rotation += this.rotationSpeed * deltaTime;
-                } else {
-                    this.rotation -= this.rotationSpeed * deltaTime;
-                }
-            } else {
-                this.rotation = targetRotation; // If close enough, snap to target rotation
-            }
-
-            // Normalize the rotation angle to the range [-PI, PI]
-            this.rotation = (this.rotation + Math.PI) % (2 * Math.PI) - Math.PI;
+        if(this.currentProfile) {
+            this.currentProfile.update(deltaTime, this.input, this.currentState);
         }
     }
 
-    setDirection(dx, dy) {
-        this.acc.x = dx;
-        this.acc.y = dy;
+    setInput(dx, dy) {
+        this.input = {dx, dy};
     }
 
-    setAcceleration(ax, ay) {
-        this.acc.x = ax;
-        this.acc.y = ay;
-    }
 }

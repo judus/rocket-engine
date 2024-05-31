@@ -64,7 +64,7 @@ export default class EntityController {
 
         const movement = this.currentEntity.getComponent("movement");
         if(movement) {
-            movement.setDirection(this.movementDirections.x, this.movementDirections.y);
+            movement.setInput(this.movementDirections.x, this.movementDirections.y);
         }
     }
 }

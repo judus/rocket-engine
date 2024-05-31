@@ -104,7 +104,7 @@ export default class MovementComponent extends BaseComponent {
         }
     }
 
-    setDirection(dx, dy) {
+    setInput(dx, dy) {
         this.entity.acc.x = dx;
         this.entity.acc.y = dy;
     }
