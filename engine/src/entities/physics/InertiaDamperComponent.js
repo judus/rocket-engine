@@ -1,33 +1,76 @@
 import BaseComponent from "../../abstracts/BaseComponent.js";
+import Vector3D from "../../utils/maths/Vector3D.js";
 
 export default class InertiaDamperComponent extends BaseComponent {
-    constructor(settings) {
+    constructor(profiles) {
         super();
-        this.settings = settings; // Settings for different profiles
-        this.activeModifiers = {}; // Currently active modifiers
-        this.profile = null;
+        this.profiles = profiles;
+        this.currentProfile = null;
+        this.isActive = true; // Controlled by the player
+        this.hasEnergy = true; // Indicates if the damper has sufficient energy
     }
 
-    setProfile(profile) {
-        this.profile = profile;
-        // Set the active modifiers based on the provided profile
-        this.activeModifiers = this.settings[profile] || {};
-        if(this.entity) {
-            this.applyModifiers(this.entity);
+    setProfile(name) {
+        this.currentProfile = this.profiles[name] || null;
+        this.resetModifiers();
+        if(this.currentProfile && this.isActive && this.hasEnergy) {
+            this.applyModifiers();
         }
-        return this;
     }
 
-    applyModifiers(entity) {
-        // Apply the modifiers to the entity's properties
-        entity.accelerationModifier = this.activeModifiers.accelerationModifier || 1;
-        entity.inertiaModifier = this.activeModifiers.inertiaModifier || 1;
-        entity.dragCoefficientModifier = Math.min(Math.max(this.activeModifiers.dragCoefficientModifier || 1, 0), 1); // Ensure drag coefficient modifier is normalized
+    switch() {
+        this.isActive = !this.isActive;
+        if(this.isActive && this.currentProfile && this.hasEnergy) {
+            this.applyModifiers();
+        } else {
+            this.resetModifiers();
+        }
+    }
+
+    applyModifiers() {
+        if(!this.entity || !this.currentProfile) return;
+
+        this.entity.mass *= this.currentProfile.massModifier || 1;
+        this.entity.momentOfInertia *= this.currentProfile.momentOfInertiaModifier || 1;
+        this.entity.accelerationModifier *= this.currentProfile.accelerationModifier || 1;
+        this.entity.inertiaModifier *= this.currentProfile.inertiaModifier || 1;
+        this.entity.dragCoefficient *= this.currentProfile.dragCoefficientModifier || 1;
+        //this.entity.staticFrictionForce = this.entity.staticFrictionForce.multiply(this.currentProfile.staticFrictionModifier || 1);
+        this.entity.rotationalDragCoefficient *= this.currentProfile.rotationalDragCoefficientModifier || 1;
+    }
+
+    resetModifiers() {
+        if(!this.entity) return;
+
+        // Reset to default values or store original values to reset to
+        this.entity.mass = this.entity.defaultMass || 1000;
+        this.entity.momentOfInertia = this.entity.defaultMomentOfInertia || 1;
+        this.entity.accelerationModifier = 1;
+        this.entity.inertiaModifier = 1;
+        this.entity.dragCoefficient = 1000;
+        this.entity.staticFrictionForce = new Vector3D(1000, 1000, 0);
+        this.entity.rotationalDragCoefficient = 0.1;
+    }
+
+    applyEnergyConsumption() {
+        const powerPlant = this.entity.getComponent('powerPlant');
+        if(powerPlant) {
+            const energyRequired = (this.currentProfile.energyConsumptionRate || 0.5) * powerPlant.maxEnergy; // Configurable rate
+            if(!powerPlant.consume(energyRequired)) {
+                this.hasEnergy = false;
+                this.resetModifiers(); // Turn off the damper if there is not enough energy
+            } else {
+                this.hasEnergy = true;
+            }
+        }
     }
 
     update(deltaTime) {
-        if(this.entity) {
-            this.applyModifiers(this.entity);
+        if(this.isActive && this.currentProfile) {
+            this.applyEnergyConsumption();
+            if(this.hasEnergy) {
+                this.applyModifiers();
+            }
         }
     }
 }
