@@ -120,7 +120,7 @@ export default class Rocket {
         console.log("✅ Rocket Engine: All systems initialized...");
 
         // console.log("🔄 Rocket Engine: Initializing input manager...");
-        // this.inputManager();
+        this.inputManager().init(this.engine);
         // console.log("✅ Rocket Engine: Input manager initialized...");
 
         // Load application resources asynchronously

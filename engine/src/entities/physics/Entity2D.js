@@ -190,4 +190,33 @@ export default class Entity2D {
 
     setInput(ad, ws) {
     }
+
+    attack() {
+        this.hasComponent('attack', (component) => {
+            component.attack()
+        }, () => {
+            console.log('No attack component found.')
+        });
+    }
+
+    logState() {
+        console.log(`Entity ${this.id} state:`);
+        console.log(`Position: ${this.pos}`);
+        console.log(`Velocity: ${this.velocity}`);
+        console.log(`Acceleration: ${this.acceleration}`);
+        console.log(`Mass: ${this.mass}`);
+        console.log(`Moment of Inertia: ${this.momentOfInertia}`);
+        console.log(`Angular Velocity: ${this.angularVelocity}`);
+        console.log(`Angular Acceleration: ${this.angularAcceleration}`);
+        console.log(`Orientation: ${this.orientation}`);
+        console.log(`Acceleration Modifier: ${this.accelerationModifier}`);
+        console.log(`Inertia Modifier: ${this.inertiaModifier}`);
+        console.log(`Drag Coefficient: ${this.dragCoefficient}`);
+        console.log(`Rotational Drag Coefficient: ${this.rotationalDragCoefficient}`);
+        console.log(`Components: `, this.components);
+    }
+
+    logThis() {
+        console.log(this);
+    }
 }

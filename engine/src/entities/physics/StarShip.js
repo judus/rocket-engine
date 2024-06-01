@@ -8,6 +8,14 @@ import EngineProfile from "./EngineProfile.js";
 import Vector3D from "../../utils/maths/Vector3D.js";
 import EnvironmentComponent from "./EnvironmentComponent.js";
 import WorldScaleComponent from "./WorldScaleComponent.js";
+import EntityMountsComponent from "./EntityMountsComponent.js";
+import WeaponSystemComponent from "./WeaponSystemComponent.js";
+import MountProfile from "./MountProfile.js";
+import LaserWeapon from "./LaserWeapon.js";
+import KineticWeapon from "./KineticWeapon.js";
+import Scanner from "./Scanner.js";
+import Jammer from "./Jammer.js";
+import ShipAttackComponent from "./ShipAttackComponent.js";
 
 export default class StarShip extends Entity2D {
     constructor(engine, config, id) {
@@ -29,13 +37,10 @@ export default class StarShip extends Entity2D {
             rotationalDragCoefficient: 0.999, // New property for rotational drag coefficient
             staticFrictionCoefficient: 10, // New property for static friction coefficient
 
-
             // Energy settings set to great capacity and recharge rate
             // in order for our car to be able to use it's maxThrust
             maxEnergy: 1000000000, // Reduced to reasonable levels
             rechargeRate: 10000000, // Reduced to reasonable levels
-
-
         };
 
         super(engine, config, id);
@@ -52,6 +57,33 @@ export default class StarShip extends Entity2D {
             'arcade': {accelerationModifier: 1, inertiaModifier: 1, dragCoefficientModifier: 50},
             'advanced': {accelerationModifier: 1, inertiaModifier: 1, dragCoefficientModifier: 1},
         };
+
+        config.mountProfile = new MountProfile([
+            {
+                id: 'mount1',
+                type: 'weapon',
+                typeCompatibility: ['laser', 'kinetic'],
+                position: {x: 80, y: 20}
+            },
+            {
+                id: 'mount2',
+                type: 'weapon',
+                typeCompatibility: ['laser', 'kinetic'],
+                position: {x: -80, y: 20}
+            },
+            {
+                id: 'mount3',
+                type: 'utility',
+                typeCompatibility: ['scanner', 'jammer'],
+                position: {x: -0, y: 0}
+            },
+            {
+                id: 'mount4',
+                type: 'utility',
+                typeCompatibility: ['scanner', 'jammer'],
+                position: {x: -0, y: 0}
+            }
+        ]);
 
         this.config = config;
 
@@ -77,6 +109,29 @@ export default class StarShip extends Entity2D {
 
         // Add PhysicsComponent last to update physics after all other components
         this.addComponent('physics', new PhysicsComponent(), 1 / 60, 7);
+
+        // Add EntityMountsComponent to manage mounts
+        this.addComponent('mounts', new EntityMountsComponent(config.mountProfile), 1 / 60, 8);
+
+        // Add WeaponSystemComponent to manage weapons
+        this.addComponent('weaponSystem', new WeaponSystemComponent(), 1 / 60, 9);
+
+        this.addComponent('attack', new ShipAttackComponent(), 1 / 60, 10);
+
+
+        // Mounting weapons
+        this.hasComponent('mounts', (mounts) => {
+            const laserWeapon = new LaserWeapon(engine);
+            const kineticWeapon = new KineticWeapon(engine);
+            const scanner = new Scanner(engine);
+            const jammer = new Jammer(engine);
+
+            mounts.attachEntity(laserWeapon, 'mount1');
+            mounts.attachEntity(kineticWeapon, 'mount2');
+        });
+
+        this.getComponent('weaponSystem').createWeaponGroup(1, [0, 1]);
+
     }
 
     setInput(ad, ws) {

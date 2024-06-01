@@ -12,16 +12,15 @@ export default class EntityController {
 
     handleAttack(scopedMouse, mainCamera) {
         if(this.currentEntity) {
-            const attack = this.currentEntity.getComponent("attack");
-            if(attack) {
-                attack.attack(scopedMouse, mainCamera);
-            }
+            this.currentEntity.hasComponent("attack", (component) =>{
+                component.attack(scopedMouse, mainCamera);
+            }, () => {
+                console.warn('No attack component found on this entity.');
+            });
         }
     }
 
     handleMoveEvent(axis, value, state, isStarting) {
-
-
         if(!this.currentEntity) return;
 
         const engine = this.currentEntity.getComponent("engine");
@@ -78,4 +77,13 @@ export default class EntityController {
             engineController.switchOrientationMode();
         });
     }
+
+    switchGroup(group) {
+        console.log('Switching group to: ', group);1
+        if(!this.currentEntity) return;
+        this.currentEntity.hasComponent("weaponSystem", (weaponSystem) => {
+            weaponSystem.switchGroup(group);
+        });
+    }
+
 }

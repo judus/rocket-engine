@@ -35,7 +35,12 @@ export default class InputHandler {
         this.eventBus.on("entityDestroyed", (event) => this.playerActions.handleEntityDestroyed(event));
         this.eventBus.on("switchInertiaDampers", (event) => this.playerActions.handleInertiaDamperSwitch(event));
         this.eventBus.on("switchAutoOrientation", (event) => this.playerActions.handleAutoOrientationSwitch(event));
+        this.eventBus.on("logState", (event) => this.playerActions.handleLogState(event));
+        this.eventBus.on("logThis", (event) => this.playerActions.handleLogThis(event));
+        this.eventBus.on("key", (event) => this.playerActions.handleKey(event));
     }
+
+
 
     handleScopedMouseDown(scopedMouse) {
         this.selectionStartWorld = {...scopedMouse.world};

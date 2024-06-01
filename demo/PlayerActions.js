@@ -136,11 +136,22 @@ export default class PlayerActions {
     }
 
     handleAutoOrientationSwitch(event) {
-        console.log('handleAutoOrientationSwitch');
         this.entityController.switchAutoOrientation();
     }
+
     handleInertiaDamperSwitch(event) {
-        console.log('handleInertiaDamperSwitch');
         this.entityController.switchEngineProfile();
+    }
+
+    handleKey(key) {
+        this.entityController.switchGroup(key);
+    }
+
+    handleLogState(event) {
+        this.entityController.currentEntity && this.entityController.currentEntity.logState();
+    }
+
+    handleLogThis(event) {
+        this.entityController.currentEntity && this.entityController.currentEntity.logThis();
     }
 }

@@ -37,12 +37,33 @@ export default class MyInputBindings extends InputBindings {
             'q': {
                 down: () => this.eventBus.emit('switchAutoOrientation'),
             },
+            'k': {
+                down: () => this.eventBus.emit('logState'),
+            },
+            'l': {
+                down: () => this.eventBus.emit('logThis'),
+            },
             'shift': {
                 down: () => this.eventBus.emit('boost'),
                 up: () => this.eventBus.emit('stopBoost')
             },
             'space': {
                 down: () => this.eventBus.emit('switchInertiaDampers'),
+            },
+            '0': {
+                down: () => this.eventBus.emit('key', 0),
+            },
+            '1': {
+                down: () => this.eventBus.emit('key', 1),
+            },
+            '2': {
+                down: () => this.eventBus.emit('key', 2),
+            },
+            '3': {
+                down: () => this.eventBus.emit('key', 3),
+            },
+            '4': {
+                down: () => this.eventBus.emit('key', 4),
             },
         };
     }

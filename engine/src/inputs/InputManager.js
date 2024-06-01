@@ -15,6 +15,7 @@ export default class InputManager extends EngineBase {
             ...config
         };
         this.scopedMice = [];
+        this.listenersInitialized = false; // Flag to track if listeners have been initialized
     }
 
     /**
@@ -26,8 +27,11 @@ export default class InputManager extends EngineBase {
         this.eventBus = engine.service(EngineParts.EVENT_BUS);
         this.globalMouse = engine.service(EngineParts.GLOBAL_MOUSE);
 
-        this.setupKeyboardListeners();
-        this.setupGlobalMouseListeners();
+        if(!this.listenersInitialized) {
+            this.setupKeyboardListeners();
+            this.setupGlobalMouseListeners();
+            this.listenersInitialized = true;
+        }
 
         // Get all canvases from the scene managers
         const director = this.engine.service(EngineParts.SCENE_DIRECTOR);

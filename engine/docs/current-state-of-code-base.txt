@@ -1,0 +1,769 @@
+Ok I have updated some code:
+
+import EntityTransform from "../../services/EntityTransform.js";
+import EntityManager from "../EntityManager.js";
+import EngineParts from "../../EngineParts.js";
+import StringHelpers from "../../utils/StringHelpers.js";
+import Spatial2D from "../../utils/spatial/Spatial2D.js";
+import CustomPhysics2D from "../../physics/CustomPhysics2D.js";
+import Vector3D from "../../utils/maths/Vector3D.js";
+
+export default class Entity2D {
+constructor(engine, config, id = null) {
+this.engine = engine;
+this.id = id || config.id || StringHelpers.generateUUID();
+this.type = config.type || this.constructor.name;
+
+        // Geometry
+        this.width = config.width || 0;
+        this.height = config.height || 0;
+        this.scale = config.scale || 1;
+
+        // Physics
+        this.mass = config.mass || 1;
+        this.pos = config.position || new Vector3D();
+        this.velocity = config.velocity || new Vector3D();
+        this.acceleration = config.acceleration || new Vector3D();
+        this.momentOfInertia = config.momentOfInertia || 1;
+        this.angularVelocity = config.angularVelocity || 0;
+        this.angularAcceleration = config.angularAcceleration || 0;
+        this.orientation = config.orientation || 0;
+        this.accelerationModifier = config.accelerationModifier || 1;
+        this.inertiaModifier = config.inertiaModifier || 1;
+        this.dragCoefficient = config.dragCoefficient || 0.1;
+        this.rotationalDragCoefficient = config.rotationalDragCoefficient || 0.1;
+
+
+        // Functional
+        this.taskScheduler = engine.create(EngineParts.TASK_SCHEDULER);
+        this.eventBus = engine.service(EngineParts.EVENT_BUS);
+        this.components = {};
+        this.behavior = config.behavior || null;
+        this.spriteSheet = config.spriteSheet || null;
+
+        // Collision
+        this.collisionDetection = config.collisionDetection || null;
+        this.boundingBox = this.createBoundingBox();
+        this.collisionBoxes = config.collisionBoxes || [];
+        this.polygon = config.polygon || [];
+        this.frames = config.frames || {};
+
+        // Hierarchy
+        this.children = [];
+        this.parent = null;
+
+        // Storage
+        this.entityManager = engine.service(EngineParts.ENTITY_MANAGER);
+        this.storeName = config.storeName || EngineParts.ENTITY_STORE_NAME;
+        this.spatialHash = null;
+
+        // Register this entity
+        this.entityManager.addEntity(this);
+
+        this.pos.onChange = () => {
+            if(this.entityManager) {
+                this.entityManager.updateEntity(this);
+            }
+        };
+    }
+
+    createBoundingBox() {
+        return {
+            x: this.pos.x,
+            y: this.pos.y,
+            width: this.width,
+            height: this.height
+        };
+    }
+
+    getComponent(name) {
+        return this.components[name];
+    }
+
+    hasComponent(name, onTrue, onFalse) {
+        if(this.components[name]) {
+            onTrue && onTrue(this.components[name], this);
+        } else {
+            onFalse && onFalse(name)
+        }
+    }
+
+    addComponent(componentType, component, updateFrequency = 1, renderFrequency = 1) {
+        if(this.components[componentType]) {
+            console.warn(`Component ${componentType} already exists on entity ${this.id}`);
+            return;
+        }
+
+        this.components[componentType] = component;
+        component.onAdd(this);
+
+        if(component.update) {
+            this.taskScheduler.addTask(component.update.bind(component), component.constructor.name, updateFrequency);
+        }
+        if(component.render) {
+            // this.taskScheduler.addTask(component.render.bind(component), component.constructor.name, renderFrequency);
+        }
+    }
+
+    removeComponent(componentType) {
+        const component = this.components[componentType];
+        if(component) {
+            component.onRemove();
+            this.taskScheduler.removeTask(component.update.bind(component));
+            this.taskScheduler.removeTask(component.render.bind(component));
+            delete this.components[componentType];
+        }
+    }
+
+    addChild(child) {
+        if(this.children.includes(child)) {
+            console.warn(`Child ${child.id} already added to entity ${this.id}`);
+            return;
+        }
+        child.parent = this;
+        this.children.push(child);
+    }
+
+    removeChild(child) {
+        this.children = this.children.filter(c => c !== child);
+        child.parent = null;
+    }
+
+    getGlobalPosition() {
+        return EntityTransform.getGlobalPosition(this);
+    }
+
+    getGlobalScale() {
+        return EntityTransform.getGlobalScale(this);
+    }
+
+    getGlobalRotation() {
+        return EntityTransform.getGlobalRotation(this);
+    }
+
+    update(deltaTime) {
+        this.taskScheduler.runTasks(deltaTime);
+        CustomPhysics2D.update(this, deltaTime);
+        this.children.forEach(child => child.update(deltaTime));
+    }
+
+    render(context) {
+        Object.values(this.components).forEach(component => {
+            if(component.render) {
+                const globalPos = this.getGlobalPosition();
+                component.render(context, globalPos.x, globalPos.y);
+            }
+        });
+        this.children.forEach(child => child.render(context));
+    }
+
+    setBehavior(behavior, frequency = 1) {
+        if(this.behavior) {
+            this.taskScheduler.removeTask(this.behavior.perform.bind(this.behavior, this));
+        }
+        this.behavior = behavior;
+        if(behavior) {
+            this.taskScheduler.addTask(behavior.perform.bind(behavior, this), behavior.constructor.name, frequency);
+        }
+    }
+
+    onCollision(otherEntity, collisionResult) {
+        console.log(`Entity ${this.id} collided with ${otherEntity.id}`);
+    }
+
+    destroy() {
+        if(this.entityManager) {
+            this.entityManager.deleteSpatial(this.pos.x, this.pos.y, this);
+            this.entityManager.removeEntity(this);
+        }
+
+        if(this.parent) {
+            this.parent.removeChild(this);
+        }
+
+        this.children.forEach(child => {
+            child.destroy();
+        });
+
+        if(this.eventBus) {
+            this.eventBus.emit('entityDestroyed', this);
+        }
+    }
+
+    setInput(ad, ws) {
+    }
+
+}
+
+import Entity2D from "./Entity2D.js";
+import EntityMountsComponent from "./EntityMountsComponent.js";
+import WeaponSystemComponent from "./WeaponSystemComponent.js";
+import PowerPlantComponent from "./PowerPlantComponent.js";
+import InertiaDamperComponent from "./InertiaDamperComponent.js";
+import EngineComponent from "./EngineComponent.js";
+import EngineControllerComponent from "./EngineControllerComponent.js";
+import PhysicsComponent from "./PhysicsComponent.js";
+import EnvironmentComponent from "./EnvironmentComponent.js";
+import Vector3D from "../../utils/maths/Vector3D.js";
+import EngineProfile from "./EngineProfile.js";
+import MountProfile from "./MountProfile.js";
+
+export default class StarShip extends Entity2D {
+constructor(engine, config, id) {
+config = {
+...config,
+// Initially the vehicle is at rest at the origin
+pos: new Vector3D(0, 0, 0),
+velocity: new Vector3D(0, 0, 0),
+
+            // The vehicle
+            mass: 1000, // 1000 kg car
+
+            // Physic modifiers, reset to have no effect
+            momentOfInertia: 1, // Increased slightly for stability
+            accelerationModifier: 1, // Reduced for balanced acceleration
+            inertiaModifier: 1, // Keeping it low for agility
+            dragCoefficient: 500,
+            rotationalDragCoefficient: 0.999, // New property for rotational drag coefficient
+            staticFrictionCoefficient: 10, // New property for static friction coefficient
+
+            dragCoefficientModifier: 1, // New property for drag coefficient modifier
+
+            // Energy settings set to great capacity and recharge rate
+            // in order for our car to be able to use its maxThrust
+            maxEnergy: 1000000000, // Reduced to reasonable levels
+            rechargeRate: 10000000, // Reduced to reasonable levels
+        };
+
+        super(engine, config, id);
+
+        // Set up engine profile for our car - we use the "boost" profile
+        config.engineProfile = new EngineProfile({
+            idle: {efficiency: 1, maxThrust: 10000, maxTorque: 10},
+            cruise: {efficiency: 1, maxThrust: 10000, maxTorque: 10},
+            boost: {efficiency: 1, maxThrust: 10000, maxTorque: 10},
+        });
+
+        // The damper settings and reset to have no effect
+        config.damperSettings = {
+            arcade: {accelerationModifier: 1, inertiaModifier: 1, dragCoefficientModifier: 50},
+            advanced: {accelerationModifier: 1, inertiaModifier: 1, dragCoefficientModifier: 1},
+        };
+
+        config.mountProfile = new MountProfile([
+            {
+                type: 'weapon',
+                typeCompatibility: ['laser', 'kinetic'],
+                classCompatibility: 2000,
+                position: {x: 10, y: 20}
+            },
+            {
+                type: 'utility',
+                typeCompatibility: ['scanner', 'jammer'],
+                classCompatibility: 2000,
+                position: {x: -10, y: 20}
+            },
+        ]);
+
+
+        this.config = config;
+
+        // Add PowerPlant component before others that depend on it
+        this.addComponent('powerPlantComponent', new PowerPlantComponent(config.maxEnergy, config.rechargeRate), 1 / 60, 2);
+
+        // Add inertia damper after scaling and powerPlant
+        const inertiaDamper = new InertiaDamperComponent(config.damperSettings);
+        inertiaDamper.setProfile('arcade'); // Set the profile here
+        this.addComponent('inertiaDamperComponent', inertiaDamper, 1 / 60, 3);
+
+        // Add engine component which depends on powerPlant and possibly inertiaDamper
+        const engineComponent = new EngineComponent(config.engineProfile);
+        engineComponent.setState('cruise'); // Start with cruise for better control
+        this.addComponent('engineComponent', engineComponent, 1 / 60, 4);
+
+        // Add engineController component which depends on engine
+        this.addComponent('engineControllerComponent', new EngineControllerComponent(), 1 / 60, 5);
+
+        // Add EnvironmentComponent to apply environmental effects like drag
+        this.addComponent('environmentComponent', new EnvironmentComponent(), 1 / 60, 6);
+
+        // Add PhysicsComponent last to update physics after all other components
+        this.addComponent('physicsComponent', new PhysicsComponent(), 1 / 60, 7);
+
+        // Add EntityMountsComponent to manage mounts
+        this.entityMountsComponent = new EntityMountsComponent();
+        this.addComponent('entityMountsComponent', this.entityMountsComponent, 1 / 60, 8);
+
+        // Add WeaponSystemComponent to manage weapons
+        this.weaponSystemComponent = new WeaponSystemComponent();
+        this.addComponent('weaponSystemComponent', this.weaponSystemComponent, 1 / 60, 9);
+
+        if(config.mountProfile) {
+            this.entityMountsComponent.setProfile(config.mountProfile);
+        }
+    }
+
+    setInput(ad, ws) {
+        this.getComponent('engineControllerComponent').setInput(ad, ws);
+    }
+
+}
+
+export default class BaseComponent {
+/**
+
+* BaseComponent constructor.
+  */
+  constructor() {
+  this.entity = null; // Will be set when the component is added to an entity
+  }
+
+  /**
+    * Called when the component is added to an entity.
+      */
+      onAdd(entity) {
+      this.entity = entity;
+      return this;
+      }
+
+  /**
+    * Called when the component is removed from an entity.
+      */
+      onRemove() {
+      this.entity = null;
+      }
+
+  /**
+    * Optional update method, can be overridden by subclasses.
+    * @param {number} deltaTime - The time elapsed since the last update.
+      */
+      update(deltaTime) {
+      // Logic to execute each frame
+      }
+
+  /**
+    * Optional method to handle messages, can be overridden by subclasses.
+    * @param {string} message - The message to handle.
+    * @param {Object} data - The data associated with the message.
+      */
+      receiveMessage(message, data) {
+      // Logic to handle messages sent to the component
+      }
+      }
+
+import BaseComponent from '../../abstracts/BaseComponent.js';
+
+export default class PowerPlantComponent extends BaseComponent {
+constructor(maxEnergy, rechargeRate) {
+super();
+this.maxEnergy = maxEnergy;
+this.energy = maxEnergy;
+this.rechargeRate = rechargeRate;
+}
+
+    recharge(deltaTime) {
+        this.energy = Math.min(this.maxEnergy, this.energy + this.rechargeRate * deltaTime);
+    }
+
+    consume(amount) {
+        if(this.energy >= amount) {
+            this.energy -= amount;
+            return true;
+        }
+        return false;
+    }
+
+    update(deltaTime) {
+        this.recharge(deltaTime);
+    }
+
+}
+
+import BaseComponent from '../../abstracts/BaseComponent.js';
+import CustomPhysics2D from "../../physics/CustomPhysics2D.js";
+
+export default class PhysicsComponent extends BaseComponent {
+update(deltaTime) {
+super.update(deltaTime);
+CustomPhysics2D.update(this.entity, deltaTime);
+}
+}
+
+import BaseComponent from "../../abstracts/BaseComponent.js";
+
+export default class InertiaDamperComponent extends BaseComponent {
+constructor(profiles) {
+super();
+this.profiles = profiles;
+this.currentProfile = null;
+this.isActive = true; // Controlled by the player
+this.hasEnergy = true; // Indicates if the damper has sufficient energy
+}
+
+    setProfile(name) {
+        this.currentProfile = this.profiles[name] || null;
+        this.resetModifiers();
+        if(this.currentProfile && this.isActive && this.hasEnergy) {
+            this.applyModifiers();
+        }
+    }
+
+    switch() {
+        this.isActive = !this.isActive;
+        if(this.isActive && this.currentProfile && this.hasEnergy) {
+            this.applyModifiers();
+        } else {
+            this.resetModifiers();
+        }
+    }
+
+    applyModifiers() {
+        if(!this.entity || !this.currentProfile) return;
+
+        this.entity.mass *= this.currentProfile.massModifier || 1;
+        this.entity.momentOfInertia *= this.currentProfile.momentOfInertiaModifier || 1;
+        this.entity.accelerationModifier *= this.currentProfile.accelerationModifier || 1;
+        this.entity.inertiaModifier *= this.currentProfile.inertiaModifier || 1;
+        this.entity.dragCoefficient *= this.currentProfile.dragCoefficientModifier || 1;
+        this.entity.staticFrictionForce = this.entity.staticFrictionForce.multiply(this.currentProfile.staticFrictionModifier || 1);
+        this.entity.rotationalDragCoefficient *= this.currentProfile.rotationalDragCoefficientModifier || 1;
+    }
+
+    resetModifiers() {
+        if(!this.entity) return;
+
+        // Reset to default values or store original values to reset to
+        this.entity.mass = this.entity.defaultMass || 1000;
+        this.entity.momentOfInertia = this.entity.defaultMomentOfInertia || 1;
+        this.entity.accelerationModifier = 1;
+        this.entity.inertiaModifier = 1;
+        this.entity.dragCoefficient = 1000;
+        this.entity.staticFrictionForce = new Vector3D(1000, 1000, 0);
+        this.entity.rotationalDragCoefficient = 0.1;
+    }
+
+    applyEnergyConsumption() {
+        const powerPlant = this.entity.getComponent('powerPlant');
+        if(powerPlant) {
+            const energyRequired = (this.currentProfile.energyConsumptionRate || 0.5) * powerPlant.maxEnergy; // Configurable rate
+            if(!powerPlant.consume(energyRequired)) {
+                this.hasEnergy = false;
+                this.resetModifiers(); // Turn off the damper if there is not enough energy
+            } else {
+                this.hasEnergy = true;
+            }
+        }
+    }
+
+    update(deltaTime) {
+        if(this.isActive && this.currentProfile) {
+            this.applyEnergyConsumption();
+            if(this.hasEnergy) {
+                this.applyModifiers();
+            }
+        }
+    }
+
+}
+
+import BaseComponent from '../../abstracts/BaseComponent.js';
+import Vector3D from "../../utils/maths/Vector3D.js";
+
+export default class EngineControllerComponent extends BaseComponent {
+constructor() {
+super();
+this.profile = 'arcade';
+this.autoOrient = true;
+this.target = null;
+
+        this.currentInput = {ad: 0, ws: 0};
+    }
+
+    setInput(ad, ws) {
+        this.currentInput = {ad, ws};
+    }
+
+    setArcadeInput(ad, ws) {
+        const thrustDirection = new Vector3D(ad, ws, 0); // Map input directly to x and y axis
+        const thrustMagnitude = thrustDirection.magnitude();
+
+        if(thrustMagnitude > 0) {
+            if(thrustMagnitude > 1) {
+                thrustDirection.normalize();
+            }
+
+            const powerPercentage = thrustMagnitude; // Power percentage based on input magnitude (0 to 1)
+            this.applyThrust(thrustDirection, powerPercentage);
+        }
+    }
+
+    setAdvancedInput(ad, ws) {
+        // Apply torque for rotation
+        if(ad !== 0) {
+            const torqueDirection = ad > 0 ? 1 : -1; // Clockwise or counterclockwise
+            const powerPercentage = Math.abs(ad);
+            this.applyTorque(torqueDirection, powerPercentage);
+        }
+
+        // Apply thrust based on the current orientation
+        if(ws !== 0) {
+            const directionMultiplier = ws > 0 ? -1 : 1; // Reversed: forward thrust with S, backward thrust with W
+            const thrustDirection = new Vector3D(
+                Math.cos(this.entity.orientation) * directionMultiplier,
+                Math.sin(this.entity.orientation) * directionMultiplier,
+                0
+            );
+            const powerPercentage = Math.abs(ws); // Power percentage based on input magnitude (0 to 1)
+            this.applyThrust(thrustDirection, powerPercentage);
+        }
+    }
+
+    applyThrust(thrustDirection, powerPercentage) {
+        this.entity.hasComponent('engine', (engine) => {
+            engine.applyThrust(this.entity, thrustDirection, powerPercentage);
+        }, () => {
+            console.log("No engine attached to apply thrust");
+        });
+    }
+
+    applyTorque(torqueDirection, powerPercentage) {
+        this.entity.hasComponent('engine', (engine) => {
+            console.log('Applying torque', torqueDirection, powerPercentage);
+            engine.applyTorque(this.entity, torqueDirection, powerPercentage);
+        }, () => {
+            console.log("No engine attached to apply thrust");
+        });
+    }
+
+    update(deltaTime) {
+        const {ad, ws} = this.currentInput;
+        if(this.profile === 'arcade') {
+            this.setArcadeInput(ad, ws);
+            this.handleAutoOrientation();
+        } else if(this.profile === 'advanced') {
+            this.setAdvancedInput(ad, ws);
+            this.entity.rotation = this.entity.orientation;
+        }
+    }
+
+    handleAutoOrientation() {
+        if(this.autoOrient) {
+            if(this.target) {
+                const directionToTarget = this.target.pos.subtract(this.entity.pos).normalize();
+                this.entity.rotation = Math.atan2(directionToTarget.y, directionToTarget.x);
+            } else if(this.entity.velocity.magnitude() > 0) {
+                console.log("Auto orienting based on velocity");
+                const direction = this.entity.velocity.normalize();
+                this.entity.rotation = Math.atan2(direction.y, direction.x);
+            }
+        }
+    }
+
+    setProfile(profile) {
+        this.profile = profile;
+    }
+
+    switchProfile() {
+        this.profile = this.profile === 'arcade' ? 'advanced' : 'arcade';
+        console.log('Switched profile to', this.profile);
+    }
+
+
+    switchOrientationMode() {
+        this.autoOrient = this.autoOrient !== true;
+        console.log(`Switched auto orientation ${this.autoOrient?'ON':'OFF'}`);
+    }
+
+}
+
+import BaseComponent from '../../abstracts/BaseComponent.js';
+import CustomPhysics2D from "../../physics/CustomPhysics2D.js";
+
+export default class EngineComponent extends BaseComponent {
+constructor(engineProfile) {
+super();
+this.engineProfile = engineProfile;
+this.stateModifiers = {};
+}
+
+    setState(name) {
+        this.stateModifiers = this.engineProfile.states[name] || {};
+        return this;
+    }
+
+    applyThrust(entity, thrustDirection, powerPercentage) {
+        //console.log(powerPercentage);
+        if(thrustDirection.magnitude() === 0) return;
+
+        const efficiency = this.stateModifiers.efficiency || 1;
+        const maxThrust = this.stateModifiers.maxThrust || 10000;
+
+        const thrustPower = maxThrust * powerPercentage * efficiency;
+        //console.log('thrustPower', thrustPower);
+
+        const thrustMagnitude = Math.min(thrustPower, maxThrust);
+        const thrust = thrustDirection.normalize().multiply(thrustMagnitude);
+        //console.log('thrust', thrust);
+
+        const energyRequired = thrustMagnitude / efficiency;
+        //console.log(`Thrust magnitude: ${thrustMagnitude}, Efficiency: ${efficiency}, EnergyRequired: ${energyRequired}`);
+
+        const powerPlant = entity.getComponent('powerPlant');
+
+        if(powerPlant && powerPlant.consume(energyRequired)) {
+            //console.log('Engine calls applyForce with thrust', thrust);
+            CustomPhysics2D.applyForce(entity, thrust);
+        } else {
+            console.log(`Insufficient energy to apply thrust. Required: ${energyRequired}, Available: ${powerPlant ? powerPlant.energy : 'N/A'}`);
+        }
+    }
+
+    applyTorque(entity, torqueDirection, powerPercentage) {
+        if(powerPercentage === 0) return;
+
+        const efficiency = this.stateModifiers.efficiency || 1;
+        const maxTorque = this.stateModifiers.maxTorque || 10000;
+
+        const torquePower = maxTorque * powerPercentage * efficiency;
+        const torqueMagnitude = Math.min(torquePower, maxTorque);
+        const torque = torqueDirection * torqueMagnitude;
+
+        const energyRequired = torqueMagnitude / efficiency;
+        const powerPlant = entity.getComponent('powerPlant');
+
+        //console.log(`Torque magnitude: ${torqueMagnitude}, Efficiency: ${efficiency}, EnergyRequired: ${energyRequired}`);
+
+        if(powerPlant && powerPlant.consume(energyRequired)) {
+            //console.log('Engine calls applyTorque with torque', torque);
+            CustomPhysics2D.applyTorque(entity, torque);
+        } else {
+            console.log("Insufficient energy to apply torque");
+        }
+    }
+
+}
+
+import BaseComponent from "../../abstracts/BaseComponent.js";
+import Vector3D from "../../utils/maths/Vector3D.js";
+
+export default class EntityMountsComponent extends BaseComponent {
+constructor() {
+super();
+this.mounts = [];
+}
+
+    setProfile(profile, accumulate = false) {
+        if(!accumulate) {
+            this.mounts = {};
+        }
+
+        profile.mounts.forEach(mount => {
+            if(!this.mounts[mount.type]) {
+                this.mounts[mount.type] = [];
+            }
+            this.mounts[mount.type].push({
+                typeCompatibility: mount.typeCompatibility,
+                position: new Vector3D(mount.position.x, mount.position.y, mount.position.z),
+                currentEntity: null
+            });
+        });
+    }
+
+    attachEntity(entity, mountIndex, type) {
+        const mounts = this.mounts[type];
+        if(mounts) {
+            const mount = mounts[mountIndex];
+            if(mount && mount.typeCompatibility.includes(entity.type)) {
+                mount.currentEntity = entity;
+                this.entity.addChild(entity);
+            } else {
+                throw new Error('Entity type not compatible with this mount.');
+            }
+        }
+    }
+
+    detachEntity(mountIndex, type) {
+        const mounts = this.mounts[type];
+        if(mounts) {
+            const mount = mounts[mountIndex];
+            if(mount && mount.currentEntity) {
+                this.entity.removeChild(mount.currentEntity);
+                mount.currentEntity = null;
+            }
+        }
+    }
+
+    updatePositions() {
+        const entityPosition = this.entity.getGlobalPosition();
+        const entityOrientation = this.entity.getGlobalRotation();
+
+        Object.values(this.mounts).forEach(mountArray => {
+            mountArray.forEach(mount => {
+                if(mount.currentEntity) {
+                    const rotatedPosition = mount.position.rotate(entityOrientation);
+                    mount.currentEntity.pos = entityPosition.add(rotatedPosition);
+                    mount.currentEntity.orientation = entityOrientation;
+                }
+            });
+        });
+    }
+
+    update(deltaTime) {
+        this.updatePositions();
+    }
+
+    getMounts(type) {
+        return this.mounts[type] || [];
+    }
+
+}
+
+export default class MountProfile {
+constructor(mounts) {
+this.mounts = mounts; // Array of mount definitions
+}
+}
+
+import BaseComponent from "../../abstracts/BaseComponent.js";
+
+export default class WeaponSystemComponent extends BaseComponent {
+constructor() {
+super();
+this.weaponGroups = {};
+}
+
+    createWeaponGroup(name, weaponIndices) {
+        this.weaponGroups[name] = weaponIndices;
+    }
+
+    activateWeaponGroup(name) {
+        const weaponIndices = this.weaponGroups[name];
+        const weaponMounts = this.entity.getComponent('entityMountsComponent').getMounts('weapon');
+        weaponIndices.forEach(index => {
+            const mount = weaponMounts[index];
+            if(mount && mount.currentEntity) {
+                mount.currentEntity.activate();
+            }
+        });
+    }
+
+    deactivateWeaponGroup(name) {
+        const weaponIndices = this.weaponGroups[name];
+        const weaponMounts = this.entity.getComponent('entityMountsComponent').getMounts('weapon');
+        weaponIndices.forEach(index => {
+            const mount = weaponMounts[index];
+            if(mount && mount.currentEntity) {
+                mount.currentEntity.deactivate();
+            }
+        });
+    }
+
+    fire() {
+        Object.keys(this.weaponGroups).forEach(name => this.activateWeaponGroup(name));
+    }
+
+    update(deltaTime) {
+        // Update logic for the weapon system if necessary
+    }
+
+}
