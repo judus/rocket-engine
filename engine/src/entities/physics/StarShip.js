@@ -24,7 +24,9 @@ export default class StarShip extends Entity2D {
             momentOfInertia: 1, // Increased slightly for stability
             accelerationModifier: 1, // Reduced for balanced acceleration
             inertiaModifier: 1, // Keeping it low for agility
-            dragCoefficient: 1000,
+            dragCoefficient: 500,
+            dragCoefficientModifier: 1, // New property for drag coefficient modifier
+            staticFrictionForce: new Vector3D(1000, 2000, 0), // New property for static friction force
 
             // Energy settings set to great capacity and recharge rate
             // in order for our car to be able to use it's maxThrust
