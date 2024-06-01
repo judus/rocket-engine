@@ -10,7 +10,6 @@ export default class EnvironmentComponent extends BaseComponent {
     applyDrag(entity) {
         if(entity.dragCoefficient) {
             const dragCoefficient = entity.dragCoefficient * (entity.dragCoefficientModifier || 1);
-            console.log('dragCoefficient', dragCoefficient); // = 1
             const dragForce = entity.velocity.multiply(-dragCoefficient);
             CustomPhysics2D.applyForce(entity, dragForce);
         }
@@ -42,7 +41,7 @@ export default class EnvironmentComponent extends BaseComponent {
     update(deltaTime) {
         if(this.entity) {
             this.applyDrag(this.entity);
-            this.applyStaticFriction(this.entity);
+            //this.applyStaticFriction(this.entity);
         }
     }
 }

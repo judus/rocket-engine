@@ -55,7 +55,7 @@ export default class CustomPhysics2D {
         entity.acceleration = new Vector3D();
 
         // Log the updated position
-        console.log("Updated Position (Meters):", entity.pos);
+        //console.log("Updated Position (Meters):", entity.pos);
     }
 
     static applyGravity(entity1, entity2, G = 6.67430e-11) {
