@@ -14,6 +14,7 @@ export default class FollowComponent extends CameraComponent {
     setTarget(target) {
         this.target = target;
         this.firstFollow = true;
+        console.log("Camera target received", target);
     }
 
     update(deltaTime) {

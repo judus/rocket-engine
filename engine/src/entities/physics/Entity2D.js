@@ -29,6 +29,7 @@ export default class Entity2D {
         this.accelerationModifier = config.accelerationModifier || 1;
         this.inertiaModifier = config.inertiaModifier || 1;
         this.dragCoefficient = config.dragCoefficient || 0.1;
+        this.rotationalDragCoefficient = config.rotationalDragCoefficient || 0.1;
 
 
         // Functional
@@ -75,6 +76,14 @@ export default class Entity2D {
 
     getComponent(name) {
         return this.components[name];
+    }
+
+    hasComponent(name, onTrue, onFalse) {
+        if(this.components[name]) {
+            onTrue && onTrue(this.components[name], this);
+        } else {
+            onFalse && onFalse(name)
+        }
     }
 
     addComponent(componentType, component, updateFrequency = 1, renderFrequency = 1) {

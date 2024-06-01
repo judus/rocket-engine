@@ -14,6 +14,7 @@ export default class CustomPhysics2D {
     static vectorPixelsToMeters(vector) {
         return vector.multiply(1 / CustomPhysics2D.SCALE_FACTOR);
     }
+
     static vectorMetersToPixels(vector) {
         return vector.multiply(CustomPhysics2D.SCALE_FACTOR);
     }
@@ -28,6 +29,7 @@ export default class CustomPhysics2D {
         const effectiveMomentOfInertia = entity.momentOfInertia * entity.inertiaModifier;
         const angularAcceleration = (torque / effectiveMomentOfInertia) * entity.accelerationModifier;
         entity.angularAcceleration += angularAcceleration;
+        //console.log("Torque Applied: Angular Acceleration", entity.angularAcceleration, "Torque:", torque);
     }
 
     static update(entity, dt) {
@@ -55,7 +57,7 @@ export default class CustomPhysics2D {
         entity.acceleration = new Vector3D();
 
         // Log the updated position
-        //console.log("Updated Position (Meters):", entity.pos);
+        //console.log("Updated Position (Meters):", entity.pos, "Orientation:", entity.orientation);
     }
 
     static applyGravity(entity1, entity2, G = 6.67430e-11) {

@@ -134,4 +134,13 @@ export default class PlayerActions {
             this.mouseSelectionLayer.clearSelection();  // Clear selection after handling
         }
     }
+
+    handleAutoOrientationSwitch(event) {
+        console.log('handleAutoOrientationSwitch');
+        this.entityController.switchAutoOrientation();
+    }
+    handleInertiaDamperSwitch(event) {
+        console.log('handleInertiaDamperSwitch');
+        this.entityController.switchEngineProfile();
+    }
 }

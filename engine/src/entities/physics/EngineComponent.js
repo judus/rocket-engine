@@ -14,27 +14,26 @@ export default class EngineComponent extends BaseComponent {
     }
 
     applyThrust(entity, thrustDirection, powerPercentage) {
-
-        console.log(powerPercentage);
+        //console.log(powerPercentage);
         if(thrustDirection.magnitude() === 0) return;
 
         const efficiency = this.stateModifiers.efficiency || 1;
         const maxThrust = this.stateModifiers.maxThrust || 10000;
 
         const thrustPower = maxThrust * powerPercentage * efficiency;
-        console.log('thrustPower', thrustPower);
+        //console.log('thrustPower', thrustPower);
 
         const thrustMagnitude = Math.min(thrustPower, maxThrust);
         const thrust = thrustDirection.normalize().multiply(thrustMagnitude);
-        console.log('thrust', thrust);
+        //console.log('thrust', thrust);
 
         const energyRequired = thrustMagnitude / efficiency;
-        console.log(`Thrust magnitude: ${thrustMagnitude}, Efficiency: ${efficiency}, EnergyRequired: ${energyRequired}`);
+        //console.log(`Thrust magnitude: ${thrustMagnitude}, Efficiency: ${efficiency}, EnergyRequired: ${energyRequired}`);
 
         const powerPlant = entity.getComponent('powerPlant');
 
         if(powerPlant && powerPlant.consume(energyRequired)) {
-            console.log('Engine calls applyForce with thrust', thrust);
+            //console.log('Engine calls applyForce with thrust', thrust);
             CustomPhysics2D.applyForce(entity, thrust);
         } else {
             console.log(`Insufficient energy to apply thrust. Required: ${energyRequired}, Available: ${powerPlant ? powerPlant.energy : 'N/A'}`);
@@ -54,9 +53,10 @@ export default class EngineComponent extends BaseComponent {
         const energyRequired = torqueMagnitude / efficiency;
         const powerPlant = entity.getComponent('powerPlant');
 
-        console.log(`Torque magnitude: ${torqueMagnitude}, Efficiency: ${efficiency}, EnergyRequired: ${energyRequired}`);
+        //console.log(`Torque magnitude: ${torqueMagnitude}, Efficiency: ${efficiency}, EnergyRequired: ${energyRequired}`);
 
         if(powerPlant && powerPlant.consume(energyRequired)) {
+            //console.log('Engine calls applyTorque with torque', torque);
             CustomPhysics2D.applyTorque(entity, torque);
         } else {
             console.log("Insufficient energy to apply torque");

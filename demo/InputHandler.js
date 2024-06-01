@@ -33,6 +33,8 @@ export default class InputHandler {
         this.eventBus.on('mouse.selection', (area, scopedMouse) => this.playerActions.handleMouseSelection(area, scopedMouse));
         this.eventBus.on("controlEntity", (entityId) => this.playerActions.handleControlEntity(entityId));
         this.eventBus.on("entityDestroyed", (event) => this.playerActions.handleEntityDestroyed(event));
+        this.eventBus.on("switchInertiaDampers", (event) => this.playerActions.handleInertiaDamperSwitch(event));
+        this.eventBus.on("switchAutoOrientation", (event) => this.playerActions.handleAutoOrientationSwitch(event));
     }
 
     handleScopedMouseDown(scopedMouse) {
@@ -63,4 +65,6 @@ export default class InputHandler {
         this.selectionStartWorld = null;
         this.selectionEndWorld = null;
     }
+
+
 }

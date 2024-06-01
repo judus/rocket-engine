@@ -26,26 +26,30 @@ export default class StarShip extends Entity2D {
             inertiaModifier: 1, // Keeping it low for agility
             dragCoefficient: 500,
             dragCoefficientModifier: 1, // New property for drag coefficient modifier
-            staticFrictionForce: new Vector3D(1000, 2000, 0), // New property for static friction force
+            rotationalDragCoefficient: 0.999, // New property for rotational drag coefficient
+            staticFrictionCoefficient: 10, // New property for static friction coefficient
+
 
             // Energy settings set to great capacity and recharge rate
             // in order for our car to be able to use it's maxThrust
             maxEnergy: 1000000000, // Reduced to reasonable levels
             rechargeRate: 10000000, // Reduced to reasonable levels
+
+
         };
 
         super(engine, config, id);
 
         // Set up engine profile for our car - we use the "boost" profile
         config.engineProfile = new EngineProfile({
-            'idle': { efficiency: 1, maxThrust: 10000, maxTorque: 200},
-            'cruise': {efficiency: 1, maxThrust: 10000, maxTorque: 200},
-            'boost': { efficiency: 1, maxThrust: 10000, maxTorque: 200}
+            'idle': { efficiency: 1, maxThrust: 10000, maxTorque: 10},
+            'cruise': {efficiency: 1, maxThrust: 10000, maxTorque: 10},
+            'boost': { efficiency: 1, maxThrust: 10000, maxTorque: 10}
         });
 
         // The damper settings and reset to have no effect
         config.damperSettings = {
-            'arcade': {accelerationModifier: 1, inertiaModifier: 1, dragCoefficientModifier: 1},
+            'arcade': {accelerationModifier: 1, inertiaModifier: 1, dragCoefficientModifier: 50},
             'advanced': {accelerationModifier: 1, inertiaModifier: 1, dragCoefficientModifier: 1},
         };
 

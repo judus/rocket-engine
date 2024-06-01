@@ -5,6 +5,10 @@ export default class EngineControllerComponent extends BaseComponent {
     constructor() {
         super();
         this.profile = 'arcade';
+        this.autoOrient = true;
+        this.target = null;
+
+
         this.currentInput = {ad: 0, ws: 0};
     }
 
@@ -27,34 +31,64 @@ export default class EngineControllerComponent extends BaseComponent {
     }
 
     setAdvancedInput(ad, ws) {
-        if(ws !== 0) {
-            const torquePercentage = Math.abs(ws); // Power percentage based on input magnitude (0 to 1)
-            const torqueDirection = ws > 0 ? 1 : -1; // Clockwise or counterclockwise
-            this.applyTorque(torqueDirection, torquePercentage);
+        // Apply torque for rotation
+        if(ad !== 0) {
+            const torqueDirection = ad > 0 ? 1 : -1; // Clockwise or counterclockwise
+            const powerPercentage = Math.abs(ad);
+            this.applyTorque(torqueDirection, powerPercentage);
         }
 
-        if(ad !== 0) {
-            const thrustDirection = new Vector3D(Math.cos(this.entity.orientation), Math.sin(this.entity.orientation), 0);
-            const powerPercentage = Math.abs(ad); // Power percentage based on input magnitude (0 to 1)
-            this.applyThrust(thrustDirection.multiply(ad), powerPercentage);
+        // Apply thrust based on the current orientation
+        if(ws !== 0) {
+            const directionMultiplier = ws > 0 ? -1 : 1; // Reversed: forward thrust with S, backward thrust with W
+            const thrustDirection = new Vector3D(
+                Math.cos(this.entity.orientation) * directionMultiplier,
+                Math.sin(this.entity.orientation) * directionMultiplier,
+                0
+            );
+            const powerPercentage = Math.abs(ws); // Power percentage based on input magnitude (0 to 1)
+            this.applyThrust(thrustDirection, powerPercentage);
         }
     }
 
     applyThrust(thrustDirection, powerPercentage) {
-        const engine = this.entity.getComponent('engine');
-        if(engine) {
+        this.entity.hasComponent('engine', (engine) => {
             engine.applyThrust(this.entity, thrustDirection, powerPercentage);
-        } else {
+        }, () => {
             console.log("No engine attached to apply thrust");
-        }
+        });
     }
 
     applyTorque(torqueDirection, powerPercentage) {
-        const engine = this.entity.getComponent('engine');
-        if(engine) {
+        this.entity.hasComponent('engine', (engine) => {
+            console.log('Applying torque', torqueDirection, powerPercentage);
             engine.applyTorque(this.entity, torqueDirection, powerPercentage);
-        } else {
-            console.log("No engine attached to apply torque");
+        }, () => {
+            console.log("No engine attached to apply thrust");
+        });
+    }
+
+    update(deltaTime) {
+        const {ad, ws} = this.currentInput;
+        if(this.profile === 'arcade') {
+            this.setArcadeInput(ad, ws);
+            this.handleAutoOrientation();
+        } else if(this.profile === 'advanced') {
+            this.setAdvancedInput(ad, ws);
+            this.entity.rotation = this.entity.orientation;
+        }
+    }
+
+    handleAutoOrientation() {
+        if(this.autoOrient) {
+            if(this.target) {
+                const directionToTarget = this.target.pos.subtract(this.entity.pos).normalize();
+                this.entity.rotation = Math.atan2(directionToTarget.y, directionToTarget.x);
+            } else if(this.entity.velocity.magnitude() > 0) {
+                console.log("Auto orienting based on velocity");
+                const direction = this.entity.velocity.normalize();
+                this.entity.rotation = Math.atan2(direction.y, direction.x);
+            }
         }
     }
 
@@ -62,12 +96,14 @@ export default class EngineControllerComponent extends BaseComponent {
         this.profile = profile;
     }
 
-    update(deltaTime) {
-        const {ad, ws} = this.currentInput;
-        if(this.profile === 'arcade') {
-            this.setArcadeInput(ad, ws);
-        } else if(this.profile === 'advanced') {
-            this.setAdvancedInput(ad, ws);
-        }
+    switchProfile() {
+        this.profile = this.profile === 'arcade' ? 'advanced' : 'arcade';
+        console.log('Switched profile to', this.profile);
+    }
+
+
+    switchOrientationMode() {
+        this.autoOrient = this.autoOrient !== true;
+        console.log(`Switched auto orientation ${this.autoOrient?'ON':'OFF'}`);
     }
 }

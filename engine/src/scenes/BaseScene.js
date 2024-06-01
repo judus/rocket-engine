@@ -93,6 +93,7 @@ export default class BaseScene extends EngineBase {
     }
 
     setCameraTarget(entity) {
+        console.log("Setting camera target", entity);
         if(entity) {
             this.camera.setTarget(entity);
         }

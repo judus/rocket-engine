@@ -51,6 +51,7 @@ export default class WorldScene1 extends BaseScene {
 
         if(player || camera) {
             this.eventBus.emit('controlEntity', 'player');
+            this.setCameraTarget(player);
         } else {
             console.error("Player entity not found in the data store");
         }

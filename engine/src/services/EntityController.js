@@ -64,4 +64,18 @@ export default class EntityController {
         if(!this.currentEntity) return;
         this.currentEntity.setInput(this.movementDirections.x, this.movementDirections.y);
     }
+
+    switchEngineProfile() {
+        if(!this.currentEntity) return;
+        this.currentEntity.hasComponent("engineController", (engineController) => {
+            engineController.switchProfile();
+        });
+    }
+
+    switchAutoOrientation() {
+        if(!this.currentEntity) return;
+        this.currentEntity.hasComponent("engineController", (engineController) => {
+            engineController.switchOrientationMode();
+        });
+    }
 }
