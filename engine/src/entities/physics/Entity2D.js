@@ -28,6 +28,8 @@ export default class Entity2D {
         this.orientation = config.orientation || 0;
         this.accelerationModifier = config.accelerationModifier || 1;
         this.inertiaModifier = config.inertiaModifier || 1;
+        this.dragCoefficient = config.dragCoefficient || 0.1;
+
 
         // Functional
         this.taskScheduler = engine.create(EngineParts.TASK_SCHEDULER);
@@ -175,5 +177,8 @@ export default class Entity2D {
         if(this.eventBus) {
             this.eventBus.emit('entityDestroyed', this);
         }
+    }
+
+    setInput(ad, ws) {
     }
 }

@@ -153,7 +153,6 @@ export default class Polygon {
 
 // Example usage
 document.addEventListener("DOMContentLoaded", () => {
-    const polygon = new Polygon("jPolygon", "your-image-source.jpg", "coordinates");
 
     // Assign undo and clearCanvas methods to buttons
     document.getElementById("undoButton").addEventListener("click", () => polygon.undo());

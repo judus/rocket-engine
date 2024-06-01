@@ -33,6 +33,8 @@ export default class Rocket {
         this.engine = new Engine(this);
         this.engine.config = this.config;
 
+        EngineParts.worldScale(12, 1080);
+
         (new EngineInit()).initializeServices(this.engine);
         this.serviceContainer.initAll(this.engine);
         this.pluginContainer.initAll(this.engine);
@@ -117,9 +119,9 @@ export default class Rocket {
         // All services should be initialized by now
         console.log("✅ Rocket Engine: All systems initialized...");
 
-        console.log("🔄 Rocket Engine: Initializing input manager...");
-        this.inputManager().init(this.engine);
-        console.log("✅ Rocket Engine: Input manager initialized...");
+        // console.log("🔄 Rocket Engine: Initializing input manager...");
+        // this.inputManager();
+        // console.log("✅ Rocket Engine: Input manager initialized...");
 
         // Load application resources asynchronously
         console.log("🔄 Rocket Engine: Commencing resource loading...");

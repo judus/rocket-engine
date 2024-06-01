@@ -15,7 +15,7 @@ const minimap = document.getElementById('rocket-minimap');
 
 const rocket = new Rocket({
     targetElement: main,
-    showPerformanceMonitor: false,
+    showPerformanceMonitor: true,
     inputBindings: new MyInputBindings(),
 });
 

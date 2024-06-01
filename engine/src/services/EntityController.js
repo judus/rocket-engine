@@ -21,16 +21,17 @@ export default class EntityController {
 
     handleMoveEvent(axis, value, state, isStarting) {
 
+
         if(!this.currentEntity) return;
 
-        const movement = this.currentEntity.getComponent("movement");
+        const engine = this.currentEntity.getComponent("engine");
 
-        if(movement) {
+        if(engine) {
             if(state) {
                 if(isStarting) {
-                    movement.setState(state);
+                    engine.setState(state);
                 } else {
-                    movement.setState("walk"); // Default to walk when the state event stops
+                    engine.setState("walk"); // Default to walk when the state event stops
                 }
             }
 
@@ -61,10 +62,6 @@ export default class EntityController {
 
     updateDirection() {
         if(!this.currentEntity) return;
-
-        const movement = this.currentEntity.getComponent("movement");
-        if(movement) {
-            movement.setInput(this.movementDirections.x, this.movementDirections.y);
-        }
+        this.currentEntity.setInput(this.movementDirections.x, this.movementDirections.y);
     }
 }

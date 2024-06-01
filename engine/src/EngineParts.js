@@ -1,3 +1,5 @@
+import CustomPhysics2D from "./physics/CustomPhysics2D.js";
+
 export default class EngineParts {
     static TIMER = 'timer';
     static EVENT_BUS = 'eventBus';
@@ -20,4 +22,11 @@ export default class EngineParts {
     static ENTITY_CONTROLLER = 'entityController';
     static TASK_SCHEDULER = 'taskScheduler';
     static ENTITY_STORE_NAME = 'entities';
+
+    static worldScale = (meterInPixels, screenHeight) => {
+        const scaleFactor = screenHeight / meterInPixels;
+        //CustomPhysics2D.SCALE_FACTOR = scaleFactor;
+        //console.log(CustomPhysics2D.SCALE_FACTOR);
+        return scaleFactor;
+    }
 }

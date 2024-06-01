@@ -1,23 +1,6 @@
-import Vector3D from "../utils/maths/Vector3D.js";
+import Vector3D from "../engine/src/utils/maths/Vector3D.js";
 
 export default class CustomPhysics2D {
-    static SCALE_FACTOR = 12; // 1 meter = 12 pixels
-
-    static pixelsToMeters(value) {
-        return value / CustomPhysics2D.SCALE_FACTOR;
-    }
-
-    static metersToPixels(value) {
-        return value * CustomPhysics2D.SCALE_FACTOR;
-    }
-
-    static vectorPixelsToMeters(vector) {
-        return vector.multiply(1 / CustomPhysics2D.SCALE_FACTOR);
-    }
-    static vectorMetersToPixels(vector) {
-        return vector.multiply(CustomPhysics2D.SCALE_FACTOR);
-    }
-
     static applyForce(entity, force) {
         const effectiveMass = entity.mass * entity.inertiaModifier;
         const acceleration = force.divide(effectiveMass).multiply(entity.accelerationModifier);
@@ -31,17 +14,9 @@ export default class CustomPhysics2D {
     }
 
     static update(entity, dt) {
-        // Update velocity in meters based on acceleration
+        // Update velocity and position based on acceleration
         entity.velocity = entity.velocity.add(entity.acceleration.multiply(dt));
-
-        // Convert the current position from pixels to meters
-        let oldPosition = CustomPhysics2D.vectorPixelsToMeters(entity.pos);
-
-        // Update position in meters based on velocity
-        let newPosition = oldPosition.add(entity.velocity.multiply(dt));
-
-        // Convert the new position from meters to pixels
-        entity.pos = CustomPhysics2D.vectorMetersToPixels(newPosition);
+        entity.pos = entity.pos.add(entity.velocity.multiply(dt));
 
         // Update angular velocity and orientation based on angular acceleration
         entity.angularVelocity += entity.angularAcceleration * dt;
@@ -55,7 +30,7 @@ export default class CustomPhysics2D {
         entity.acceleration = new Vector3D();
 
         // Log the updated position
-        console.log("Updated Position (Meters):", entity.pos);
+        console.log("Updated Position:", entity.pos);
     }
 
     static applyGravity(entity1, entity2, G = 6.67430e-11) {
@@ -69,3 +44,30 @@ export default class CustomPhysics2D {
         console.log("Gravity Applied: Force Magnitude", forceMagnitude);
     }
 }
+
+// Example Usage
+class Entity {
+    constructor(mass, inertiaModifier, accelerationModifier) {
+        this.mass = mass; // kg
+        this.inertiaModifier = 1; // Default to 1 if not specified
+        this.accelerationModifier = 1; // Default to 1 if not specified
+        this.momentOfInertia = 1; // Default to 1 if not specified
+        this.acceleration = new Vector3D();
+        this.velocity = new Vector3D();
+        this.pos = new Vector3D();
+        this.angularAcceleration = 0;
+        this.angularVelocity = 0;
+        this.orientation = 0;
+    }
+}
+
+const car = new Entity(1000, 1, 1); // 1000 kg car
+
+const force = new Vector3D(100000, 0, 0); // 100 kW force in x direction
+const dt = 1; // 1 second time step
+
+CustomPhysics2D.applyForce(car, force);
+CustomPhysics2D.update(car, dt);
+
+console.log("Car Position after 1 second:", car.pos);
+console.log("Car Velocity after 1 second:", car.velocity);

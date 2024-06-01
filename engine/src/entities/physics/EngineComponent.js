@@ -10,39 +10,52 @@ export default class EngineComponent extends BaseComponent {
 
     setState(name) {
         this.stateModifiers = this.engineProfile.states[name] || {};
+        return this;
     }
 
-    applyThrust(entity, thrustDirection, power) {
+    applyThrust(entity, thrustDirection, powerPercentage) {
+
+        console.log(powerPercentage);
+        if(thrustDirection.magnitude() === 0) return;
+
         const efficiency = this.stateModifiers.efficiency || 1;
-        const maxThrust = this.stateModifiers.maxThrust || 1000;
+        const maxThrust = this.stateModifiers.maxThrust || 10000;
 
-        const thrustPower = power * efficiency;
-        const thrustMagnitude = thrustPower / thrustDirection.magnitude();
+        const thrustPower = maxThrust * powerPercentage * efficiency;
+        console.log('thrustPower', thrustPower);
 
-        const limitedThrustMagnitude = Math.min(thrustMagnitude, maxThrust);
-        const thrust = thrustDirection.normalize().multiply(limitedThrustMagnitude);
+        const thrustMagnitude = Math.min(thrustPower, maxThrust);
+        const thrust = thrustDirection.normalize().multiply(thrustMagnitude);
+        console.log('thrust', thrust);
 
-        const energyRequired = limitedThrustMagnitude * thrustDirection.magnitude() / efficiency;
+        const energyRequired = thrustMagnitude / efficiency;
+        console.log(`Thrust magnitude: ${thrustMagnitude}, Efficiency: ${efficiency}, EnergyRequired: ${energyRequired}`);
+
         const powerPlant = entity.getComponent('powerPlant');
+
         if(powerPlant && powerPlant.consume(energyRequired)) {
+            console.log('Engine calls applyForce with thrust', thrust);
             CustomPhysics2D.applyForce(entity, thrust);
         } else {
-            console.log("Insufficient energy to apply thrust");
+            console.log(`Insufficient energy to apply thrust. Required: ${energyRequired}, Available: ${powerPlant ? powerPlant.energy : 'N/A'}`);
         }
     }
 
-    applyTorque(entity, torqueDirection, power) {
+    applyTorque(entity, torqueDirection, powerPercentage) {
+        if(powerPercentage === 0) return;
+
         const efficiency = this.stateModifiers.efficiency || 1;
-        const maxTorque = this.stateModifiers.maxTorque || 500;
+        const maxTorque = this.stateModifiers.maxTorque || 10000;
 
-        const torquePower = power * efficiency;
-        const torqueMagnitude = torquePower / Math.abs(torqueDirection);
+        const torquePower = maxTorque * powerPercentage * efficiency;
+        const torqueMagnitude = Math.min(torquePower, maxTorque);
+        const torque = torqueDirection * torqueMagnitude;
 
-        const limitedTorqueMagnitude = Math.min(torqueMagnitude, maxTorque);
-        const torque = torqueDirection * limitedTorqueMagnitude;
-
-        const energyRequired = limitedTorqueMagnitude * Math.abs(torqueDirection) / efficiency;
+        const energyRequired = torqueMagnitude / efficiency;
         const powerPlant = entity.getComponent('powerPlant');
+
+        console.log(`Torque magnitude: ${torqueMagnitude}, Efficiency: ${efficiency}, EnergyRequired: ${energyRequired}`);
+
         if(powerPlant && powerPlant.consume(energyRequired)) {
             CustomPhysics2D.applyTorque(entity, torque);
         } else {

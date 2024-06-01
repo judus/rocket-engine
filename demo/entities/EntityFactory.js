@@ -55,6 +55,7 @@ export default class EntityFactory {
 
     createPlayer(definition, x, y) {
         const player = new Player(this.engine, definition, x, y, 'player');
+        console.log(`Player created: ${player.id}`);
         this.entityManager.addEntity(player);
         return player;
     }

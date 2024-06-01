@@ -11,6 +11,7 @@ export default class BaseComponent {
      */
     onAdd(entity) {
         this.entity = entity;
+        return this;
     }
 
     /**

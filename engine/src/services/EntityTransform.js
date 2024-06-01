@@ -58,8 +58,8 @@ export default class EntityTransform {
     }
 
     static faceVelocity(entity) {
-        if(entity.vel.x !== 0 || entity.vel.y !== 0) {
-            entity.rotation = Math.atan2(entity.vel.y, entity.vel.x);
+        if(entity.vel && (entity.vel.x !== 0 || entity.vel.y !== 0)) {
+            //entity.rotation = Math.atan2(entity.vel.y, entity.vel.x);
         }
     }
 

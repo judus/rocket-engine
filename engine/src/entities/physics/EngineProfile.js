@@ -1,4 +1,4 @@
-class EngineProfile {
+export default class EngineProfile {
     constructor(states) {
         this.states = states; // States with different settings for the engine
     }
