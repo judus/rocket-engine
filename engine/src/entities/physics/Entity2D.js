@@ -139,16 +139,6 @@ export default class Entity2D {
         return EntityTransform.getGlobalRotation(this);
     }
 
-    setBehavior(behavior, frequency = 1) {
-        if(this.behavior) {
-            this.taskScheduler.removeTask(this.behavior.perform.bind(this.behavior, this));
-        }
-        this.behavior = behavior;
-        if(behavior) {
-            this.taskScheduler.addTask(behavior.perform.bind(behavior, this), behavior.constructor.name, frequency);
-        }
-    }
-
     update(deltaTime) {
         this.taskScheduler.runTasks(deltaTime);
         CustomPhysics2D.update(this, deltaTime);
@@ -163,6 +153,16 @@ export default class Entity2D {
             }
         });
         this.children.forEach(child => child.render(context));
+    }
+
+    setBehavior(behavior, frequency = 1) {
+        if(this.behavior) {
+            this.taskScheduler.removeTask(this.behavior.perform.bind(this.behavior, this));
+        }
+        this.behavior = behavior;
+        if(behavior) {
+            this.taskScheduler.addTask(behavior.perform.bind(behavior, this), behavior.constructor.name, frequency);
+        }
     }
 
     onCollision(otherEntity, collisionResult) {
