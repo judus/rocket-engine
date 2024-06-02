@@ -52,29 +52,14 @@ export default class Vector3D {
         return this;
     }
 
-    /**
-     * Adds another vector to this vector.
-     * @param {Vector3D} vector - The vector to add.
-     * @returns {Vector3D} The resulting vector.
-     */
     add(vector) {
         return new Vector3D(this.x + vector.x, this.y + vector.y, this.z + vector.z);
     }
 
-    /**
-     * Subtracts another vector from this vector.
-     * @param {Vector3D} vector - The vector to subtract.
-     * @returns {Vector3D} The resulting vector.
-     */
     subtract(vector) {
         return new Vector3D(this.x - vector.x, this.y - vector.y, this.z - vector.z);
     }
 
-    /**
-     * Multiplies this vector by a scalar or another vector.
-     * @param {number|Vector3D} value - The scalar or vector to multiply by.
-     * @returns {Vector3D} The resulting vector.
-     */
     multiply(value) {
         if(value instanceof Vector3D) {
             return new Vector3D(this.x * value.x, this.y * value.y, this.z * value.z);
@@ -83,11 +68,6 @@ export default class Vector3D {
         }
     }
 
-    /**
-     * Divides this vector by a scalar or another vector.
-     * @param {number|Vector3D} value - The scalar or vector to divide by.
-     * @returns {Vector3D} The resulting vector.
-     */
     divide(value) {
         if(value instanceof Vector3D) {
             return new Vector3D(this.x / value.x, this.y / value.y, this.z / value.z);
@@ -96,20 +76,10 @@ export default class Vector3D {
         }
     }
 
-    /**
-     * Calculates the dot product of this vector and another vector.
-     * @param {Vector3D} vector - The other vector.
-     * @returns {number} The dot product.
-     */
     dot(vector) {
         return this.x * vector.x + this.y * vector.y + this.z * vector.z;
     }
 
-    /**
-     * Calculates the cross product of this vector and another vector.
-     * @param {Vector3D} vector - The other vector.
-     * @returns {Vector3D} The resulting vector.
-     */
     cross(vector) {
         return new Vector3D(
             this.y * vector.z - this.z * vector.y,
@@ -118,18 +88,10 @@ export default class Vector3D {
         );
     }
 
-    /**
-     * Calculates the magnitude (length) of this vector.
-     * @returns {number} The magnitude of the vector.
-     */
     magnitude() {
         return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
     }
 
-    /**
-     * Normalizes this vector (makes it a unit vector).
-     * @returns {Vector3D} The normalized vector.
-     */
     normalize() {
         const magnitude = this.magnitude();
         if(magnitude === 0) {
@@ -138,11 +100,6 @@ export default class Vector3D {
         return this.divide(magnitude);
     }
 
-    /**
-     * Calculates the distance between this vector and another vector.
-     * @param {Vector3D} vector - The other vector.
-     * @returns {number} The distance between the vectors.
-     */
     distance(vector) {
         return Math.sqrt(
             (this.x - vector.x) * (this.x - vector.x) +
@@ -151,28 +108,28 @@ export default class Vector3D {
         );
     }
 
-    /**
-     * Checks if this vector is equal to another vector.
-     * @param {Vector3D} vector - The other vector.
-     * @returns {boolean} True if the vectors are equal, false otherwise.
-     */
     equals(vector) {
         return this.x === vector.x && this.y === vector.y && this.z === vector.z;
     }
 
-    /**
-     * Creates a copy of this vector.
-     * @returns {Vector3D} The copy of the vector.
-     */
     clone() {
         return new Vector3D(this.x, this.y, this.z);
     }
 
-    /**
-     * Returns a string representation of this vector.
-     * @returns {string} The string representation.
-     */
     toString() {
         return `(${this.x}, ${this.y}, ${this.z})`;
+    }
+
+    /**
+     * Rotates the vector around the Z-axis by the given angle (in radians).
+     * @param {number} angle - The angle in radians.
+     * @returns {Vector3D} The rotated vector.
+     */
+    rotate(angle) {
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
+        const x = this.x * cos - this.y * sin;
+        const y = this.x * sin + this.y * cos;
+        return new Vector3D(x, y, this.z);
     }
 }

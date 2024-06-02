@@ -31,7 +31,6 @@ export default class Entity2D {
         this.dragCoefficient = config.dragCoefficient || 0.1;
         this.rotationalDragCoefficient = config.rotationalDragCoefficient || 0.1;
 
-
         // Functional
         this.taskScheduler = engine.create(EngineParts.TASK_SCHEDULER);
         this.eventBus = engine.service(EngineParts.EVENT_BUS);
@@ -99,7 +98,7 @@ export default class Entity2D {
             this.taskScheduler.addTask(component.update.bind(component), component.constructor.name, updateFrequency);
         }
         if(component.render) {
-            // this.taskScheduler.addTask(component.render.bind(component), component.constructor.name, renderFrequency);
+            //this.taskScheduler.addTask(component.render.bind(component), component.constructor.name, renderFrequency);
         }
     }
 
@@ -189,6 +188,7 @@ export default class Entity2D {
     }
 
     setInput(ad, ws) {
+        this.getComponent('engineController').setInput(ad, ws);
     }
 
     attack() {

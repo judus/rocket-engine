@@ -7,7 +7,6 @@ import PhysicsComponent from "./PhysicsComponent.js";
 import EngineProfile from "./EngineProfile.js";
 import Vector3D from "../../utils/maths/Vector3D.js";
 import EnvironmentComponent from "./EnvironmentComponent.js";
-import WorldScaleComponent from "./WorldScaleComponent.js";
 import EntityMountsComponent from "./EntityMountsComponent.js";
 import WeaponSystemComponent from "./WeaponSystemComponent.js";
 import MountProfile from "./MountProfile.js";
@@ -49,9 +48,9 @@ export default class StarShip extends Entity2D {
 
         // Set up engine profile for our car - we use the "boost" profile
         config.engineProfile = new EngineProfile({
-            'idle': { efficiency: 1, maxThrust: 10000, maxTorque: 10},
+            'idle': {efficiency: 1, maxThrust: 10000, maxTorque: 10},
             'cruise': {efficiency: 1, maxThrust: 10000, maxTorque: 10},
-            'boost': { efficiency: 1, maxThrust: 10000, maxTorque: 10}
+            'boost': {efficiency: 1, maxThrust: 10000, maxTorque: 10}
         });
 
         // The damper settings and reset to have no effect
@@ -101,7 +100,6 @@ export default class StarShip extends Entity2D {
 
         this.config = config;
 
-
         // Add PowerPlant component before others that depend on it
         this.addComponent('powerPlant', new PowerPlantComponent(config.maxEnergy, config.rechargeRate), 1 / 60, 2);
 
@@ -132,7 +130,6 @@ export default class StarShip extends Entity2D {
 
         this.addComponent('attack', new ShipAttackComponent(), 1 / 60, 10);
 
-
         // Mounting weapons
         this.hasComponent('mounts', (mounts) => {
             const laserWeapon1 = new LaserWeapon(engine);
@@ -160,11 +157,9 @@ export default class StarShip extends Entity2D {
         this.addComponent('render', new RenderComponent((deltaTime, context, entity, camera) => {
             Drawing.draw(context, entity, camera, entity.color);
         }, false));
-
     }
 
     setInput(ad, ws) {
         this.getComponent('engineController').setInput(ad, ws);
     }
 }
-

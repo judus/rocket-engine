@@ -68,9 +68,13 @@ export default class EntityMountsComponent extends BaseComponent {
         Object.values(this.mounts).forEach(mountArray => {
             mountArray.forEach(mount => {
                 if(mount.currentEntity) {
-                    // const rotatedPosition = mount.pos.rotate(entityOrientation);
-                    // mount.currentEntity.pos = entityPosition.add(rotatedPosition);
-                    // mount.currentEntity.orientation = entityOrientation;
+                    const rotatedPosition = mount.position.rotate(entityOrientation);
+                    mount.currentEntity.pos.set(
+                        entityPosition.x + rotatedPosition.x,
+                        entityPosition.y + rotatedPosition.y,
+                        mount.currentEntity.pos.z // Retain the original z position
+                    );
+                    mount.currentEntity.orientation = entityOrientation;
                 }
             });
         });
