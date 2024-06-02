@@ -10,6 +10,7 @@ import AxisBackground from "../layers/shared/AxisBackground.js";
 import DynamicContextMenuLayer from "../layers/shared/context-menu/DynamicContextMenuLayer.js";
 import StarBackground from "../layers/shared/stars/StarBackground.js";
 import SpriteLayer from "../layers/SpriteLayer.js";
+import ParallaxBackground2 from "../layers/shared/stars/ParallaxBackground2.js";
 
 export default class WorldScene1 extends BaseScene {
     constructor() {
@@ -21,14 +22,16 @@ export default class WorldScene1 extends BaseScene {
         // Set up layers
         this.addLayer('backgroundLayer', BackgroundLayer);
         this.addLayer('ParallaxBackground', ParallaxBackground);
-        this.addLayer('highlight', HighlightBackground);
+        this.addLayer('ParallaxBackground2', ParallaxBackground2);
         this.addLayer('axisBackground', AxisBackground);
-        this.addLayer('spriteLayer', SpriteLayer); // Add the new sprite layer
-        this.addLayer('ParticleLayer', ParticleLayer);
-        this.addLayer('ProjectileLayer', ProjectileLayer);
+        this.addLayer('highlight', HighlightBackground);
         this.addLayer('foregroundLayer', ExampleLayer);
-        this.addLayer('mouseSelectionLayer', MouseSelectionLayer); // Add the new layer
-        this.addLayer('contextMenuLayer', DynamicContextMenuLayer); // Add context menu layer
+        //this.addLayer('spriteLayer', SpriteLayer); // Add the new sprite layer
+        //this.addLayer('ParticleLayer', ParticleLayer);
+        //this.addLayer('ProjectileLayer', ProjectileLayer);
+
+        //this.addLayer('mouseSelectionLayer', MouseSelectionLayer); // Add the new layer
+        //this.addLayer('contextMenuLayer', DynamicContextMenuLayer); // Add context menu layer
     }
 
     load(callback) {

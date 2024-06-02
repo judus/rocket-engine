@@ -36,7 +36,7 @@ export default class EngineComponent extends BaseComponent {
             //console.log('Engine calls applyForce with thrust', thrust);
             CustomPhysics2D.applyForce(entity, thrust);
         } else {
-            console.log(`Insufficient energy to apply thrust. Required: ${energyRequired}, Available: ${powerPlant ? powerPlant.energy : 'N/A'}`);
+            //console.log(`Insufficient energy to apply thrust. Required: ${energyRequired}, Available: ${powerPlant ? powerPlant.energy : 'N/A'}`);
         }
     }
 

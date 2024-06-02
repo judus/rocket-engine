@@ -40,10 +40,10 @@ export default class Drawing {
 
     static drawPolygon(context, vertices, color) {
         context.beginPath();
-        context.moveTo(vertices[0].x, vertices[0].y);
+        context.moveTo(Math.abs(vertices[0].x), Math.abs(vertices[0].y));
 
         for(let i = 1; i < vertices.length; i++) {
-            context.lineTo(vertices[i].x, vertices[i].y);
+            context.lineTo(Math.abs(vertices[i].x), Math.abs(vertices[i].y));
         }
 
         context.closePath();

@@ -2,6 +2,7 @@ import PlayerActions from './PlayerActions.js';
 import GameLogic from './GameLogic.js';
 import EntityInitialization from "./entities/EntityInitialization.js";
 import EngineBase from "../engine/src/abstracts/EngineBase.js";
+import Cockpit from "./html-ui/Cockpit.js";
 
 export default class Application extends EngineBase {
     init(engine) {
@@ -11,6 +12,7 @@ export default class Application extends EngineBase {
         this.entityInitialization = new EntityInitialization(this.engine);
         this.playerActions = new PlayerActions(this.engine);
         this.gameLogic = new GameLogic(this.engine);
+        this.cockpit = new Cockpit(this.engine);
         console.log('Application initialized.');
     }
 
@@ -43,12 +45,12 @@ export default class Application extends EngineBase {
         this.entityInitialization.createEntities();
         console.log('Entities created.');
 
+
         this.playerActions.inputHandler.setupEventListeners();
-
-
     }
 
     update(deltaTime) {
         this.gameLogic.update(deltaTime);
+        this.cockpit.update(deltaTime);
     }
 }

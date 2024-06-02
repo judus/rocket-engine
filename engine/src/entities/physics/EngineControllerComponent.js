@@ -61,7 +61,7 @@ export default class EngineControllerComponent extends BaseComponent {
 
     applyTorque(torqueDirection, powerPercentage) {
         this.entity.hasComponent('engine', (engine) => {
-            console.log('Applying torque', torqueDirection, powerPercentage);
+            //console.log('Applying torque', torqueDirection, powerPercentage);
             engine.applyTorque(this.entity, torqueDirection, powerPercentage);
         }, () => {
             console.log("No engine attached to apply thrust");
@@ -85,7 +85,7 @@ export default class EngineControllerComponent extends BaseComponent {
                 const directionToTarget = this.target.pos.subtract(this.entity.pos).normalize();
                 this.entity.rotation = Math.atan2(directionToTarget.y, directionToTarget.x);
             } else if(this.entity.velocity.magnitude() > 0) {
-                console.log("Auto orienting based on velocity");
+                //console.log("Auto orienting based on velocity");
                 const direction = this.entity.velocity.normalize();
                 this.entity.rotation = Math.atan2(direction.y, direction.x);
             }
@@ -98,12 +98,14 @@ export default class EngineControllerComponent extends BaseComponent {
 
     switchProfile() {
         this.profile = this.profile === 'arcade' ? 'advanced' : 'arcade';
-        console.log('Switched profile to', this.profile);
+        this.entity.eventBus.emit('component.engineController.mode', this.profile);
+
+        //console.log('Switched profile to', this.profile);
     }
 
 
     switchOrientationMode() {
         this.autoOrient = this.autoOrient !== true;
-        console.log(`Switched auto orientation ${this.autoOrient?'ON':'OFF'}`);
+        //console.log(`Switched auto orientation ${this.autoOrient?'ON':'OFF'}`);
     }
 }

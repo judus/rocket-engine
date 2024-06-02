@@ -3,49 +3,30 @@ import BaseComponent from "../../abstracts/BaseComponent.js";
 export default class WeaponSystemComponent extends BaseComponent {
     constructor() {
         super();
-        this.weaponGroups = Array(10).fill().map(() => ({active: false, weapons: []}));
+        this.weaponGroups = {};
+        this.activeGroups = new Set();
     }
 
-    createWeaponGroup(groupNumber, weaponIndices) {
-        if(groupNumber < 0 || groupNumber > 9) {
-            throw new Error('Group number must be between 0 and 9.');
-        }
-        this.weaponGroups[groupNumber].weapons = weaponIndices;
+    createWeaponGroup(groupKey, weaponIndices) {
+        this.weaponGroups[groupKey] = weaponIndices;
     }
 
-    switchGroup(groupNumber) {
-        console.log(groupNumber);
-
-        if(groupNumber < 0 || groupNumber > 9) {
-            throw new Error('Group number must be between 0 and 9.');
+    switchGroup(groupKey) {
+        if(this.activeGroups.has(groupKey)) {
+            this.activeGroups.delete(groupKey);
+        } else {
+            this.activeGroups.add(groupKey);
         }
-        const group = this.weaponGroups[groupNumber];
-        group.active = !group.active;
-
-        const weaponMounts = this.entity.getComponent('mounts').getMounts('weapon');
-        group.weapons.forEach(index => {
-            const mount = weaponMounts[index];
-            if(mount && mount.currentEntity) {
-                if(group.active) {
-                    console.log(`Activating weapon at mount ${mount.id}.`);
-                    mount.currentEntity.activate();
-                } else {
-                    console.log(`Deactivating weapon at mount ${mount.id}.`);
-                    mount.currentEntity.deactivate();
-                }
-            }
-        });
     }
 
     fire() {
-        console.log('WeaponSystemComponent.fire() called.');
-        this.weaponGroups.forEach(group => {
-            if(group.active) {
-                group.weapons.forEach(index => {
+        this.activeGroups.forEach(groupKey => {
+            const weaponIndices = this.weaponGroups[groupKey];
+            if(weaponIndices) {
+                weaponIndices.forEach(index => {
                     const weaponMounts = this.entity.getComponent('mounts').getMounts('weapon');
                     const mount = weaponMounts[index];
                     if(mount && mount.currentEntity) {
-                        console.log(`Firing weapon at mount ${mount.id}.`);
                         mount.currentEntity.fire();
                     }
                 });

@@ -37,6 +37,6 @@ export default class BackgroundLayer extends BaseLayer {
         this.context.fillStyle = '#000000';
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        this.drawAxis(scene);
+        //this.drawAxis(scene);
     }
 }

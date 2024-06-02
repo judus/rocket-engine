@@ -124,9 +124,7 @@ export default class Player extends StarShip {
         // this.addComponent('hangar', new HangarComponent());
 
         // Rendering
-        this.addComponent('render', new RenderComponent((deltaTime, context, entity, camera) => {
-            Drawing.draw(context, entity, camera, entity.color);
-        }, false));
+
 
         // Initialize behavior
         // this.behavior = new FaceVelocityBehavior();

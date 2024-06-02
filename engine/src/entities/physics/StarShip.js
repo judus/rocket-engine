@@ -16,6 +16,8 @@ import KineticWeapon from "./KineticWeapon.js";
 import Scanner from "./Scanner.js";
 import Jammer from "./Jammer.js";
 import ShipAttackComponent from "./ShipAttackComponent.js";
+import RenderComponent from "../../components/RenderComponent.js";
+import Drawing from "../../services/Drawing.js";
 
 export default class StarShip extends Entity2D {
     constructor(engine, config, id) {
@@ -39,8 +41,8 @@ export default class StarShip extends Entity2D {
 
             // Energy settings set to great capacity and recharge rate
             // in order for our car to be able to use it's maxThrust
-            maxEnergy: 1000000000, // Reduced to reasonable levels
-            rechargeRate: 10000000, // Reduced to reasonable levels
+            maxEnergy: 10000000, // Reduced to reasonable levels
+            rechargeRate: 300000, // Reduced to reasonable levels
         };
 
         super(engine, config, id);
@@ -54,7 +56,7 @@ export default class StarShip extends Entity2D {
 
         // The damper settings and reset to have no effect
         config.damperSettings = {
-            'arcade': {accelerationModifier: 1, inertiaModifier: 1, dragCoefficientModifier: 50},
+            'arcade': {accelerationModifier: 1, inertiaModifier: 0.1, dragCoefficientModifier: 500},
             'advanced': {accelerationModifier: 1, inertiaModifier: 1, dragCoefficientModifier: 1},
         };
 
@@ -73,12 +75,24 @@ export default class StarShip extends Entity2D {
             },
             {
                 id: 'mount3',
+                type: 'weapon',
+                typeCompatibility: ['laser', 'kinetic'],
+                position: {x: 80, y: 20}
+            },
+            {
+                id: 'mount4',
+                type: 'weapon',
+                typeCompatibility: ['laser', 'kinetic'],
+                position: {x: -80, y: 20}
+            },
+            {
+                id: 'mount5',
                 type: 'utility',
                 typeCompatibility: ['scanner', 'jammer'],
                 position: {x: -0, y: 0}
             },
             {
-                id: 'mount4',
+                id: 'mount6',
                 type: 'utility',
                 typeCompatibility: ['scanner', 'jammer'],
                 position: {x: -0, y: 0}
@@ -121,16 +135,31 @@ export default class StarShip extends Entity2D {
 
         // Mounting weapons
         this.hasComponent('mounts', (mounts) => {
-            const laserWeapon = new LaserWeapon(engine);
-            const kineticWeapon = new KineticWeapon(engine);
+            const laserWeapon1 = new LaserWeapon(engine);
+            const laserWeapon2 = new LaserWeapon(engine);
+            const kineticWeapon1 = new KineticWeapon(engine);
+            const kineticWeapon2 = new KineticWeapon(engine);
             const scanner = new Scanner(engine);
             const jammer = new Jammer(engine);
 
-            mounts.attachEntity(laserWeapon, 'mount1');
-            mounts.attachEntity(kineticWeapon, 'mount2');
+            mounts.attachEntity(laserWeapon1, 'mount1');
+            mounts.attachEntity(laserWeapon2, 'mount2');
+            mounts.attachEntity(kineticWeapon1, 'mount3');
+            mounts.attachEntity(kineticWeapon2, 'mount4');
         });
 
-        this.getComponent('weaponSystem').createWeaponGroup(1, [0, 1]);
+        // Create weapon groups
+        // The first parameter is the key to activate the group (can be any int or char)
+        // The second parameter is an array of indices referring to the mount positions of the weapons
+        // The order in the array determines the order of firing
+        this.hasComponent('weaponSystem', (weaponSystemComponent) => {
+            weaponSystemComponent.createWeaponGroup('1', [0, 1]); // Group '1' with weapons on mount1 and mount2
+            weaponSystemComponent.createWeaponGroup('2', [2, 3]); // Group '2' with weapons on mount3 and mount4
+        });
+
+        this.addComponent('render', new RenderComponent((deltaTime, context, entity, camera) => {
+            Drawing.draw(context, entity, camera, entity.color);
+        }, false));
 
     }
 

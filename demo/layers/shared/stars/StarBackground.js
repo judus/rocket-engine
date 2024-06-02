@@ -7,6 +7,7 @@ export default class StarBackground {
         this.height = height;
         this.parallaxFactor = parallaxFactor;
         this.stars = this.createStars(numStars);
+        this.colorChangingStars = this.assignColorChangingStars(10); // Adjust number of color-changing stars as needed
     }
 
     createStars(numStars) {
@@ -15,22 +16,36 @@ export default class StarBackground {
             stars.push({
                 x: Math.random() * this.width,
                 y: Math.random() * this.height,
-                size: Math.random() * 2 + 1,
+                size: Math.random() * 0.5 + 1,
+                color: 'white',
+                isColorChanging: false,
+                colorChangeRate: 0,
+                colorChangePhase: 0
             });
         }
         return stars;
     }
 
+    assignColorChangingStars(numColorChangingStars) {
+        const colorChangingStars = [];
+        for(let i = 0; i < numColorChangingStars; i++) {
+            const star = this.stars[Math.floor(Math.random() * this.stars.length)];
+            star.isColorChanging = true;
+            star.colorChangeRate = Math.random() * 0.05 + 0.01;
+            star.colorChangePhase = Math.random() * 2 * Math.PI;
+            star.colorPairs = Math.random() < 0.5
+                ? ['rgba(255, 0, 0, 0.75)', 'rgba(0, 0, 255, 0.75)']
+                : ['rgba(0, 255, 0, 0.75)', 'rgba(255, 255, 0, 0.75)'];
+            colorChangingStars.push(star);
+        }
+        return colorChangingStars;
+    }
+
     render(scene) {
         let vel = {x: 0, y: 0};
-        let target = null;
-
         const cameraTarget = scene.camera.getComponent(FollowComponent).target;
-        if (cameraTarget) {
-            const movement = cameraTarget.getComponent('movement');
-            if (movement) {
-                vel = movement.vel;
-            }
+        if(cameraTarget) {
+            vel = cameraTarget.velocity;
         }
 
         for(const star of this.stars) {
@@ -44,12 +59,19 @@ export default class StarBackground {
             if(star.y > this.height) star.y -= this.height;
         }
 
-        this.context.fillStyle = 'white';
+        const currentTime = Date.now() / 1000;
+        for(const star of this.colorChangingStars) {
+            star.colorChangePhase += star.colorChangeRate;
+            const colorIndex = Math.floor((Math.sin(star.colorChangePhase) + 1) / 2 * star.colorPairs.length);
+            star.color = star.colorPairs[colorIndex];
+        }
+
+
         for(const star of this.stars) {
+            this.context.fillStyle = star.color;
             this.context.beginPath();
             this.context.arc(star.x, star.y, star.size, 0, 2 * Math.PI);
             this.context.fill();
         }
-
     }
 }

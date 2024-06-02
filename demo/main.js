@@ -25,7 +25,7 @@ rocket.stack('world', (stack) => {
     stack.addScene(new WorldScene1());
     // stack.addScene(new GameOverScene());
     // stack.addScene(new WorldScene3());
-}, {width: 1920, height: 1080});
+}, {width: 3840, height: 1920});
 //
 // rocket.stack('target', (stack) => {
 //     stack.addScene(new Cockpit());

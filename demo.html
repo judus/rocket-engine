@@ -8,70 +8,11 @@
 	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 	<link rel="icon" href="favicon.ico" type="image/x-icon">
-	<style>
-		* {
-			margin: 0;
-			padding: 0;
-			box-sizing: border-box;
-		}
-
-		html, body {
-			height: 100%;
-			overflow: hidden;
-			background-color: #593A3A;
-		}
-
-		body {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
-
-		#gameContainer {
-			width: 100%;
-			height: 100%;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
-
-		canvas {
-			display: block;
-			border: 5px solid darkslategray;
-			width: 100%;
-			height: 100%;
-			object-fit: contain;
-		}
-
-		#loading {
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-			color: white;
-			font-family: Arial, sans-serif;
-			font-size: 24px;
-		}
-
-		#rocket {
-			position: relative;
-			border: 5px solid darkslategray;
-		}
-
-		#rocket-minimap {
-			position: absolute;
-			top: 0;
-			right: 0;
-			border: 5px solid darkslategray;
-		}
-
-		#rocket-target {
-			position: absolute;
-			top: 0;
-			left: 0;
-			border: 5px solid darkslategray;
-		}
-	</style>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Sixtyfour&family=Workbench&display=swap"
+	      rel="stylesheet">
+	<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div id="rocket">
@@ -79,6 +20,7 @@
 	<div id="rocket-world"></div>
 	<div id="rocket-target"></div>
 	<div id="rocket-minimap"></div>
+	<div id="rocket-hud"></div>
 </div>
 <script type="module" src="demo/main.js"></script>
 <script>
