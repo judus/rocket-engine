@@ -1,15 +1,35 @@
+# General .gitignore file
+
+# Ignore node_modules
+node_modules/
+npm-debug.log
+
+# Ignore logs
+logs/
+*.log
+yarn-debug.log*
+yarn-error.log*
+
+# Ignore environment variables
+.env
+
+# Ignore build files
+build/
+dist/
+
+# Ignore IDE/editor settings
+.idea/
+.vscode/
+*.swp
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore temporary files
+*.tmp
+*.temp
+
+# Ignore specific paths and files
 /demo/assets/css/styles.css
-/demo/assets/images/gunship-fighter-2.png
-/demo/assets/images/gunship-fighter-2-weapontype-1.png
-/demo/assets/images/gunship-fighter-2-weapontype-2.png
-/demo/assets/images/gunship-fighter-2-weapontype-3l.png
-/demo/assets/images/gunship-fighter-2-weapontype-3r.png
-/demo/assets/images/gunship-fighter-2-weapontype-4.png
-/demo/assets/images/gunship-fighter-3.png
-/demo/assets/images/gunship-fighter-3-weapontype-1.png
-/demo/assets/images/gunship-fighter-3-weapontype-2.png
-/demo/assets/images/gunship-fighter-3-weapontype-3.png
-/demo/assets/images/gunship-heavyfighter-1.png
-/demo/assets/images/gunship-heavyfighter-1-weapontype-1.png
-/demo/assets/images/gunship-heavyfighter-1-weapontype-2.png
-/demo/assets/images/gunship-heavyfighter-1-weapontype-3.png
+/demo/assets/images/
