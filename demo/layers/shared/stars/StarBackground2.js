@@ -56,16 +56,18 @@ export default class StarBackground {
         }
 
         const currentTime = Date.now();
-        if(currentTime - this.lastShootingStarTime > 3000 && Math.random() > 0.9) {
-            //this.shootingStars.push(this.createShootingStar());
+        if(currentTime - this.lastShootingStarTime > 10000 && Math.random() > 0.95) { // Less frequent shooting stars
+            this.shootingStars.push(this.createShootingStar());
             this.lastShootingStarTime = currentTime;
         }
 
-        this.context.clearRect(0, 0, this.width, this.height); // Clear the canvas before drawing
-
         for(const star of this.stars) {
             const twinkleOpacity = star.opacity + Math.sin(currentTime * star.twinkle) * 0.3;
-            this.context.fillStyle = `rgba(255, 255, 255, ${twinkleOpacity})`;
+            const gradient = this.context.createRadialGradient(star.x, star.y, 0, star.x, star.y, star.size);
+            gradient.addColorStop(0, `rgba(255, 255, 255, ${twinkleOpacity})`);
+            gradient.addColorStop(1, `rgba(255, 255, 255, 0)`);
+
+            this.context.fillStyle = gradient;
             this.context.beginPath();
             this.context.arc(star.x, star.y, star.size, 0, 2 * Math.PI);
             this.context.fill();
@@ -75,7 +77,17 @@ export default class StarBackground {
             shootingStar.x += shootingStar.speed;
             shootingStar.y += shootingStar.speed;
 
-            this.context.strokeStyle = `rgba(255, 255, 255, ${shootingStar.opacity})`;
+            // Create gradient for shooting star
+            const gradient = this.context.createLinearGradient(
+                shootingStar.x,
+                shootingStar.y,
+                shootingStar.x - shootingStar.length,
+                shootingStar.y - shootingStar.length
+            );
+            gradient.addColorStop(0, `rgba(255, 255, 255, ${shootingStar.opacity})`);
+            gradient.addColorStop(1, `rgba(255, 255, 255, 0)`);
+
+            this.context.strokeStyle = gradient;
             this.context.lineWidth = 2;
             this.context.beginPath();
             this.context.moveTo(shootingStar.x, shootingStar.y);
