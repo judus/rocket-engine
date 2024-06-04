@@ -3,8 +3,6 @@ export default class Vector3D {
         this._x = x;
         this._y = y;
         this._z = z;
-        this.onChange = null;
-        this.isUpdating = false;
     }
 
     get x() {
@@ -21,34 +19,21 @@ export default class Vector3D {
 
     set x(value) {
         this._x = value;
-        if(!this.isUpdating && this.onChange) {
-            this.onChange();
-        }
     }
 
     set y(value) {
         this._y = value;
-        if(!this.isUpdating && this.onChange) {
-            this.onChange();
-        }
     }
 
     set z(value) {
         this._z = value;
-        if(!this.isUpdating && this.onChange) {
-            this.onChange();
-        }
     }
 
     set(x, y, z) {
-        this.isUpdating = true;
         this._x = x;
         this._y = y;
         this._z = z;
-        this.isUpdating = false;
-        if(this.onChange) {
-            this.onChange();
-        }
+
         return this;
     }
 
@@ -100,7 +85,7 @@ export default class Vector3D {
         return this.divide(magnitude);
     }
 
-    distance(vector) {
+    distanceTo(vector) {
         return Math.sqrt(
             (this.x - vector.x) * (this.x - vector.x) +
             (this.y - vector.y) * (this.y - vector.y) +

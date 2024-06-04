@@ -19,6 +19,7 @@ export default class SpatialHashGrid2DDataStore extends BaseDataStore {
     }
 
     set(id, entity) {
+        console.log('setting entity', id);
         super.set(id, entity); // Use BaseDataStore's set method
         //if(entity instanceof SpatialEntity2D) {
             this.setSpatial(entity.pos.x, entity.pos.y, entity);
@@ -32,6 +33,11 @@ export default class SpatialHashGrid2DDataStore extends BaseDataStore {
                 this.deleteSpatial(entity.pos.x, entity.pos.y, entity);
            // }
             super.delete(id); // Use BaseDataStore's delete method
+
+            // console.log('Entity deleted', id);
+            // console.log('Test query:', this.get(id));
+
+
         } else {
             console.warn(`Entity with ID '${id}' not found.`);
         }
@@ -42,6 +48,8 @@ export default class SpatialHashGrid2DDataStore extends BaseDataStore {
     }
 
     setSpatial(x, y, entity) {
+        //console.log('setting spatial', entity.id);
+
         const hash = hashCoordinates(x, y, this.cellSize);
         if(!this.grid.has(hash)) {
             this.grid.set(hash, new Set());
@@ -99,18 +107,20 @@ export default class SpatialHashGrid2DDataStore extends BaseDataStore {
     }
 
     updateEntity(entity) {
-        if (!entity.pos) {
+        if(!entity.pos) {
             console.log(entity);
             throw new Error('Entity does not have a position');
         }
 
-        //if(entity instanceof SpatialEntity2D) {
-            const newHash = hashCoordinates(entity.pos.x, entity.pos.y, this.cellSize);
-            if(entity.spatialHash !== newHash) {
-                this.deleteSpatial(entity.pos.x, entity.pos.y, entity);
-                this.setSpatial(entity.pos.x, entity.pos.y, entity);
-                this.eventBus.emit(entity.id, entity);
-            }
-        //}
+        const newHash = hashCoordinates(entity.pos.x, entity.pos.y, this.cellSize);
+        if(entity.spatialHash !== newHash) {
+            // Debugging: Log the hash change
+            //console.log(`Entity ${entity.id} moving from hash ${entity.spatialHash} to ${newHash}`);
+
+            this.deleteSpatial(entity.pos.x, entity.pos.y, entity);
+            this.setSpatial(entity.pos.x, entity.pos.y, entity);
+            this.eventBus.emit(entity.id, entity);
+        }
     }
+
 }

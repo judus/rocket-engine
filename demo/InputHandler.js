@@ -38,6 +38,7 @@ export default class InputHandler {
         this.eventBus.on("logState", (event) => this.playerActions.handleLogState(event));
         this.eventBus.on("logThis", (event) => this.playerActions.handleLogThis(event));
         this.eventBus.on("key", (event) => this.playerActions.handleKey(event));
+        this.eventBus.on("dropHeatSink", (event) => this.playerActions.handleDropHeatSink(event));
     }
 
 

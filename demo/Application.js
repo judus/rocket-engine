@@ -3,6 +3,9 @@ import GameLogic from './GameLogic.js';
 import EntityInitialization from "./entities/EntityInitialization.js";
 import EngineBase from "../engine/src/abstracts/EngineBase.js";
 import Cockpit from "./html-ui/Cockpit.js";
+import AudioLoader from "./AudioLoader.js";
+import AudioEventHandler from "./AudioEventHandler.js";
+import UserInteractionHandler from "./UserInteractionHandler.js";
 
 export default class Application extends EngineBase {
     init(engine) {
@@ -13,6 +16,8 @@ export default class Application extends EngineBase {
         this.playerActions = new PlayerActions(this.engine);
         this.gameLogic = new GameLogic(this.engine);
         this.cockpit = new Cockpit(this.engine);
+        this.audioLoader = new AudioLoader(this.eventBus);
+        this.audioEventHandler = null;
         console.log('Application initialized.');
     }
 
@@ -45,8 +50,19 @@ export default class Application extends EngineBase {
         this.entityInitialization.createEntities();
         console.log('Entities created.');
 
+        console.log('Loading sounds...');
+        await this.audioLoader.loadSounds();
+        this.audioEventHandler = new AudioEventHandler(this.eventBus, this.audioLoader.getAudioManager());
+        console.log('Sounds loaded.');
 
         this.playerActions.inputHandler.setupEventListeners();
+
+        // Initialize user interaction handler to enable audio
+        new UserInteractionHandler(this.eventBus, () => {
+            this.audioLoader.getAudioManager().enable();
+            this.eventBus.emit('play.music.theme');
+            console.log('User interaction detected. Audio enabled.');
+        });
     }
 
     update(deltaTime) {

@@ -2,7 +2,7 @@ import BaseScene from "../../engine/src/scenes/BaseScene.js";
 import PositionComponent from "../../engine/src/components/PositionComponent.js";
 import RenderComponent from "../../engine/src/components/RenderComponent.js";
 import Entity from "../../engine/src/entities/Entity.js";
-import ExampleLayer from '../layers/ExampleLayer.js';
+import PolygonLayer from '../layers/PolygonLayer.js';
 
 export default class WorldScene3 extends BaseScene {
     constructor() {
@@ -13,8 +13,8 @@ export default class WorldScene3 extends BaseScene {
         super.init(engine);
 
         // Set up layers
-        this.addLayer('backgroundLayer', ExampleLayer);
-        this.addLayer('mainLayer', ExampleLayer);
+        this.addLayer('backgroundLayer', PolygonLayer);
+        this.addLayer('mainLayer', PolygonLayer);
 
         engine.createStore('exampleType');
 

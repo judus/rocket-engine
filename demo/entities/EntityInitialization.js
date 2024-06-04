@@ -36,6 +36,7 @@ export default class EntityInitialization {
                 }
             }
         }
+        console.log(this.entityDefinitions.definitions.weapons.laser);
 
         await Promise.all(promises);
     }

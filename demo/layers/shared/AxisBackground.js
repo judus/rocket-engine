@@ -23,7 +23,9 @@ export default class AxisBackground extends BaseLayer {
 
     drawGrid(scene) {
         const camera = scene.camera;
-        const cellSizeMeters = 50; // Grid size in meters
+        const baseCellSizeMeters = 50; // Base grid size in meters
+        const zoomFactor = Math.pow(2, Math.floor(Math.log2(camera.zoomLevel))); // Adjust cell size based on zoom level
+        const cellSizeMeters = baseCellSizeMeters / zoomFactor;
         const cellSizePixels = CustomPhysics2D.metersToPixels(cellSizeMeters); // Convert grid size to pixels
         const width = this.canvas.width;
         const height = this.canvas.height;
@@ -61,6 +63,7 @@ export default class AxisBackground extends BaseLayer {
             }
         }
     }
+
 
     drawAxis(scene) {
         // Get camera position and zoom level

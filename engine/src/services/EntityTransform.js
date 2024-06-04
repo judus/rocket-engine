@@ -1,3 +1,5 @@
+import Vector3D from "../utils/maths/Vector3D.js";
+
 export default class EntityTransform {
     static updateVertices(entity, vertices) {
         return vertices.map(vertex => {
@@ -16,7 +18,7 @@ export default class EntityTransform {
     }
 
     static getGlobalPosition(entity) {
-        let globalPos = {x: entity.pos.x, y: entity.pos.y};
+        let globalPos = new Vector3D(entity.pos.x, entity.pos.y, entity.pos.z);
         let currentParent = entity.parent;
 
         while(currentParent) {
@@ -27,6 +29,7 @@ export default class EntityTransform {
 
             globalPos.x = rotatedX + currentParent.pos.x;
             globalPos.y = rotatedY + currentParent.pos.y;
+            globalPos.z = globalPos.z + currentParent.pos.z; // Ensure Z position is also handled
             currentParent = currentParent.parent;
         }
 

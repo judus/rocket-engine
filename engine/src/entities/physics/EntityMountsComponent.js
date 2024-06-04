@@ -63,18 +63,27 @@ export default class EntityMountsComponent extends BaseComponent {
 
     updatePositions() {
         const entityPosition = this.entity.getGlobalPosition();
-        const entityOrientation = this.entity.getGlobalRotation();
+        const entityRotation = this.entity.getGlobalRotation();
 
         Object.values(this.mounts).forEach(mountArray => {
             mountArray.forEach(mount => {
                 if(mount.currentEntity) {
-                    const rotatedPosition = mount.position.rotate(entityOrientation);
+                    // Rotate the mount position based on the entity's rotation
+                    const rotatedPosition = mount.position.rotate(entityRotation);
+
+                    // Set the new position of the mounted entity
                     mount.currentEntity.pos.set(
                         entityPosition.x + rotatedPosition.x,
                         entityPosition.y + rotatedPosition.y,
                         mount.currentEntity.pos.z // Retain the original z position
                     );
-                    mount.currentEntity.orientation = entityOrientation;
+
+                    // Adjust the rotation of the mounted entity
+                    mount.currentEntity.rotation = entityRotation;
+
+                    // Logging for debugging
+                    //console.log(`Entity Position: ${entityPosition}, Rotation: ${entityRotation}`);
+                    //console.log(`Mount ID: ${mount.id}, New Position: ${mount.currentEntity.pos}, Rotation: ${mount.currentEntity.rotation}`);
                 }
             });
         });

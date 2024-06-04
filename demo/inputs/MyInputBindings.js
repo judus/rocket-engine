@@ -37,6 +37,9 @@ export default class MyInputBindings extends InputBindings {
             'q': {
                 down: () => this.eventBus.emit('switchAutoOrientation'),
             },
+            'h': {
+                down: () => this.eventBus.emit('dropHeatSink'),
+            },
             'k': {
                 down: () => this.eventBus.emit('logState'),
             },

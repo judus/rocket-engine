@@ -32,7 +32,8 @@ export default class Entity2D {
         this.rotationalDragCoefficient = config.rotationalDragCoefficient || 0.1;
 
         // Functional
-        this.taskScheduler = engine.create(EngineParts.TASK_SCHEDULER);
+        this.updateTaskScheduler = engine.create(EngineParts.TASK_SCHEDULER);
+        this.renderTaskScheduler = engine.create(EngineParts.TASK_SCHEDULER);
         this.eventBus = engine.service(EngineParts.EVENT_BUS);
         this.components = {};
         this.behavior = config.behavior || null;
@@ -95,10 +96,10 @@ export default class Entity2D {
         component.onAdd(this);
 
         if(component.update) {
-            this.taskScheduler.addTask(component.update.bind(component), component.constructor.name, updateFrequency);
+            this.updateTaskScheduler.addTask(component.update.bind(component), component.constructor.name, updateFrequency);
         }
         if(component.render) {
-            //this.taskScheduler.addTask(component.render.bind(component), component.constructor.name, renderFrequency);
+            this.renderTaskScheduler.addTask(component.render.bind(component), component.constructor.name, renderFrequency);
         }
     }
 
@@ -106,8 +107,8 @@ export default class Entity2D {
         const component = this.components[componentType];
         if(component) {
             component.onRemove();
-            this.taskScheduler.removeTask(component.update.bind(component));
-            this.taskScheduler.removeTask(component.render.bind(component));
+            this.updateTaskScheduler.removeTask(component.update.bind(component));
+            this.renderTaskScheduler.removeTask(component.render.bind(component));
             delete this.components[componentType];
         }
     }
@@ -119,11 +120,13 @@ export default class Entity2D {
         }
         child.parent = this;
         this.children.push(child);
+        this.entityManager.removeEntity(child);
     }
 
     removeChild(child) {
         this.children = this.children.filter(c => c !== child);
         child.parent = null;
+        this.entityManager.addEntity(child);
     }
 
     getGlobalPosition() {
@@ -139,28 +142,33 @@ export default class Entity2D {
     }
 
     update(deltaTime) {
-        this.taskScheduler.runTasks(deltaTime);
-        CustomPhysics2D.update(this, deltaTime);
-        this.children.forEach(child => child.update(deltaTime));
+        // Run all update component tasks
+        this.updateTaskScheduler.runTasks(deltaTime);
+
+        // Update the spatial hash grid if there is no parent
+        if(!this.parent && this.entityManager) {
+            this.entityManager.updateEntity(this);
+        }
+
+        // Update children after physics updates
+        this.children.forEach(child => child.update(deltaTime)); // Children don't have physics components
     }
 
-    render(context) {
-        Object.values(this.components).forEach(component => {
-            if(component.render) {
-                const globalPos = this.getGlobalPosition();
-                component.render(context, globalPos.x, globalPos.y);
-            }
-        });
+    render(deltaTime, context, entity, camera) {
+        // Run all render component tasks
+        this.renderTaskScheduler.runTasks(deltaTime, context, entity, camera);
+
+        // Render children
         this.children.forEach(child => child.render(context));
     }
 
     setBehavior(behavior, frequency = 1) {
         if(this.behavior) {
-            this.taskScheduler.removeTask(this.behavior.perform.bind(this.behavior, this));
+            this.updateTaskScheduler.removeTask(this.behavior.perform.bind(this.behavior, this));
         }
         this.behavior = behavior;
         if(behavior) {
-            this.taskScheduler.addTask(behavior.perform.bind(behavior, this), behavior.constructor.name, frequency);
+            this.updateTaskScheduler.addTask(behavior.perform.bind(behavior, this), behavior.constructor.name, frequency);
         }
     }
 

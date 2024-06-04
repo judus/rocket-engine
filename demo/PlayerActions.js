@@ -143,6 +143,10 @@ export default class PlayerActions {
         this.entityController.switchEngineProfile();
     }
 
+    handleDropHeatSink(event) {
+        this.entityController.dropHeatSink();
+    }
+
     handleKey(key) {
         this.entityController.switchGroup(key);
     }

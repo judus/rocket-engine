@@ -1,8 +1,8 @@
 import Entity2D from "./Entity2D.js";
 
 export default class Weapon extends Entity2D {
-    constructor(engine, config) {
-        super(engine, config);
+    constructor(engine, config, id = null) {
+        super(engine, config, id);
         this.type = config.type;
         this.damage = config.damage;
         this.energyConsumption = config.energyConsumption;

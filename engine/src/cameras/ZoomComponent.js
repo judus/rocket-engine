@@ -33,7 +33,7 @@ export default class ZoomComponent extends CameraComponent {
     zoom(deltaY) {
         const zoomChange = deltaY < 0 ? 0.1 : -0.1;
         const newZoom = this.targetZoom + zoomChange;
-        this.setZoom(Math.max(0.5, Math.min(newZoom, 3)));
+        this.setZoom(Math.max(1, Math.min(newZoom, 3)));
     }
 
     update(deltaTime) {

@@ -4,6 +4,7 @@ import EntityManager from "./EntityManager.js";
 import EngineParts from "../EngineParts.js";
 import StringHelpers from "../utils/StringHelpers.js";
 import Spatial2D from "../utils/spatial/Spatial2D.js";
+import Vector3D from "../utils/maths/Vector3D.js";
 
 export default class Entity {
     constructor(engine, config, id = null) {
@@ -12,7 +13,7 @@ export default class Entity {
         this.type = config.type || this.constructor.name;
 
         // Geometry (provisional - to be extended or replaced)
-        this.pos = config.pos ? new Spatial2D(config.pos.x, config.pos.y) : new Spatial2D(0, 0);
+        this.pos = config.pos ? new Vector3D(config.pos.x, config.pos.y, 0) : new Vector3D(0, 0, 0);
         this.width = config.width || 0;
         this.height = config.height || 0;
         this.scale = config.scale || 1;

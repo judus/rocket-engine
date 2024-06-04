@@ -1,17 +1,24 @@
 import Weapon from "./Weapon.js";
+import RenderComponent from "../../components/RenderComponent.js";
+import Drawing from "../../services/Drawing.js";
+import SpriteComponent from "../../sprites/SpriteComponent.js";
 
 export default class LaserWeapon extends Weapon {
-    constructor(engine) {
+    constructor(engine, id = null) {
         const config = {
             type: 'laser',
             damage: 10,
             energyConsumption: 5,
             rateOfFire: 500, // ms
-            width: 1,
-            height: 2,
-            pos: {x: 0, y: 0, z: 0}
+            width: 12,
+            height: 46,
+            pos: {x: 100, y: 100, z: 0}
         };
-        super(engine, config);
+
+        super(engine, config, id);
+
+        this.spriteSheet = this.engine.spriteSheetManager().getSpriteSheet('gunship-fighter-2-weapontype-1');
+        this.addComponent('sprite', new SpriteComponent(this.spriteSheet, 0), 1 / 60);
     }
 
     fire() {

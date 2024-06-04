@@ -79,11 +79,18 @@ export default class EntityController {
     }
 
     switchGroup(group) {
-        console.log('Switching group to: ', group);1
+        console.log('Switching group to: ', group);
         if(!this.currentEntity) return;
         this.currentEntity.hasComponent("weaponSystem", (weaponSystem) => {
             weaponSystem.switchGroup(group);
         });
     }
 
+    dropHeatSink() {
+        console.log("Dropping heat sink...");
+        if(!this.currentEntity) return;
+        this.currentEntity.hasComponent('heatManager', (component) => {
+            component.dropHeatSink();
+        });
+    }
 }

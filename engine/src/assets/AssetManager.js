@@ -14,7 +14,7 @@ export default class AssetManager {
         this.eventBus = engine.eventBus();
     }
 
-    setBinaryManager(binaryManager) {
+    setBinaryManager(binaryManager) {a
         this.binaryManager = binaryManager;
     }
 

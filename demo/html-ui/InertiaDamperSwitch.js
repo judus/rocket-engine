@@ -33,6 +33,7 @@ export default class InertiaDamperSwitch extends UIComponent {
 
     toggleState() {
         this.setState(!this.state);
-        this.ui.eventBus.emit('switch:stateChange', {state: this.state});
+        this.ui.eventBus.emit('component.state.update', {state: this.state});
+        this.ui.eventBus.emit('component.switch');
     }
 }

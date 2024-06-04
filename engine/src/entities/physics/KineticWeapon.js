@@ -1,7 +1,7 @@
 import Weapon from "./Weapon.js";
 
 export default class KineticWeapon extends Weapon {
-    constructor(engine) {
+    constructor(engine, id = null) {
         const config = {
             type: 'kinetic',
             damage: 15,
@@ -11,7 +11,7 @@ export default class KineticWeapon extends Weapon {
             height: 2,
             pos: {x: 0, y: 0, z: 0}
         };
-        super(engine, config);
+        super(engine, config, id);
     }
 
     fire() {

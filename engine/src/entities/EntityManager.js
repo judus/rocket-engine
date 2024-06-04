@@ -6,6 +6,11 @@ export default class EntityManager {
     }
 
     addEntity(entity, type = null) {
+        if(entity.parent) {
+            console.warn(`Entity ${entity.id} has a parent and will not be added to the store.`);
+            return;
+        }
+
         this.entities.set(entity.id, entity);
 
         // Determine the appropriate datastore for the entity
@@ -29,7 +34,7 @@ export default class EntityManager {
         if(!store) {
             throw new Error(`Data store for type ${entity.type} not found`);
         }
-
+        console.log(`Removing entity ${entity.id} from store ${storeName}`);
         store.delete(entity.id);
     }
 
@@ -84,6 +89,11 @@ export default class EntityManager {
     }
 
     updateEntity(entity, type = null) {
+        if(entity.parent) {
+            //console.warn(`Entity ${entity.id} has a parent and will not be updated in the store.`);
+            return;
+        }
+
         // Update the entity in the appropriate datastore
         const storeName = this.getStoreNameForType(type, entity);
         const store = this.dataStoreManager.getStore(storeName);

@@ -1,5 +1,5 @@
 import BaseScene from "../../engine/src/scenes/BaseScene.js";
-import ExampleLayer from '../layers/ExampleLayer.js';
+import PolygonLayer from '../layers/PolygonLayer.js';
 import BackgroundLayer from "../layers/shared/BackgroundLayer.js";
 import ParallaxBackground from "../layers/shared/stars/ParallaxBackground.js";
 import ProjectileLayer from "../layers/shared/ProjectileLayer.js";
@@ -20,13 +20,13 @@ export default class WorldScene1 extends BaseScene {
     init(engine) {
         super.init(engine);
         // Set up layers
-        this.addLayer('backgroundLayer', BackgroundLayer);
+        //this.addLayer('backgroundLayer', BackgroundLayer);
         this.addLayer('ParallaxBackground', ParallaxBackground);
         this.addLayer('ParallaxBackground2', ParallaxBackground2);
         this.addLayer('axisBackground', AxisBackground);
         this.addLayer('highlight', HighlightBackground);
-        this.addLayer('foregroundLayer', ExampleLayer);
-        //this.addLayer('spriteLayer', SpriteLayer); // Add the new sprite layer
+        this.addLayer('spriteLayer', SpriteLayer); // Add the new sprite layer
+        this.addLayer('foregroundLayer', PolygonLayer);
         //this.addLayer('ParticleLayer', ParticleLayer);
         //this.addLayer('ProjectileLayer', ProjectileLayer);
 

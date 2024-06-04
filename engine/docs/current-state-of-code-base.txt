@@ -198,10 +198,10 @@ this.type = config.type || this.constructor.name;
 import Entity2D from "./Entity2D.js";
 import EntityMountsComponent from "./EntityMountsComponent.js";
 import WeaponSystemComponent from "./WeaponSystemComponent.js";
-import PowerPlantComponent from "./PowerPlantComponent.js";
-import InertiaDamperComponent from "./InertiaDamperComponent.js";
+import ReactorComponent from "./ReactorComponent.js";
+import DamperComponent from "./DamperComponent.js";
 import EngineComponent from "./EngineComponent.js";
-import EngineControllerComponent from "./EngineControllerComponent.js";
+import ControllerComponent from "./ControllerComponent.js";
 import PhysicsComponent from "./PhysicsComponent.js";
 import EnvironmentComponent from "./EnvironmentComponent.js";
 import Vector3D from "../../utils/maths/Vector3D.js";
@@ -269,10 +269,10 @@ velocity: new Vector3D(0, 0, 0),
         this.config = config;
 
         // Add PowerPlant component before others that depend on it
-        this.addComponent('powerPlantComponent', new PowerPlantComponent(config.maxEnergy, config.rechargeRate), 1 / 60, 2);
+        this.addComponent('powerPlantComponent', new ReactorComponent(config.maxEnergy, config.rechargeRate), 1 / 60, 2);
 
         // Add inertia damper after scaling and powerPlant
-        const inertiaDamper = new InertiaDamperComponent(config.damperSettings);
+        const inertiaDamper = new DamperComponent(config.damperSettings);
         inertiaDamper.setProfile('arcade'); // Set the profile here
         this.addComponent('inertiaDamperComponent', inertiaDamper, 1 / 60, 3);
 
@@ -282,7 +282,7 @@ velocity: new Vector3D(0, 0, 0),
         this.addComponent('engineComponent', engineComponent, 1 / 60, 4);
 
         // Add engineController component which depends on engine
-        this.addComponent('engineControllerComponent', new EngineControllerComponent(), 1 / 60, 5);
+        this.addComponent('engineControllerComponent', new ControllerComponent(), 1 / 60, 5);
 
         // Add EnvironmentComponent to apply environmental effects like drag
         this.addComponent('environmentComponent', new EnvironmentComponent(), 1 / 60, 6);
@@ -353,7 +353,7 @@ export default class BaseComponent {
 
 import BaseComponent from '../../abstracts/BaseComponent.js';
 
-export default class PowerPlantComponent extends BaseComponent {
+export default class ReactorComponent extends BaseComponent {
 constructor(maxEnergy, rechargeRate) {
 super();
 this.maxEnergy = maxEnergy;
@@ -391,7 +391,7 @@ CustomPhysics2D.update(this.entity, deltaTime);
 
 import BaseComponent from "../../abstracts/BaseComponent.js";
 
-export default class InertiaDamperComponent extends BaseComponent {
+export default class DamperComponent extends BaseComponent {
 constructor(profiles) {
 super();
 this.profiles = profiles;
@@ -469,7 +469,7 @@ this.hasEnergy = true; // Indicates if the damper has sufficient energy
 import BaseComponent from '../../abstracts/BaseComponent.js';
 import Vector3D from "../../utils/maths/Vector3D.js";
 
-export default class EngineControllerComponent extends BaseComponent {
+export default class ControllerComponent extends BaseComponent {
 constructor() {
 super();
 this.profile = 'arcade';

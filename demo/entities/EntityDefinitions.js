@@ -3,10 +3,12 @@ import Station from './Station.js';
 import Starship from './Starship.js';
 import Asteroid from './Asteroid.js';
 import Faction from './Faction.js';
+import LaserWeapon from "../../engine/src/entities/physics/LaserWeapon.js";
 
 export default class EntityDefinitions {
     constructor() {
         this.definitions = {
+
             factions: {
                 faction_1: {
                     id: 'faction_1',
@@ -223,8 +225,29 @@ export default class EntityDefinitions {
                             {x: -12, y: 12},
                         ],
                     },
-                }
-            }
+                },
+            },
+            weapons: {
+                laser: {
+                    entityClass: LaserWeapon,
+                    type: 'laser',
+                    damage: 10,
+                    energyConsumption: 5,
+                    rateOfFire: 500, // ms
+                    width: 12,
+                    height: 60,
+                    pos: {x: 0, y: 0, z: 0},
+                    sprite: {
+                        orientation: Math.PI / 2,
+                        name: 'gunship-fighter-2-weapontype-1',
+                        image: 'demo/assets/images/gunship-fighter-2-weapontype-1.png',
+                        width: 46,
+                        height: 12,
+                        frames: 1
+                    },
+                },
+            },
+
         };
     }
 

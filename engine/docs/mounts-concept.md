@@ -43,7 +43,7 @@
             - Groups can be activated or deactivated based on tactical requirements.
             - Only active weapon groups consume energy.
 
-3. **PowerPlantComponent**
+3. **ReactorComponent**
     - **Responsibilities**:
         - Manage the energy capacity and recharge rate of an entity.
         - Consume energy for various operations, including weapon firing and utility usage.
@@ -148,7 +148,7 @@ entity.hasComponent('weaponSystem', (component) => component.fire());
 
 - **EntityMounts Component**: Manages all types of mounts and their positions relative to the entity.
 - **WeaponSystem Component**: Manages weapon mounts and groups.
-- **PowerPlantComponent**: Manages energy consumption and recharge.
+- **ReactorComponent**: Manages energy consumption and recharge.
 - **Entity Class**: Uses the `EntityMounts` and `WeaponSystem` components to handle mounts and weapons.
 - **MountProfile Class**: Defines mount configurations.
 - **MountableEntity Interface**: Ensures common behavior for mountable entities.

@@ -31,7 +31,6 @@ export default class Player extends StarShip {
         this.station = null;
 
         this.dataStoreManager = dataStoreManager;
-        this.spriteSheet = this.engine.spriteSheetManager().getSpriteSheet('gunship-fighter-3');
         //this.particleSystem = this.dataStoreManager.getStore('global').get('particleSystem');
 
         this.collisionBoxes = config.collisionBoxes || [];
@@ -64,11 +63,11 @@ export default class Player extends StarShip {
 
         // Handles position, rotation and scale
         // Needs update only when in view port
-        this.addComponent('transform', new TransformComponent(0, 0, this.rotation, this.scale), 1 / 60);
+        //this.addComponent('transform', new TransformComponent(0, 0, this.rotation, this.scale), 1 / 60);
 
         // Handles sprite sheet according to the movement component
         // Needs update only when moving and in view port
-        this.addComponent('sprite', new SpriteComponent(this.spriteSheet, 0), 1 / 60);
+        //this.addComponent('sprite', new SpriteComponent(this.spriteSheet, 0), 1 / 60);
 
         // Handles the polygon representation of the entity according to the movement component
         // Needs update only when moving and in view port

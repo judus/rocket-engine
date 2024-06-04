@@ -1,12 +1,18 @@
 export default class AudioManager {
     constructor() {
         this.sounds = {};
+        this.enabled = false;
     }
 
-    load(name, url) {
+    enable() {
+        this.enabled = true;
+    }
+
+    load(name, url, options = {loop: false}) {
         return new Promise((resolve, reject) => {
             const audio = new Audio();
             audio.oncanplaythrough = () => {
+                audio.loop = options.loop;
                 this.sounds[name] = audio;
                 resolve(audio);
             };
@@ -15,10 +21,18 @@ export default class AudioManager {
         });
     }
 
-    play(name) {
+    play(name, loop = false) {
+        if(!this.enabled) {
+            console.warn(`AudioManager: Audio is not enabled yet. Sound '${name}' not played.`);
+            return;
+        }
+
         const sound = this.sounds[name];
         if(sound) {
-            sound.play();
+            sound.loop = loop; // Set the loop property based on the parameter
+            sound.play().catch(error => {
+                console.error(`AudioManager: Failed to play sound '${name}'`, error);
+            });
         } else {
             console.warn(`Sound '${name}' does not exist.`);
         }
