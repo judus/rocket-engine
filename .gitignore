@@ -33,3 +33,4 @@ Thumbs.db
 # Ignore specific paths and files
 /demo/assets/css/styles.css
 /demo/assets/images/
+/demo/assets/sounds/
