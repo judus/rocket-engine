@@ -5,6 +5,7 @@ export default class AudioLoader {
         this.eventBus = eventBus;
         this.audioManager = new AudioManager();
         this.sounds = [
+            {name: 'device.overheat', url: 'demo/assets/sounds/2_SHORT_Electro_Cyber_Chaos_P1-03.wav'},
             {name: 'device.failure', url: 'demo/assets/sounds/Short_Device_Failure_SFX_33.wav'},
             {name: 'device.wakeup', url: 'demo/assets/sounds/mech01.wav'},
             {name: 'device.switch', url: 'demo/assets/sounds/Click03.mp3'},

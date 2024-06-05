@@ -23,7 +23,7 @@ export default class AudioManager {
 
     play(name, loop = false) {
         if(!this.enabled) {
-            console.warn(`AudioManager: Audio is not enabled yet. Sound '${name}' not played.`);
+            //console.warn(`AudioManager: Audio is not enabled yet. Sound '${name}' not played.`);
             return;
         }
 

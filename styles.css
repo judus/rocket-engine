@@ -1,6 +1,11 @@
 :root {
 	--primary-color: rgba(20, 148, 189, 0.8);
+	--black-color: rgba(0, 0, 0);
+	--background-color: rgba(0, 0, 0, 0.3);
 	--text-color: rgba(58, 203, 255, 0.8);
+	--success-color: rgb(0, 115, 36);
+	--alert-color: rgb(134, 40, 0);
+	--disabled-color: rgb(128, 128, 128, 0.7);
 
 	--font-family: 'Orbitron', sans-serif;
 
@@ -67,6 +72,10 @@ canvas:hover {
 
 }
 
+#rocket-main {
+	cursor: crosshair;
+}
+
 #rocket-minimap {
 	display: none;
 	position: absolute;
@@ -87,9 +96,8 @@ canvas:hover {
 	position: absolute;
 	width: 100%;
 	height: 100%;
-	top: 0px;
-	left: 0px;
-	padding: 0px;
+	top: 0;
+	left: 0;
 	display: flex;
 	flex-direction: column;
 	color: var(--primary-color);
@@ -100,6 +108,8 @@ canvas:hover {
 	font-weight: bold;
 	border: 4px solid var(--primary-color);
 	padding: 5px;
+	cursor: crosshair;
+
 
 	.font-small {
 		font-size: 12px;
@@ -118,11 +128,12 @@ canvas:hover {
 		}
 
 		progress {
+			padding: 2px;
 			width: 100%;
-			height: 16px;
+			height: 20px;
 			-webkit-appearance: none; /* Remove default styling for WebKit browsers */
 			appearance: none; /* Remove default styling */
-			border: 1px solid var(--primary-color);
+			border: 2px solid var(--primary-color);
 		}
 
 		/* WebKit browsers (Safari, Chrome) */
@@ -164,7 +175,6 @@ canvas:hover {
 	button {
 		background-color: var(--primary-color);
 		width: 100%;
-		border: none;
 		padding: 1px;
 		cursor: pointer;
 		font-family: var(--font-family);
@@ -189,14 +199,94 @@ canvas:hover {
 		margin: 5px 0;
 	}
 
-	.ui-component li.is-active {
-		background-color: #007300;
-		color: white;
+
+	.ui-component {
+		background: linear-gradient(
+				to right,
+				rgba(9, 55, 66, 0.3) 30%,
+				var(--background-color) 100%
+		);
+		h3 {
+			font-size: 16px;
+		}
+		.flex {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin: 5px 0;
+		}
+
+		.component {
+			color: var(--disabled-color);
+			padding: 5px;
+			border: 1px solid var(--primary-color);
+
+			button {
+				border-color: var(--primary-color);
+				color: var(--primary-color);
+				background-color: transparent;
+			}
+
+			.component-label {
+				font-size: 14px;
+				color: var(--primary-color);
+			}
+
+			.component-energy {
+				color: var(--disabled-color);
+			}
+
+			&.is-broken {
+				border-color: var(--disabled-color);
+				color: var(--disabled-color);
+
+				button,
+				.component-energy,
+				.component-label {
+					color: var(--disabled-color);
+				}
+
+				button {
+					background-color: transparent;
+				}
+			}
+
+			&.is-active {
+				&:not(.is-broken) {
+					.component-label,
+					.component-temperature{
+						color: var(--primary-color);
+					}
+					.component-energy {
+						color: var(--success-color);
+					}
+
+					button {
+						color: var(--black-color);
+						background-color: var(--primary-color);
+					}
+				}
+			}
+
+			&.is-overheated {
+				&:not(.is-broken) {
+					.component-temperature {
+						color: var(--alert-color);
+					}
+				}
+			}
+		}
 	}
 
-	.ui-component li.is-inactive {
-		background-color: #940000;
-		color: white;
-	}
+	.life-support {
+		.flex {
+			border-top: 1px solid var(--primary-color);
+			padding-top: 5px;
+			&:last-of-type {
+				border-bottom: 1px solid var(--primary-color);
+				padding-bottom: 3px;
+			}
+		}
 
+	}
 }

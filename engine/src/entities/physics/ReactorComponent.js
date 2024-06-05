@@ -7,8 +7,8 @@ export default class ReactorComponent extends ShipComponent {
         const profile = profiles[defaultProfile];
         this.label = 'Reactor';
         this.maxEnergy = convertMegawattsToJoulesPerSecond(profile.maxEnergyMW);
-        this.energy = this.maxEnergy;
         this.rechargeRate = convertMegawattsToJoulesPerSecond(profile.rechargeRateMW);
+        this.energy = this.maxEnergy;
     }
 
     setEnergyManager(energyManager) {
@@ -16,15 +16,14 @@ export default class ReactorComponent extends ShipComponent {
     }
 
     recharge(deltaTime) {
-        this.energy = Math.min(this.maxEnergy, this.energy + this.rechargeRate * deltaTime);
-        this.energyManager && this.energyManager.updateEnergy(this.energy);
-        if(this.heatManager) {
-            this.heatManager.addHeat(this.heatProductionRate * deltaTime);
+        if(this.isActive) {
+            this.energy = Math.min(this.maxEnergy, this.energy + this.rechargeRate * deltaTime);
+            this.energyManager && this.energyManager.updateEnergy(this.energy);
         }
     }
 
     consume(amount) {
-        if(this.energy >= amount) {
+        if(this.isActive && this.energy >= amount) {
             this.energy -= amount;
             this.energyManager && this.energyManager.updateEnergy(this.energy);
             return true;
@@ -34,5 +33,22 @@ export default class ReactorComponent extends ShipComponent {
 
     update(deltaTime) {
         this.recharge(deltaTime);
+    }
+
+    activate() {
+        if(this.userRequestedState && !this.isActive) {
+            this.isActive = true;
+            console.log(`${this.label} activated`);
+            this.entity.eventBus.emit('component.activate', {component: this});
+        }
+    }
+
+    deactivate() {
+        if(!this.userRequestedState && this.isActive) {
+            this.isActive = false;
+            console.log(`${this.label} deactivated`);
+            this.entity.eventBus.emit('component.deactivate', {component: this});
+            this.energyManager && this.energyManager.updateEnergy(0); // Ensure energy is set to 0 when deactivated
+        }
     }
 }

@@ -1,13 +1,4 @@
-import BaseComponent from '../../abstracts/BaseComponent.js';
-
-class ComponentInfo {
-    constructor(component, energyCostMW, priority) {
-        this.component = component;
-        this.energyCost = energyCostMW * 1000000; // Convert MW to J/s
-        this.priority = priority;
-        this.isActive = false;
-    }
-}
+import BaseComponent from "../../abstracts/BaseComponent.js";
 
 export default class EnergyManagerComponent extends BaseComponent {
     constructor() {
@@ -15,12 +6,28 @@ export default class EnergyManagerComponent extends BaseComponent {
         this.components = [];
         this.totalEnergyCost = 0;
         this.availableEnergy = 0;
+        this.eventBusListenerAdded = false;
     }
 
     registerComponent(component, energyCostMW, priority) {
-        this.components.push(new ComponentInfo(component, energyCostMW, priority));
+        this.components.push(component);
         this.components.sort((a, b) => a.priority - b.priority);
         this.totalEnergyCost += energyCostMW * 1000000; // Convert MW to J/s
+
+        // Ensure the component.toggle event listener is added only once
+        if(!this.eventBusListenerAdded) {
+            this.entity.eventBus.on('component.toggle', this.toggleComponent.bind(this));
+            this.eventBusListenerAdded = true;
+        }
+    }
+
+    toggleComponent(componentName) {
+        const component = this.components.find(info => info.label === componentName);
+        if(component) {
+            component.userRequestedState = !component.userRequestedState;
+            console.log(`${component.label} userRequestedState: ${component.userRequestedState}`);
+            this.manageEnergyConsumption();
+        }
     }
 
     updateEnergy(availableEnergy) {
@@ -28,38 +35,24 @@ export default class EnergyManagerComponent extends BaseComponent {
         this.manageEnergyConsumption();
     }
 
-    allocateEnergy(energyCost) {
-        if(this.availableEnergy >= energyCost) {
-            this.availableEnergy -= energyCost;
-            return true;
-        }
-        return false;
-    }
-
-    consumeEnergy(energyAmount) {
-        if(this.availableEnergy >= energyAmount) {
-            this.availableEnergy -= energyAmount;
-            return true;
-        }
-        return false;
-    }
-
     manageEnergyConsumption() {
         let currentEnergy = this.availableEnergy;
         let stateChanged = false;
 
-        this.components.forEach(info => {
-            if(currentEnergy >= info.energyCost) {
-                if(!info.isActive) {
-                    info.component.activate();
-                    info.isActive = true;
+        this.components.forEach(component => {
+            //console.log(`Component: ${component.label}, userRequestedState: ${component.userRequestedState}, isActive: ${component.isActive}`);
+
+            if(component.userRequestedState && currentEnergy >= component.energyCost) {
+                if(!component.isActive) {
+                    component.isActive = true;
+                    component.activate();
                     stateChanged = true;
                 }
-                currentEnergy -= info.energyCost;
+                currentEnergy -= component.energyCost;
             } else {
-                if(info.isActive) {
-                    info.component.deactivate();
-                    info.isActive = false;
+                if(component.isActive) {
+                    component.isActive = false;
+                    component.deactivate();
                     stateChanged = true;
                 }
             }
@@ -71,9 +64,13 @@ export default class EnergyManagerComponent extends BaseComponent {
     }
 
     getComponentStates() {
-        return this.components.map(info => ({
-            name: info.component.label,
-            isActive: info.isActive
+        return this.components.map(component => ({
+            name: component.label,
+            isActive: component.isActive,
+            userRequestedState: component.userRequestedState,
+            energyCost: component.energyCost / 1000000, // Convert back to MW
+            temperature: component.currentTemperature,
+            isOverheated: component.currentTemperature >= component.maxTemperature,
         }));
     }
 

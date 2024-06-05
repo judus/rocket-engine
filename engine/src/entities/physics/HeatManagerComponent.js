@@ -1,112 +1,96 @@
 import BaseComponent from '../../abstracts/BaseComponent.js';
 
-class HeatProducer {
-    constructor(component, heatProductionRate, maxTemperature) {
-        this.component = component;
-        this.heatProductionRate = heatProductionRate;
-        this.maxTemperature = maxTemperature;
-        this.currentTemperature = 0;
-        this.health = component.health || 100; // Default health if not provided in the component
-    }
-
-    addHeat(amount) {
-        console.log(`${this.component.label} temperature: ${this.currentTemperature}`);
-        this.currentTemperature = Math.min(this.maxTemperature, this.currentTemperature + amount);
-    }
-
-    dissipateHeat(dissipationRate) {
-        this.currentTemperature = Math.max(0, this.currentTemperature - dissipationRate);
-    }
-
-    isOverheated() {
-        return this.currentTemperature >= this.maxTemperature;
-    }
-}
-
 export default class HeatManagerComponent extends BaseComponent {
-    constructor(maxHeat, globalDissipationRate) {
+    constructor(globalDissipationFactor = 0.1) { // Lower dissipation factor
         super();
-        this.maxHeat = maxHeat;
-        this.globalDissipationRate = globalDissipationRate;
-        this.currentHeat = 0;
+        this.globalTemperature = 18; // Initial global temperature
+        this.globalMaxTemperature = 50; // Max global temperature
+        this.globalDissipationFactor = globalDissipationFactor; // Heat dissipation factor
         this.heatProducers = [];
     }
 
     registerHeatProducer(component, heatProductionRate, maxTemperature) {
-        console.log(`Registering heat producer: ${component.label}`, maxTemperature)
-        console.log(component);
-        this.heatProducers.push(new HeatProducer(component, heatProductionRate, maxTemperature));
+        console.log(`Registering HeatProducer for ${component.label}`, {
+            heatProductionRate,
+            maxTemperature
+        });
+
+        this.heatProducers.push(component);
     }
 
     unregisterHeatProducer(component) {
-        this.heatProducers = this.heatProducers.filter(producer => producer.component !== component);
+        this.heatProducers = this.heatProducers.filter(producer => producer !== component);
     }
 
     addHeat(amount) {
-        this.currentHeat = Math.min(this.maxHeat, this.currentHeat + amount);
+        //console.log(`Adding global heat: ${amount}`);
+        this.globalTemperature += amount;
+        //console.log(`Global temperature: ${this.globalTemperature}°C`);
     }
 
-    dissipateHeat(deltaTime) {
-        this.currentHeat = Math.max(0, this.currentHeat - this.globalDissipationRate * deltaTime);
-
-        // Also dissipate heat from individual components
-        this.heatProducers.forEach(producer => {
-            producer.dissipateHeat(this.globalDissipationRate * deltaTime);
-        });
+    removeHeat(amount) {
+        //console.log(`Removing global heat: ${amount}`);
+        this.globalTemperature -= amount;
+        //console.log(`Global temperature: ${this.globalTemperature}°C`);
     }
 
-    applyDamage() {
-        if(this.heatProducers.length === 0) {
-            return;
-        }
-
-        // Sort heat producers by heat production rate in descending order
-        this.heatProducers.sort((a, b) => b.heatProductionRate - a.heatProductionRate);
-
-        // Find the highest heat producer that is active
-        for(let producer of this.heatProducers) {
-            if(producer.component.isActive) {
-                producer.health -= 35;
-                console.warn(`${producer.component.label} takes 35 damage due to overheating! Health remaining: ${producer.health}`);
-                if(producer.health <= 0) {
-                    producer.component.deactivate();
-                    console.warn(`${producer.component.label} has broken down due to overheating!`);
-                }
-                break; // Only apply damage to the highest heat producer
-            }
-        }
-    }
-
-    dropHeatSink() {
-        this.entity.hasComponent('cargo', (cargoBay) => {
-            const heatSink = cargoBay.removeCargo('heatSink');
-            if(heatSink) {
-                const heatReduction = heatSink.heatReduction;
-                this.currentHeat = Math.max(0, this.currentHeat - heatReduction);
-                console.log(`Heat sink dropped! Current heat: ${this.currentHeat}`);
-            } else {
-                console.warn('No heat sinks available in cargo bay.');
-            }
-        });
+    setDissipationFactor(factor) {
+        this.globalDissipationFactor = factor;
+        //console.log(`Updated global dissipation factor: ${this.globalDissipationFactor}`);
     }
 
     update(deltaTime) {
+        if(typeof deltaTime !== 'number' || isNaN(deltaTime) || deltaTime <= 0) {
+            //console.error(`Invalid deltaTime: ${deltaTime}`);
+            return;
+        }
+
         let totalHeatProduced = 0;
 
         this.heatProducers.forEach(producer => {
-            if(producer.component.isActive) {
-                producer.addHeat(producer.heatProductionRate * deltaTime);
-                totalHeatProduced += producer.heatProductionRate * deltaTime;
+            const heatProduced = producer.heatProductionRate * deltaTime * 0.01 * producer.maxTemperature;
+
+            if(producer.isActive) {
+                producer.addHeat(heatProduced);
+                if(producer.currentTemperature >= producer.maxTemperature) {
+                    this.addHeat(heatProduced);
+                }
+            } else {
+                producer.removeHeat(heatProduced);
+                if(producer.currentTemperature <= producer.maxTemperature * 0.5) {
+                    this.removeHeat(heatProduced);
+                }
             }
+
+            producer.checkOverheat(deltaTime);
         });
 
-        this.addHeat(totalHeatProduced);
+        this.dissipateHeat(deltaTime);
 
-        // Apply damage if current heat exceeds max heat
-        if(this.currentHeat >= this.maxHeat) {
-            this.applyDamage();
+        if(this.globalTemperature > this.globalMaxTemperature) {
+            //console.warn('Global temperature exceeded maximum threshold!');
+            // Implement additional game factor effects based on global temperature
         }
 
-        this.dissipateHeat(deltaTime);
+        // Emit heat.update event
+        if(this.entity && this.entity.eventBus) {
+            const heatData = this.heatProducers.map(producer => ({
+                name: producer.label,
+                temperature: producer.currentTemperature,
+                isOverheated: producer.isOverheated(),
+                energyCost: producer.energyCost / 1000000, // Convert back to MW
+                isActive: producer.isActive,
+                userRequestedState: producer.userRequestedState,
+                health: producer.health
+            }));
+            this.entity.eventBus.emit('heat.update', heatData);
+            this.entity.eventBus.emit('globalTemperature.update', this.globalTemperature);
+        }
+    }
+
+    dissipateHeat(deltaTime) {
+        const dissipationAmount = this.globalTemperature * this.globalDissipationFactor * deltaTime;
+        this.globalTemperature = Math.max(18, this.globalTemperature - dissipationAmount);
+        //console.log(`Dissipated heat: ${dissipationAmount}. Global temperature: ${this.globalTemperature}°C`);
     }
 }

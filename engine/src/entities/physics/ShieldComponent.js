@@ -18,13 +18,6 @@ export default class ShieldComponent extends ShipComponent {
         }
     }
 
-    takeDamage(damage) {
-        this.currentShield = Math.max(0, this.currentShield - damage);
-        if(this.currentShield <= 0) {
-            console.warn('Shield down!');
-        }
-    }
-
     update(deltaTime) {
         if(this.isActive) {
             this.recharge(deltaTime);

@@ -1,21 +1,34 @@
-// ShipComponent.js
 import BaseComponent from '../../abstracts/BaseComponent.js';
 
 export default class ShipComponent extends BaseComponent {
-    constructor(profiles, initialProfile, priority, label = null, gracePeriod = 1000) {
+    constructor(profiles, initialProfile, priority, label = null) {
         super();
         this.profiles = profiles;
         this.currentProfile = initialProfile;
         this.priority = priority;
-        this.isActive = true;
+        this.isActive = false; // Set initial state to false
+        this.userRequestedState = true; // Default to true to match initial active state
         this.energyManager = null;
         this.heatManager = null;
         const profile = profiles[initialProfile];
-        this.energyCost = profile.energyCostMW; // Use energyCostMW
+        this.energyCost = profile.energyCostMW * 1000000; // Use energyCostMW, convert to J/s
         this.heatProductionRate = profile.heatProductionRate || 0; // Add heat production rate
+        this.maxTemperature = profile.maxTemperature || 150; // Add max temperature
+        this.health = profile.health || 100; // Add health
+        this.isBroken = false; // Set initial broken state to false
+        this.currentTemperature = this.maxTemperature * 0.5; // Start at 50% of max temperature
+        this.overheatGracePeriod = 10; // 10 seconds grace period before taking damage
+        this.overheatTimer = 0;
         this.label = label || this.constructor.name; // Set label with default to class name
-        this.gracePeriod = gracePeriod; // Grace period in milliseconds
-        this.deactivationTime = null; // Time when the component was deactivated
+
+        // Debugging logs
+        console.log(`ShipComponent initialized:`, {
+            label: this.label,
+            energyCost: this.energyCost,
+            heatProductionRate: this.heatProductionRate,
+            maxTemperature: this.maxTemperature,
+            health: this.health
+        });
     }
 
     onAdd(entity) {
@@ -27,39 +40,88 @@ export default class ShipComponent extends BaseComponent {
         this.entity.hasComponent('heatManager', (heatManager) => {
             this.heatManager = heatManager;
             if(this.heatProductionRate > 0) {
-                this.heatManager.registerHeatProducer(this, this.heatProductionRate);
+                console.log(`Registering heat producer: ${this.label}`, {
+                    heatProductionRate: this.heatProductionRate,
+                    maxTemperature: this.maxTemperature
+                });
+                this.heatManager.registerHeatProducer(this, this.heatProductionRate, this.maxTemperature);
             }
         });
     }
 
     activate() {
-        if(this.deactivationTime && Date.now() - this.deactivationTime < this.gracePeriod) {
-            // If within grace period, do not activate
-            return;
+        if(!this.isActive) {
+            this.isActive = true;
+            console.log(`${this.label} activated`);
+            this.entity.eventBus.emit('component.activate', {component: this});
         }
-
-        this.isActive = true;
-        console.log(`${this.label} activated`);
-        this.entity.eventBus.emit('component.activate', {component: this});
     }
 
     deactivate() {
-        this.isActive = false;
-        console.log(`${this.label} deactivated`);
-        this.entity.eventBus.emit('component.deactivate', {component: this});
-        this.deactivationTime = Date.now(); // Record the deactivation time
+        if(this.isActive) {
+            this.isActive = false;
+            console.log(`${this.label} deactivated`);
+        }
+    }
+
+    addHeat(amount) {
+        if(this.currentTemperature <= this.maxTemperature) {
+            this.currentTemperature += amount;
+        }
+    }
+
+    removeHeat(amount) {
+        if(this.currentTemperature > this.maxTemperature * 0.5) {
+            this.currentTemperature -= amount;
+        }
+    }
+
+    checkOverheat(deltaTime) {
+        if(this.currentTemperature >= this.maxTemperature) {
+            this.overheatTimer += deltaTime;
+            if(this.overheatTimer >= this.overheatGracePeriod && !this.isBroken) {
+                this.entity.eventBus.emit('component.overheat', {component: this});
+                this.takeDamage(35); // Example damage value
+                this.overheatTimer = 0; // Reset timer after taking damage
+            }
+        } else {
+            this.overheatTimer = 0; // Reset timer if temperature drops below max
+        }
+    }
+
+    takeDamage(amount) {
+        this.health -= amount;
+        console.warn(`${this.label} takes ${amount} damage due to overheating! Health remaining: ${this.health}`);
+        if(this.health <= 0 && !this.isBroken) {
+            this.entity.eventBus.emit('component.break', {component: this});
+            this.isBroken = true;
+            this.deactivate();
+            console.warn(`${this.label} has broken down due to overheating!`);
+        }
+
+    }
+
+    isOverheated() {
+        return this.currentTemperature >= this.maxTemperature;
     }
 
     applyProfile(profileName) {
         const profile = this.profiles[profileName];
         if(profile) {
             this.currentProfile = profileName;
-            this.energyCost = profile.energyCostMW; // Use energyCostMW
+            this.energyCost = profile.energyCostMW * 1000000; // Use energyCostMW, convert to J/s
             this.heatProductionRate = profile.heatProductionRate || 0;
+            this.maxTemperature = profile.maxTemperature || 150;
+            this.health = profile.health || 100;
+            console.log(`!!!!!!!!!!!!!!Applied health profile: ${profileName} to ${this.health}`);
             if(this.heatManager) {
                 this.heatManager.unregisterHeatProducer(this);
                 if(this.heatProductionRate > 0) {
-                    this.heatManager.registerHeatProducer(this, this.heatProductionRate);
+                    console.log(`Re-registering heat producer after profile applied: ${this.label}`, {
+                        heatProductionRate: this.heatProductionRate,
+                        maxTemperature: this.maxTemperature
+                    });
+                    this.heatManager.registerHeatProducer(this, this.heatProductionRate, this.maxTemperature);
                 }
             }
             // Apply other profile-specific settings here

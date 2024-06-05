@@ -23,6 +23,7 @@ import CargoBayComponent from "./CargoBayComponent.js";
 import ReactorComponent from "./ReactorComponent.js";
 import ShieldComponent from "./ShieldComponent.js";
 import HeatManagerComponent from "./HeatManagerComponent.js";
+import CoolingSystemComponent from "./CoolingSystemComponent.js";
 
 export default class StarShip extends Entity2D {
     constructor(engine, config, id) {
@@ -44,30 +45,31 @@ export default class StarShip extends Entity2D {
 
         const powerPlantProfiles = {
             default: {
-                heatProductionRate: 5, // Example heat production rate
-                maxTemperature: 150, // Maximum temperature in degrees Celsius
+                maxTemperature: 100, // in °C
+                heatProductionRate: 1,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
                 health: 100,
-                energyCostMW: 0.001,
+                energyCostMW: 0,
                 maxEnergyMW: 10, // megawatts
                 rechargeRateMW: 0.3 // megawatts
             }
         };
 
-        const laserWeaponProfiles = {
+        const coolingSystemProfiles = {
             default: {
-                energyPerShotMJ: 0.9, // megajoules per shot
-                reloadTime: 0.1, // second reload time (10 shots per second)
-                basePowerRequirementMW: 0.1, // megawatt continuous power when idle
-                firingPowerRequirementMW: 0.9 // megawatts additional power when firing (total 10 MW when firing)
+                maxTemperature: 100,  // Maximum operational temperature in °C
+                heatProductionRate: 1,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
+                dissipationFactor: 0.5,  // Reduces the heat accumulation rate in other components by this factor
+                health: 100,  // Health points of the cooling system, indicating its damage threshold
+                energyCostMW: 1,  // Energy cost in megawatts for the cooling system to operate
             }
         };
 
         const engineProfiles = {
             default: {
-                energyCostMW: 2,
-                heatProductionRate: 5, // Example heat production rate
-                maxTemperature: 150, // Maximum temperature in degrees Celsius
+                maxTemperature: 100, // in °C
+                heatProductionRate: 1,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
                 health: 100,
+                energyCostMW: 2,
                 states: {
                     idle: {efficiency: 1, maxThrust: 200000, maxTorque: 10},
                     cruise: {efficiency: 1, maxThrust: 200000, maxTorque: 10},
@@ -76,10 +78,21 @@ export default class StarShip extends Entity2D {
             }
         };
 
+        const shieldProfiles = {
+            default: {
+                maxTemperature: 100, // in °C
+                heatProductionRate: 5,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
+                health: 100,
+                energyCostMW: 2,
+                shieldStrength: 1000, // 1000 units of shield strength
+                rechargeRateMW: 0.5 // megawatts for recharging
+            }
+        };
+
         const cargoBayProfiles = {
             default: {
-                heatProductionRate: 5, // Example heat production rate
-                maxTemperature: 150, // Maximum temperature in degrees Celsius
+                maxTemperature: 100, // in °C
+                heatProductionRate: 1,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
                 health: 100,
                 energyCostMW: 1,
                 capacityMultiplier: 1
@@ -88,8 +101,8 @@ export default class StarShip extends Entity2D {
 
         const damperProfiles = {
             default: {
-                heatProductionRate: 5, // Example heat production rate
-                maxTemperature: 150, // Maximum temperature in degrees Celsius
+                maxTemperature: 100, // in °C
+                heatProductionRate: 1,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
                 health: 100,
                 energyCostMW: 2,
                 accelerationModifier: 1,
@@ -97,8 +110,8 @@ export default class StarShip extends Entity2D {
                 dragCoefficientModifier: 500
             },
             advanced: {
-                heatProductionRate: 5, // Example heat production rate
-                maxTemperature: 150, // Maximum temperature in degrees Celsius
+                maxTemperature: 100, // in °C
+                heatProductionRate: 1,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
                 health: 100,
                 energyCostMW: 2,
                 accelerationModifier: 1,
@@ -107,16 +120,6 @@ export default class StarShip extends Entity2D {
             }
         };
 
-        const shieldProfiles = {
-            default: {
-                heatProductionRate: 5, // Example heat production rate
-                maxTemperature: 150, // Maximum temperature in degrees Celsius
-                health: 100,
-                energyCostMW: 2,
-                shieldStrength: 1000, // 1000 units of shield strength
-                rechargeRateMW: 0.5 // megawatts for recharging
-            }
-        };
 
         const mountProfiles = new MountProfile([
             {
@@ -162,6 +165,7 @@ export default class StarShip extends Entity2D {
         this.addComponent('energyManager', new EnergyManagerComponent(), 1 / 60, 1);
         this.addComponent('heatManager', new HeatManagerComponent(100), 1 / 60, 1);
         this.addComponent('powerPlant', new ReactorComponent(powerPlantProfiles, 1, 'default'), 1 / 60, 2);
+        this.addComponent('cooling', new CoolingSystemComponent(coolingSystemProfiles, 1, 'default'), 1 / 60, 2);
         this.addComponent('cargo', new CargoBayComponent(cargoBayProfiles, 2, 'default'), 1 / 60, 2);
         this.addComponent('inventory', new InventoryComponent({}, 3), 1 / 60, 2);
         this.addComponent('damper', new DamperComponent(damperProfiles, 5, 'default'), 1 / 60, 3);

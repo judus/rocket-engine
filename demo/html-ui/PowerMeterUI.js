@@ -1,6 +1,6 @@
 import ProgressBarComponent from "./ProgressBarComponent.js";
 
-export default class SmallWidgetComponent extends ProgressBarComponent {
+export default class PowerMeterUI extends ProgressBarComponent {
     constructor(label, maxValue) {
         super(label, maxValue);
 

@@ -68,5 +68,8 @@ export default class Application extends EngineBase {
     update(deltaTime) {
         this.gameLogic.update(deltaTime);
         this.cockpit.update(deltaTime);
+        // Temporarily speed up the update for testing heat accumulation
+        const testDeltaTime = deltaTime * 10; // Speed up time by a factor of 10 for testing
+        this.cockpit.update(testDeltaTime);
     }
 }
