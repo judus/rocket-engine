@@ -67,22 +67,26 @@ export default class CollisionComponent extends BaseComponent {
         const detectionLevel = entity.collisionDetection || DetectionTypes.OUTER_BOX;
         let collisionResult = {collided: false};
 
+        // Check outer bounding box with OBB for precise detection
         if(detectionLevel === DetectionTypes.OUTER_BOX) {
             collisionResult = CollisionDetector.checkBoundingBoxOBB(entity, candidate);
             if(!collisionResult.collided) return collisionResult;
         }
 
+        // Check bounding box with AABB for pre-check in detailed detection
         if(detectionLevel > DetectionTypes.OUTER_BOX) {
             collisionResult = CollisionDetector.checkBoundingBoxAABB(entity, candidate);
             if(!collisionResult.collided) return collisionResult;
         }
 
-        if(detectionLevel >= DetectionTypes.SUB_BOXES) {
+        // Check collision boxes only if not doing polygonal checks
+        if(detectionLevel >= DetectionTypes.SUB_BOXES && detectionLevel < DetectionTypes.POLYGON) {
             collisionResult = CollisionDetector.checkCollisionBoxes(entity, candidate);
             if(!collisionResult.collided) return collisionResult;
         }
 
-        if(detectionLevel === DetectionTypes.POLYGON) {
+        // Check either the entity polygon or the current sprite sheet frame polygon
+        if(detectionLevel >= DetectionTypes.POLYGON) {
             collisionResult = CollisionDetector.checkPolygon(entity, candidate);
         } else if(detectionLevel === DetectionTypes.FRAME_POLYGON) {
             collisionResult = CollisionDetector.checkPolygon(entity, candidate);

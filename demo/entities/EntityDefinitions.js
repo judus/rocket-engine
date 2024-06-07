@@ -56,7 +56,7 @@ export default class EntityDefinitions {
             stations: {
                 station_type_1: {
                     entityClass: Station,
-                    collisionDetection: DetectionTypes.POLYGON,
+                    collisionDetection: DetectionTypes.SUB_BOXES,
                     polygon: {
                         orientation: 0,
                         fillColor: '#FF0000',
@@ -72,7 +72,7 @@ export default class EntityDefinitions {
                 },
                 station_type_2: {
                     entityClass: Station,
-                    collisionDetection: DetectionTypes.POLYGON,
+                    collisionDetection: DetectionTypes.SUB_BOXES,
                     polygon: {
                         orientation: 0,
                         fillColor: '#00FF00',
@@ -90,7 +90,7 @@ export default class EntityDefinitions {
                 },
                 station_type_3: {
                     entityClass: Station,
-                    collisionDetection: DetectionTypes.POLYGON,
+                    collisionDetection: DetectionTypes.SUB_BOXES,
                     polygon: {
                         orientation: 0,
                         fillColor: '#0000FF',
