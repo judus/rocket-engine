@@ -175,7 +175,7 @@ export default class Entity2D {
     }
 
     onCollision(otherEntity, collisionResult) {
-        console.log(`Entity ${this.id} collided with ${otherEntity.id}`);
+        console.log(`Entity ${this.id} collided by ${otherEntity.id}`);
     }
 
     destroy() {

@@ -240,4 +240,8 @@ export default class StarShip extends Entity2D {
     setInput(ad, ws) {
         this.getComponent('engineController').setInput(ad, ws);
     }
+
+    onCollision(otherEntity, collisionResult) {
+        super.onCollision(otherEntity, collisionResult);
+    }
 }

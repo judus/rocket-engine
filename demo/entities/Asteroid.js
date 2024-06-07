@@ -13,6 +13,7 @@ import EntityVerticesComponent from "../components/EntityVerticesComponent.js";
 import Entity2D from "../../engine/src/entities/physics/Entity2D.js";
 import Vector3D from "../../engine/src/utils/maths/Vector3D.js";
 import PhysicsComponent from "../../engine/src/entities/physics/PhysicsComponent.js";
+import CollisionDataComponent from "../../engine/src/entities/physics/CollisionDataComponent.js";
 
 export default class Asteroid extends Entity2D {
     constructor(engine, config, x = 0, y = 0, id = null, scale = 1) {
@@ -31,11 +32,8 @@ export default class Asteroid extends Entity2D {
             staticFrictionCoefficient: 10,
         };
 
-        console.log(`Constructing Asteroid ${id} at ${config.pos} with scale ${scale}`, config.pos);
 
         super(engine, config, id);
-
-
 
         this.scale = scale;
 
@@ -61,7 +59,7 @@ export default class Asteroid extends Entity2D {
             //     // Add multiple bounding boxes
             //     this.addComponent('boundingBox', new BoundingBoxComponent(
             //         ...this.definition.collisionBoxes
-            //     ));
+            //     ));d
             // }
             //
             // this.addComponent('clickable', new ClickableComponent((event, entity) => {
@@ -70,7 +68,8 @@ export default class Asteroid extends Entity2D {
             // }));
         }
         this.addComponent('physics', new PhysicsComponent(), 1 / 60, 7);
-        //this.addComponent('collision', new CollisionComponent(new DefaultCollisionResponse()), false);
+        this.addComponent('collisionData', new CollisionDataComponent(), 1 / 60, 1);
+        this.addComponent('collision', new CollisionComponent(new DefaultCollisionResponse(), true), false);
 
         this.addComponent('health', new HealthComponent(100));
 
@@ -92,4 +91,8 @@ export default class Asteroid extends Entity2D {
     //         this.behavior.perform(this, deltaTime);
     //     }
     // }
+
+    onCollision(otherEntity, collisionResult) {
+        super.onCollision(otherEntity, collisionResult);
+    }
 }

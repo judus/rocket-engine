@@ -167,7 +167,51 @@ export default class Polygon {
         return true;
     }
 
-    intersects(polygon) {
+    /**
+     * Check if this polygon intersects with another polygon.
+     * @param {Polygon} otherPolygon - The other polygon to check intersection with.
+     * @returns {boolean} True if the polygons intersect, false otherwise.
+     */
+    intersects(otherPolygon) {
+        const polygons = [this.vertices, otherPolygon.vertices];
 
+        let minA, maxA, projected, i, i1, j, minB, maxB;
+
+        for(i = 0; i < polygons.length; i++) {
+            const polygonVertices = polygons[i];
+            for(i1 = 0; i1 < polygonVertices.length; i1++) {
+                const i2 = (i1 + 1) % polygonVertices.length;
+                const p1 = polygonVertices[i1];
+                const p2 = polygonVertices[i2];
+                const normal = {x: p2.y - p1.y, y: p1.x - p2.x};
+
+                minA = maxA = undefined;
+                for(j = 0; j < this.vertices.length; j++) {
+                    projected = normal.x * this.vertices[j].x + normal.y * this.vertices[j].y;
+                    if(minA === undefined || projected < minA) {
+                        minA = projected;
+                    }
+                    if(maxA === undefined || projected > maxA) {
+                        maxA = projected;
+                    }
+                }
+
+                minB = maxB = undefined;
+                for(j = 0; j < otherPolygon.vertices.length; j++) {
+                    projected = normal.x * otherPolygon.vertices[j].x + normal.y * otherPolygon.vertices[j].y;
+                    if(minB === undefined || projected < minB) {
+                        minB = projected;
+                    }
+                    if(maxB === undefined || projected > maxB) {
+                        maxB = projected;
+                    }
+                }
+
+                if(maxA < minB || maxB < minA) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

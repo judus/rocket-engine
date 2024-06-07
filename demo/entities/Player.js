@@ -144,10 +144,4 @@ export default class Player extends StarShip {
         super.render(deltaTime); // Render components and children
     }
 
-    onCollision(otherEntity, collisionResult) {
-        const collisionComponent = this.getComponent('collision');
-        if(collisionComponent) {
-            collisionComponent.handleCollision(otherEntity, collisionResult);
-        }
-    }
 }

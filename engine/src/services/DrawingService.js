@@ -7,7 +7,6 @@ export default class DrawingService {
      * @param {string} color - The color to use for drawing.
      */
     static drawBoundingBoxAABB(context, boundingBox, camera, color = 'rgba(0, 255, 0, 0.5)') {
-        console.log('DrawingService draws AABB bounding box');
         const zoom = camera.zoomLevel;
         const x = (boundingBox.x - camera.pos.x) * zoom;
         const y = (boundingBox.y - camera.pos.y) * zoom;
@@ -27,7 +26,6 @@ export default class DrawingService {
      * @param {string} color - The color to use for drawing.
      */
     static drawBoundingBoxOBB(context, boundingBox, camera, color = 'rgba(0, 255, 0, 0.5)') {
-        console.log('DrawingService draws OBB bounding box');
         const zoom = camera.zoomLevel;
         context.strokeStyle = color;
         context.lineWidth = 2;
@@ -59,11 +57,11 @@ export default class DrawingService {
      */
     static drawCollisionBoxes(context, collisionBoxes, camera, color = 'rgba(190,0,0,0.5)') {
         context.save();
-        context.strokeStyle = 'red';
+        context.strokeStyle = color;
         context.lineWidth = 1;
 
         collisionBoxes.forEach(box => {
-            DrawingService.drawBoundingBoxOBB(context, box, camera);
+            DrawingService.drawBoundingBoxOBB(context, box, camera, color);
         });
 
         context.restore();
@@ -76,7 +74,7 @@ export default class DrawingService {
      * @param {CameraECS} camera - The camera to consider for drawing.
      * @param {string} color - The color to use for drawing.
      */
-    static drawPolygon(context, polygon, camera, color = 'rgba(0, 0, 255, 0.5)') {
+    static drawPolygon(context, polygon, camera, color = 'rgb(194,151,53)') {
         const zoom = camera.zoomLevel;
         context.strokeStyle = color;
         context.lineWidth = 2;

@@ -10,7 +10,11 @@ export default class CollisionDetector {
     static checkCollisionBoxes(entityA, entityB) {
         for(let boxA of entityA.collisionBoxes) {
             for(let boxB of entityB.collisionBoxes) {
-                if(this.checkBoundingBoxAABB({boundingBox: boxA}, {boundingBox: boxB}).collided) {
+                //dconsole.log(`Checking collision between boxA: ${JSON.stringify(boxA)} and boxB: ${JSON.stringify(boxB)}`);
+
+                if(this.checkBoundingBoxOBB({boundingBox: boxA}, {boundingBox: boxB}).collided) {
+                    //console.log(`Collision detected between boxA: ${JSON.stringify(boxA)} and boxB: ${JSON.stringify(boxB)}`);
+
                     return {collided: true};
                 }
             }
@@ -27,12 +31,7 @@ export default class CollisionDetector {
     static checkBoundingBoxAABB(entityA, entityB) {
         const boxA = entityA.boundingBox;
         const boxB = entityB.boundingBox;
-        return !(
-            boxA.x + boxA.width < boxB.x ||
-            boxA.x > boxB.x + boxB.width ||
-            boxA.y + boxA.height < boxB.y ||
-            boxA.y > boxB.y + boxB.height
-        ) ? {collided: true} : {collided: false};
+        return this.checkBoundingBoxOverlap(boxA, boxB) ? {collided: true} : {collided: false};
     }
 
     static checkBoundingBoxOBB(entityA, entityB) {
@@ -101,5 +100,53 @@ export default class CollisionDetector {
             boxA.y + boxA.height < boxB.y ||
             boxA.y > boxB.y + boxB.height
         );
+    }
+
+    /**
+     * Checks if two polygons intersect.
+     * @param {Array} polygonA - The first polygon.
+     * @param {Array} polygonB - The second polygon.
+     * @returns {boolean} - True if the polygons intersect, false otherwise.
+     */
+    static doPolygonsIntersect(polygonA, polygonB) {
+        const polygons = [polygonA, polygonB];
+        let minA, maxA, projected, i, i1, j, minB, maxB;
+
+        for(i = 0; i < polygons.length; i++) {
+            const polygon = polygons[i];
+            for(i1 = 0; i1 < polygon.length; i1++) {
+                const i2 = (i1 + 1) % polygon.length;
+                const p1 = polygon[i1];
+                const p2 = polygon[i2];
+                const normal = {x: p2.y - p1.y, y: p1.x - p2.x};
+
+                minA = maxA = undefined;
+                for(j = 0; j < polygonA.length; j++) {
+                    projected = normal.x * polygonA[j].x + normal.y * polygonA[j].y;
+                    if(minA === undefined || projected < minA) {
+                        minA = projected;
+                    }
+                    if(maxA === undefined || projected > maxA) {
+                        maxA = projected;
+                    }
+                }
+
+                minB = maxB = undefined;
+                for(j = 0; j < polygonB.length; j++) {
+                    projected = normal.x * polygonB[j].x + normal.y * polygonB[j].y;
+                    if(minB === undefined || projected < minB) {
+                        minB = projected;
+                    }
+                    if(maxB === undefined || projected > maxB) {
+                        maxB = projected;
+                    }
+                }
+
+                if(maxA < minB || maxB < minA) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

@@ -17,10 +17,8 @@ export default class CollisionDataComponent extends BaseComponent {
 
         // Update bounding box
         if(detectionLevel === DetectionTypes.OUTER_BOX) {
-            console.log('Updating bounding box OBB');
             CollisionDataUpdateService.updateBoundingBoxOBB(entity);
         } else {
-            console.log('Updating bounding box AABB');
             CollisionDataUpdateService.updateBoundingBoxAABB(entity);
             // Update collision boxes
             CollisionDataUpdateService.updateCollisionBoxes(entity);

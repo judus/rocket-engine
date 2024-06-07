@@ -69,7 +69,7 @@ export default class CollisionDataUpdateService {
      * @param {number} halfHeight - Half the height of the bounding box.
      * @param {number} orientation - The orientation of the entity.
      * @param {Object} [offset={x: 0, y: 0}] - The offset of the collision box.
-     * @returns {Object} - The axis-aligned bounding box.
+     * @returns {Object} - The axis-aligned bounding box.d
      */
     static getRotatedBoundingBoxAABB(pos, halfWidth, halfHeight, orientation, offset = {x: 0, y: 0}) {
         const cos = Math.cos(orientation);
@@ -194,9 +194,9 @@ export default class CollisionDataUpdateService {
      */
     static updateFramePolygon(entity) {
         if(entity.framePolygons) {
-            const frame = entity.frames[entity.spriteSheet.getFrame()];
+            const frame = entity.framePolygons[entity.spriteSheet.getFrame()];
             if(frame) {
-                entity.framePolygon = this.transformPolygon(frame, entity.pos, entity.rotation, entity.scale);
+                entity.framePolygons[entity.spriteSheet.getFrame()] = this.transformPolygon(frame, entity.pos, entity.rotation, entity.scale);
             }
         }
     }
