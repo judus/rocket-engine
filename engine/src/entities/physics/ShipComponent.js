@@ -40,10 +40,6 @@ export default class ShipComponent extends BaseComponent {
         this.entity.hasComponent('heatManager', (heatManager) => {
             this.heatManager = heatManager;
             if(this.heatProductionRate > 0) {
-                console.log(`Registering heat producer: ${this.label}`, {
-                    heatProductionRate: this.heatProductionRate,
-                    maxTemperature: this.maxTemperature
-                });
                 this.heatManager.registerHeatProducer(this, this.heatProductionRate, this.maxTemperature);
             }
         });

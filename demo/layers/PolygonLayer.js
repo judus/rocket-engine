@@ -7,7 +7,7 @@ export default class PolygonLayer extends BaseLayer {
     }
 
     getEntities(scene) {
-        return scene.dataStoreManager.getStore(EngineParts.ENTITY_STORE_NAME).getEntitiesInArea(scene.camera.getArea());
+        return scene.dataStoreManager.getStore('entities').getEntitiesInArea(scene.camera.getArea());
     }
 
     render(scene, deltaTime, tickCount, totalTime) {
@@ -15,8 +15,9 @@ export default class PolygonLayer extends BaseLayer {
         this.getEntities(scene).forEach(entity => {
             entity.hasComponent('render', (component) => {
                 component.render(deltaTime, this.context, scene.camera);
-            }, () => {
-                //console.log('entity has no render component:', entity.id);
+            });
+            entity.hasComponent('collision', (component) => {
+                component.render(this.context, scene.camera);
             });
         });
     }

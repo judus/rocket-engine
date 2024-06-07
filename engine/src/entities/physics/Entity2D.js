@@ -2,24 +2,27 @@ import EntityTransform from "../../services/EntityTransform.js";
 import EntityManager from "../EntityManager.js";
 import EngineParts from "../../EngineParts.js";
 import StringHelpers from "../../utils/StringHelpers.js";
-import Spatial2D from "../../utils/spatial/Spatial2D.js";
 import CustomPhysics2D from "../../physics/CustomPhysics2D.js";
 import Vector3D from "../../utils/maths/Vector3D.js";
+import QuadTree from "../../services/QuadTree.js";
+import Rectangle from "../../utils/maths/Rectangle.js";
 
 export default class Entity2D {
     constructor(engine, config, id = null) {
         this.engine = engine;
         this.id = id || config.id || StringHelpers.generateUUID();
         this.type = config.type || this.constructor.name;
+        console.log(`Constructing ${this.id} with config:`, config);
 
         // Geometry
-        this.width = config.width || 0;
-        this.height = config.height || 0;
+        this.width = config.collisionData?.sprite?.width || config.collisionData?.boundingBox?.width || 0;
+        this.height = config.collisionData?.sprite?.height || config.collisionData?.boundingBox?.height || 0;
         this.scale = config.scale || 1;
+        console.log('Entity width:', this.width, 'height:', this.height, 'scale:', this.scale);
 
         // Physics
         this.mass = config.mass || 1;
-        this.pos = config.position || new Vector3D();
+        this.pos = config.pos || new Vector3D();
         this.velocity = config.velocity || new Vector3D();
         this.acceleration = config.acceleration || new Vector3D();
         this.momentOfInertia = config.momentOfInertia || 1;
@@ -37,14 +40,17 @@ export default class Entity2D {
         this.eventBus = engine.service(EngineParts.EVENT_BUS);
         this.components = {};
         this.behavior = config.behavior || null;
-        this.spriteSheet = config.spriteSheet || null;
+        this.spriteSheet = config.sprite || null;
 
         // Collision
-        this.collisionDetection = config.collisionDetection || null;
-        this.boundingBox = this.createBoundingBox();
-        this.collisionBoxes = config.collisionBoxes || [];
-        this.polygon = config.polygon || [];
-        this.frames = config.frames || {};
+        this.collisionDetection = config.collisionDetection || null; // number from 1-4
+        this.boundingBox = config.collisionData?.boundingBox// The bounding box of the entity
+        console.log('Bounding box:', this.boundingBox);
+        this.collisionBoxes = config.collisionData?.subBoundingBoxes || []; // the entity has multiple collision boxes
+        this.polygon = config.polygon?.vertices || []; // the polygonal shape of the entity if it has one
+        this.framePolygons = config.collisionData?.framePolygons || {}; // this is supposed to be an auto generated polygon for the contour of the current sprite frame
+
+        this.color = config.polygon?.fillColor;
 
         // Hierarchy
         this.children = [];
@@ -55,14 +61,8 @@ export default class Entity2D {
         this.storeName = config.storeName || EngineParts.ENTITY_STORE_NAME;
         this.spatialHash = null;
 
-        // Register this entity
+        // Add this entity to the hash grid
         this.entityManager.addEntity(this);
-
-        this.pos.onChange = () => {
-            if(this.entityManager) {
-                this.entityManager.updateEntity(this);
-            }
-        };
     }
 
     createBoundingBox() {
@@ -142,6 +142,8 @@ export default class Entity2D {
     }
 
     update(deltaTime) {
+
+
         // Run all update component tasks
         this.updateTaskScheduler.runTasks(deltaTime);
 

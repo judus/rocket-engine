@@ -1,4 +1,5 @@
 import BaseComponent from "../abstracts/BaseComponent.js";
+import EntityTransform from "../services/EntityTransform.js";
 
 export default class RenderComponent extends BaseComponent {
     /**
@@ -19,8 +20,10 @@ export default class RenderComponent extends BaseComponent {
      * @param {Camera} camera - The camera to render relative to.
      */
     render(deltaTime, context, camera) {
+        //console.log('Rendering in RenderComponent');
         if(this.renderFunction) {
-            this.renderFunction(deltaTime, context, this.entity, camera);
+            //console.log('Executing render function');
+            this.renderFunction(deltaTime, context, camera);
         }
         if(this.drawBoundingBoxes) {
             this.drawDebugPolygon(context, camera);
@@ -64,11 +67,9 @@ export default class RenderComponent extends BaseComponent {
     }
 
     drawDebugBoundingBoxes(context, camera) {
-        const collisionData = this.entity.definition.collisionData;
-        const transformComponent = this.entity.getComponent('transform');
 
-        if(collisionData && collisionData.boundingBox && transformComponent) {
-            const {width, height} = collisionData.boundingBox;
+        if(this.entity.boundingBox) {
+            const {width, height} = this.entity.boundingBox;
             const vertices = [
                 {x: -width / 2, y: -height / 2},
                 {x: width / 2, y: -height / 2},
@@ -76,10 +77,10 @@ export default class RenderComponent extends BaseComponent {
                 {x: -width / 2, y: height / 2}
             ];
 
-            const transformedVertices = transformComponent.applyTransform(vertices);
+            const transformedVertices = EntityTransform.updateVertices(this.entity, vertices);
 
             context.save();
-            context.strokeStyle = '#84ff18';
+            context.strokeStyle = 'rgba(132,255,24,0.8)';
             context.lineWidth = 1;
 
             context.beginPath();
@@ -102,15 +103,12 @@ export default class RenderComponent extends BaseComponent {
     }
 
     drawDebugSubBoundingBoxes(context, camera) {
-        const collisionData = this.entity.definition.collisionData;
-        const transformComponent = this.entity.getComponent('transform');
-
-        if(collisionData && collisionData.subBoundingBoxes && transformComponent) {
+        if(this.entity.collisionBoxes) {
             context.save();
             context.strokeStyle = '#00c4ff';
             context.lineWidth = 1;
 
-            for(const subBox of collisionData.subBoundingBoxes) {
+            for(const subBox of this.entity.collisionBoxes) {
                 const vertices = [
                     {x: subBox.x - subBox.width / 2, y: subBox.y - subBox.height / 2},
                     {x: subBox.x + subBox.width / 2, y: subBox.y - subBox.height / 2},
@@ -118,7 +116,7 @@ export default class RenderComponent extends BaseComponent {
                     {x: subBox.x - subBox.width / 2, y: subBox.y + subBox.height / 2}
                 ];
 
-                const transformedVertices = transformComponent.applyTransform(vertices);
+                const transformedVertices = EntityTransform.updateVertices(this.entity, vertices);
 
                 context.beginPath();
                 context.moveTo(
@@ -142,11 +140,9 @@ export default class RenderComponent extends BaseComponent {
     }
 
     drawDebugPolygon(context, camera) {
-        const collisionData = this.entity.definition.collisionData;
-        const transformComponent = this.entity.getComponent('transform');
 
-        if(collisionData && collisionData.polygon && transformComponent) {
-            const transformedVertices = transformComponent.applyTransform(collisionData.polygon);
+        if(this.entity.polygon) {
+            const transformedVertices = EntityTransform.updateVertices(this.entity, this.entity.polygon);
 
             context.save();
             context.strokeStyle = 'red';
@@ -172,40 +168,38 @@ export default class RenderComponent extends BaseComponent {
     }
 
     drawDebugFramePolygons(context, camera) {
-        const collisionData = this.entity.definition.collisionData;
-        const transformComponent = this.entity.getComponent('transform');
 
-        if(collisionData && collisionData.framePolygons && transformComponent) {
-            context.save();
-            context.strokeStyle = 'yellow';
-            context.fillStyle = 'rgba(255, 255, 0, 0.5)'; // Semi-transparent yellow
-            context.lineWidth = 1;
-
-            for(const framePolygon of collisionData.framePolygons) {
-                if(framePolygon.length > 0) {
-                    const transformedVertices = transformComponent.applyTransform(framePolygon);
-
-                    context.beginPath();
-                    context.moveTo(
-                        (transformedVertices[0].x - camera.pos.x) * camera.zoomLevel,
-                        (transformedVertices[0].y - camera.pos.y) * camera.zoomLevel
-                    );
-
-                    for(let i = 1; i < transformedVertices.length; i++) {
-                        context.lineTo(
-                            (transformedVertices[i].x - camera.pos.x) * camera.zoomLevel,
-                            (transformedVertices[i].y - camera.pos.y) * camera.zoomLevel
-                        );
-                    }
-
-                    context.closePath();
-                    context.fill(); // Fill the polygon
-                    context.stroke(); // Draw the contour
-                }
-            }
-
-            context.restore();
-        }
+        // if(this.entity.frames) {
+        //     context.save();
+        //     context.strokeStyle = 'yellow';
+        //     context.fillStyle = 'rgba(255, 255, 0, 0.5)'; // Semi-transparent yellow
+        //     context.lineWidth = 1;
+        //
+        //     for(const framePolygon of this.entity.frames) {
+        //         if(framePolygon.length > 0) {
+        //             const transformedVertices = EntityTransform.updateVertices(this.entity, framePolygon);
+        //
+        //             context.beginPath();
+        //             context.moveTo(
+        //                 (transformedVertices[0].x - camera.pos.x) * camera.zoomLevel,
+        //                 (transformedVertices[0].y - camera.pos.y) * camera.zoomLevel
+        //             );
+        //
+        //             for(let i = 1; i < transformedVertices.length; i++) {
+        //                 context.lineTo(
+        //                     (transformedVertices[i].x - camera.pos.x) * camera.zoomLevel,
+        //                     (transformedVertices[i].y - camera.pos.y) * camera.zoomLevel
+        //                 );
+        //             }
+        //
+        //             context.closePath();
+        //             context.fill(); // Fill the polygon
+        //             context.stroke(); // Draw the contour
+        //         }
+        //     }
+        //
+        //     context.restore();
+        // }
     }
 
     drawDebugQuadTree(context, camera) {

@@ -68,6 +68,7 @@ export default class EntityMountsComponent extends BaseComponent {
         Object.values(this.mounts).forEach(mountArray => {
             mountArray.forEach(mount => {
                 if(mount.currentEntity) {
+
                     // Rotate the mount position based on the entity's rotation
                     const rotatedPosition = mount.position.rotate(entityRotation);
 

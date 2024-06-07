@@ -39,6 +39,9 @@ export default class Timer {
             }
             this.accumulatedTime -= this.deltaTime;
             this.tickCount++;
+
+            // Stop after the first update
+
         }
 
         if(this.showPerformanceMonitor) {

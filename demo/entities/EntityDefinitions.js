@@ -162,7 +162,7 @@ export default class EntityDefinitions {
             starships: {
                 starship_type_1: {
                     entityClass: Starship,
-                    collisionDetection: DetectionTypes.FRAME_POLYGON,
+                    collisionDetection: DetectionTypes.OUTER_BOX,
                     sprite: {
                         orientation: Math.PI / 2,
                         name: 'gunship-fighter-3',
@@ -184,13 +184,13 @@ export default class EntityDefinitions {
                 },
                 starship_type_2: {
                     entityClass: Starship,
-                    collisionDetection: DetectionTypes.FRAME_POLYGON,
+                    collisionDetection: DetectionTypes.SUB_BOXES,
                     sprite: {
                         orientation: Math.PI / 2,
-                        name: 'gunship-fighter-3',
-                        image: 'demo/assets/images/gunship-fighter-3.png',
-                        width: 119,
-                        height: 280,
+                        name: 'gunship-heavyfighter-1',
+                        image: 'demo/assets/images/gunship-heavyfighter-1.png',
+                        width: 250,
+                        height: 420,
                         frames: 1
                     },
                     polygon: {

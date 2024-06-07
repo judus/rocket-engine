@@ -48,15 +48,15 @@ export default class EntityFactory {
     }
 
     createAsteroidFromDefinition(definition, x, y, id, scale) {
-        const asteroid = new definition.entityClass(this.dataStoreManager, this.eventBus, definition, x, y, id, scale);
-        this.dataStoreManager.getStore('entities').set(asteroid.id, asteroid);
+        const asteroid = new definition.entityClass(this.engine, definition, x, y, id, scale);
+        //console.log(`Asteroid created: ${asteroid.id} at ${x}, ${y}`);
         return asteroid;
+
     }
 
     createPlayer(definition, x, y) {
         const player = new Player(this.engine, definition, x, y, 'player');
         console.log(`Player created: ${player.id}`);
-        this.entityManager.addEntity(player);
         return player;
     }
 }

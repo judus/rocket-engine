@@ -15,10 +15,7 @@ export default class CollisionShapeGenerator {
         collisionData.boundingBox = {width: frameWidth, height: frameHeight};
 
         if(detectionLevel >= DetectionTypes.SUB_BOXES) {
-            collisionData.subBoundingBoxes = this.generateBoundingBoxes([{x: 0, y: 0}, {
-                x: frameWidth,
-                y: frameHeight
-            }], frameWidth, frameHeight);
+            collisionData.subBoundingBoxes = await this.generateCollisionBoxes(imageBitmap, frameWidth, frameHeight);
         }
 
         if(detectionLevel >= DetectionTypes.POLYGON) {
@@ -53,10 +50,7 @@ export default class CollisionShapeGenerator {
         }
 
         if(detectionLevel >= DetectionTypes.SUB_BOXES) {
-            collisionData.subBoundingBoxes = this.generateBoundingBoxes([{x: 0, y: 0}, {
-                x: frameWidth,
-                y: frameHeight
-            }], frameWidth, frameHeight);
+            collisionData.subBoundingBoxes = this.generateDefaultSubBoundingBoxes(frameWidth, frameHeight);
         }
 
         if(detectionLevel >= DetectionTypes.POLYGON) {
@@ -77,6 +71,18 @@ export default class CollisionShapeGenerator {
             {x: width, y: 0},
             {x: width, y: height},
             {x: 0, y: height}
+        ];
+    }
+
+    static generateDefaultSubBoundingBoxes(frameWidth, frameHeight) {
+        // Simple default sub-bounding boxes (dividing the frame into 4 sub-boxes)
+        const boxWidth = frameWidth / 2;
+        const boxHeight = frameHeight / 2;
+        return [
+            {x: 0, y: 0, width: boxWidth, height: boxHeight},
+            {x: boxWidth, y: 0, width: boxWidth, height: boxHeight},
+            {x: 0, y: boxHeight, width: boxWidth, height: boxHeight},
+            {x: boxWidth, y: boxHeight, width: boxWidth, height: boxHeight}
         ];
     }
 
@@ -103,21 +109,73 @@ export default class CollisionShapeGenerator {
         });
     }
 
-    static generateBoundingBoxes(vertices, width, height) {
+    static async generateCollisionBoxes(imageBitmap, width, height) {
         const boxes = [];
-        const boxWidth = width / 2;
-        const boxHeight = height / 2;
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const context = canvas.getContext('2d');
+        context.drawImage(imageBitmap, 0, 0, width, height);
+        const imageData = context.getImageData(0, 0, width, height);
+        const data = imageData.data;
 
-        for(let i = 0; i < vertices.length; i += 2) {
-            boxes.push({
-                id: i / 2,
-                x: vertices[i].x - boxWidth / 2,
-                y: vertices[i].y - boxHeight / 2,
-                width: boxWidth,
-                height: boxHeight
-            });
+        const boxSize = 8; // Adjusted size of each collision box for better performance
+        const tolerance = 0.5; // Tolerance for merging boxes
+
+        // First pass: create initial boxes
+        const initialBoxes = [];
+        for(let y = 0; y < height; y += boxSize) {
+            for(let x = 0; x < width; x += boxSize) {
+                let alphaSum = 0;
+                for(let dy = 0; dy < boxSize; dy++) {
+                    for(let dx = 0; dx < boxSize; dx++) {
+                        const index = ((y + dy) * width + (x + dx)) * 4 + 3;
+                        alphaSum += data[index];
+                    }
+                }
+                if(alphaSum > 3000) {
+                    initialBoxes.push({
+                        x: x,
+                        y: y,
+                        width: boxSize,
+                        height: boxSize
+                    });
+                }
+            }
         }
 
-        return boxes;
+        // Second pass: combine adjacent boxes vertically
+        const mergedBoxesVertically = [];
+        initialBoxes.forEach(box => {
+            const existingBox = mergedBoxesVertically.find(b =>
+                b.x === box.x && b.y + b.height === box.y
+            );
+            if(existingBox) {
+                existingBox.height += box.height;
+            } else {
+                mergedBoxesVertically.push({...box});
+            }
+        });
+
+        // Third pass: combine adjacent boxes horizontally
+        const mergedBoxesHorizontally = [];
+        mergedBoxesVertically.forEach(box => {
+            const existingBox = mergedBoxesHorizontally.find(b =>
+                b.y === box.y && b.x + b.width === box.x
+            );
+            if(existingBox) {
+                existingBox.width += box.width;
+            } else {
+                mergedBoxesHorizontally.push({...box});
+            }
+        });
+
+        // Adjust positions to account for the center
+        mergedBoxesHorizontally.forEach(box => {
+            box.x -= width / 2 - box.width / 2;
+            box.y -= height / 2 - box.height / 2;
+        });
+
+        return mergedBoxesHorizontally;
     }
 }

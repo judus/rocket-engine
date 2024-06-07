@@ -33,18 +33,18 @@ export default class Player extends StarShip {
         this.dataStoreManager = dataStoreManager;
         //this.particleSystem = this.dataStoreManager.getStore('global').get('particleSystem');
 
-        this.collisionBoxes = config.collisionBoxes || [];
-        this.boundingBox = this.createBoundingBox();
+        //this.collisionBoxes = config.collisionBoxes || [];
+        //this.boundingBox = this.createBoundingBox();
         this.polygon = new Polygon(config.polygon.vertices)
             .offsetToCenter()
             .rotate(config.polygon.orientation)
             .vertices;
         //
-        this.frames = config.collisionData.framePolygons || {};
+        //this.frames = config.collisionData.framePolygons || {};
 
-        this.width = config.width || 0;
-        this.height = config.height || 0;
-        this.scale = config.scale || 1;
+        //this.width = config.width || 0;
+        //this.height = config.height || 0;
+        //this.scale = config.scale || 1;
         this.rotation = 0;
 
         this.drawing = new Drawing(this.definition.polygon.fillColor);

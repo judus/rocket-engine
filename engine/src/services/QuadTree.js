@@ -63,9 +63,8 @@ export default class QuadTree {
     }
 
     draw(context, camera) {
-        // Draw the boundary of this quad
         context.save();
-        context.strokeStyle = '#9a5702';
+        context.strokeStyle = 'rgba(154,87,2,0.75)';
         context.lineWidth = 1;
         context.strokeRect(
             (this.boundary.x - camera.pos.x) * camera.zoomLevel,

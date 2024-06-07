@@ -40,10 +40,10 @@ export default class Drawing {
 
     static drawPolygon(context, vertices, color) {
         context.beginPath();
-        context.moveTo(Math.abs(vertices[0].x), Math.abs(vertices[0].y));
+        context.moveTo(vertices[0].x, vertices[0].y);
 
         for(let i = 1; i < vertices.length; i++) {
-            context.lineTo(Math.abs(vertices[i].x), Math.abs(vertices[i].y));
+            context.lineTo(vertices[i].x, vertices[i].y);
         }
 
         context.closePath();
@@ -52,12 +52,9 @@ export default class Drawing {
     }
 
     static draw(context, entity, camera, color) {
-        const transformComponent = entity.getComponent('transform');
-        if(transformComponent) {
-            let transformMatrix = Drawing.applyCameraAndZoom(camera);
-            const transformedVertices = EntityTransform.updateVertices(entity, entity.polygon);
-            const finalVertices = Drawing.applyTransform(transformedVertices, transformMatrix);
-            Drawing.drawPolygon(context, finalVertices, color);
-        }
+        let transformMatrix = Drawing.applyCameraAndZoom(camera);
+        const transformedVertices = EntityTransform.updateVertices(entity, entity.polygon);
+        const finalVertices = Drawing.applyTransform(transformedVertices, transformMatrix);
+        Drawing.drawPolygon(context, finalVertices, color);
     }
 }

@@ -48,28 +48,64 @@ export default class PolygonTracer {
 
     static detectEdges(imageData, alphaThreshold = 0.1) {
         const {width, height, data} = imageData;
-        const edges = [];
+        const getAlpha = (x, y) => data[(y * width + x) * 4 + 3] / 255;
 
+        const directions = [
+            {x: 1, y: 0},  // Right
+            {x: 0, y: 1},  // Down
+            {x: -1, y: 0}, // Left
+            {x: 0, y: -1}  // Up
+        ];
+
+        const march = (startX, startY) => {
+            const contour = [];
+            let x = startX, y = startY;
+            let direction = 0; // Start by moving to the right
+            const visited = new Set();
+            const startKey = `${x},${y}`;
+            let maxSteps = width * height; // Safety limit to prevent infinite loops
+
+            do {
+                const key = `${x},${y}`;
+                if(visited.has(key)) break;
+                visited.add(key);
+                contour.push({x, y});
+
+                let found = false;
+                for(let i = 0; i < 4; i++) {
+                    const newDirection = (direction + i) % 4;
+                    const newX = x + directions[newDirection].x;
+                    const newY = y + directions[newDirection].y;
+
+                    if(newX >= 0 && newY >= 0 && newX < width && newY < height && getAlpha(newX, newY) >= alphaThreshold) {
+                        x = newX;
+                        y = newY;
+                        direction = newDirection;
+                        found = true;
+                        break;
+                    }
+                }
+                if(!found) break; // If no move was made, break the loop
+
+                maxSteps--;
+                if(maxSteps <= 0) {
+                    console.error("Contour length exceeded safety limit");
+                    break;
+                }
+            } while(`${x},${y}` !== startKey);
+
+            return contour;
+        };
+
+        const edges = [];
+        const visitedGlobal = new Set(); // Ensure visited set is defined here
         for(let y = 0; y < height; y++) {
             for(let x = 0; x < width; x++) {
-                const index = (y * width + x) * 4;
-                const alpha = data[index + 3] / 255;
-
-                if(alpha > alphaThreshold) {
-                    if(x === 0 || x === width - 1 || y === 0 || y === height - 1) {
-                        edges.push({x, y});
-                    } else {
-                        const neighbors = [
-                            data[((y - 1) * width + x) * 4 + 3] / 255,
-                            data[((y + 1) * width + x) * 4 + 3] / 255,
-                            data[(y * width + x - 1) * 4 + 3] / 255,
-                            data[(y * width + x + 1) * 4 + 3] / 255
-                        ];
-
-                        if(neighbors.some(a => a <= alphaThreshold)) {
-                            edges.push({x, y});
-                        }
-                    }
+                const key = `${x},${y}`;
+                if(getAlpha(x, y) >= alphaThreshold && !visitedGlobal.has(key)) {
+                    const contour = march(x, y);
+                    contour.forEach(point => visitedGlobal.add(`${point.x},${point.y}`));
+                    if(contour.length > 0) edges.push(...contour);
                 }
             }
         }
@@ -77,29 +113,35 @@ export default class PolygonTracer {
         return edges;
     }
 
-    static simplifyPolygon(points, tolerance) {
+    static simplifyPolygon(points, tolerance = 5) { // Adjusted tolerance for significant simplification
         if(points.length < 3) return points;
 
-        let dmax = 0;
-        let index = 0;
-        const end = points.length - 1;
+        const simplified = [points[0]];
 
-        for(let i = 1; i < end; i++) {
-            const d = this.perpendicularDistance(points[i], points[0], points[end]);
-            if(d > dmax) {
-                index = i;
-                dmax = d;
+        const simplify = (start, end) => {
+            let dmax = 0;
+            let index = 0;
+            for(let i = start + 1; i < end; i++) {
+                const d = this.perpendicularDistance(points[i], points[start], points[end]);
+                if(d > dmax) {
+                    index = i;
+                    dmax = d;
+                }
             }
-        }
 
-        if(dmax > tolerance) {
-            const recResults1 = this.simplifyPolygon(points.slice(0, index + 1), tolerance);
-            const recResults2 = this.simplifyPolygon(points.slice(index), tolerance);
+            if(dmax > tolerance) {
+                const recResults1 = simplify(start, index);
+                const recResults2 = simplify(index, end);
+                return [...recResults1.slice(0, recResults1.length - 1), ...recResults2];
+            } else {
+                return [points[start], points[end]];
+            }
+        };
 
-            return recResults1.slice(0, recResults1.length - 1).concat(recResults2);
-        } else {
-            return [points[0], points[end]];
-        }
+        const result = simplify(0, points.length - 1);
+        simplified.push(...result.slice(1));
+
+        return simplified;
     }
 
     static perpendicularDistance(point, lineStart, lineEnd) {

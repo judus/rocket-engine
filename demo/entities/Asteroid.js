@@ -10,19 +10,41 @@ import RenderComponent from "../../engine/src/components/RenderComponent.js";
 import ClickableComponent from "../../engine/src/components/ClickableComponent.js";
 import FaceVelocityBehavior from "../../engine/src/behaviors/FaceVelocityBehavior.js";
 import EntityVerticesComponent from "../components/EntityVerticesComponent.js";
+import Entity2D from "../../engine/src/entities/physics/Entity2D.js";
+import Vector3D from "../../engine/src/utils/maths/Vector3D.js";
+import PhysicsComponent from "../../engine/src/entities/physics/PhysicsComponent.js";
 
-export default class Asteroid extends SpatialECS2D {
-    constructor(dataStoreManager, eventBus, definition, x = 0, y = 0, id = null, scale = 1) {
-        super(dataStoreManager.getStore('entities'), x, y, id);
-        this.eventBus = eventBus;
-        this.dataStoreManager = dataStoreManager;
-        this.definition = definition;
-        this.id = id;
+export default class Asteroid extends Entity2D {
+    constructor(engine, config, x = 0, y = 0, id = null, scale = 1) {
+
+        config = {
+            ...config,
+            pos: new Vector3D(x, y, 0),
+            velocity: new Vector3D(0, 0, 0),
+            mass: 1000,
+            momentOfInertia: 1,
+            accelerationModifier: 1,
+            inertiaModifier: 1,
+            dragCoefficient: 500,
+            dragCoefficientModifier: 1,
+            rotationalDragCoefficient: 0.999,
+            staticFrictionCoefficient: 10,
+        };
+
+        console.log(`Constructing Asteroid ${id} at ${config.pos} with scale ${scale}`, config.pos);
+
+        super(engine, config, id);
+
+
+
         this.scale = scale;
 
-        this.drawing = new Drawing(this.definition.polygon.fillColor);
 
-        this.addComponent('movement', new MovementComponent());
+
+
+        this.drawing = new Drawing(config.polygon.fillColor);
+
+        //this.addComponent('movement', new MovementComponent());
 
         this.addComponent('transform', new TransformComponent(x, y, 0, this.scale));
 
@@ -34,7 +56,7 @@ export default class Asteroid extends SpatialECS2D {
             // this.addComponent('collision', new CollisionComponent(
             //     collisionType, false, new DefaultCollisionResponse(particleSystem))
             // );
-            //
+            //dd
             // if(collisionType === 'box') {
             //     // Add multiple bounding boxes
             //     this.addComponent('boundingBox', new BoundingBoxComponent(
@@ -47,11 +69,13 @@ export default class Asteroid extends SpatialECS2D {
             //     // Define custom behavior here
             // }));
         }
+        this.addComponent('physics', new PhysicsComponent(), 1 / 60, 7);
+        //this.addComponent('collision', new CollisionComponent(new DefaultCollisionResponse()), false);
 
         this.addComponent('health', new HealthComponent(100));
 
 
-        this.addComponent('render', new EntityVerticesComponent());
+        this.addComponent('render', new EntityVerticesComponent(false));
 
         // Initialize behavior
         this.behavior = new FaceVelocityBehavior();
@@ -62,10 +86,10 @@ export default class Asteroid extends SpatialECS2D {
         this.behavior = behavior;
     }
 
-    update(deltaTime) {
-        super.update(deltaTime);
-        if(this.behavior) {
-            this.behavior.perform(this, deltaTime);
-        }
-    }
+    // update(deltaTime) {
+    //     super.update(deltaTime);
+    //     if(this.behavior) {
+    //         this.behavior.perform(this, deltaTime);
+    //     }
+    // }
 }

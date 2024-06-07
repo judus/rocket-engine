@@ -2,6 +2,7 @@ import Weapon from "./Weapon.js";
 import RenderComponent from "../../components/RenderComponent.js";
 import Drawing from "../../services/Drawing.js";
 import SpriteComponent from "../../sprites/SpriteComponent.js";
+import Vector3D from "../../utils/maths/Vector3D.js";
 
 export default class LaserWeapon extends Weapon {
     constructor(engine, id = null) {
@@ -12,7 +13,7 @@ export default class LaserWeapon extends Weapon {
             rateOfFire: 500, // ms
             width: 12,
             height: 46,
-            pos: {x: 100, y: 100, z: 0}
+            pos: new Vector3D(100, 100, 0)
         };
 
         super(engine, config, id);

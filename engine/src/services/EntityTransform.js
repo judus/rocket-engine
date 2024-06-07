@@ -11,9 +11,14 @@ export default class EntityTransform {
         });
     }
 
-    static updateBoundingBox(entity) {
-        const {x, y, width, height} = entity.boundingBox;
-        const vertices = [{x, y}, {x: x + width, y}, {x, y: y + height}, {x: x + width, y: y + height}];
+    static updateBoundingBox(entity, box) {
+        const {x, y, width, height} = box;
+        const vertices = [
+            {x, y},
+            {x: x + width, y},
+            {x, y: y + height},
+            {x: x + width, y: y + height}
+        ];
         return this.updateVertices(entity, vertices);
     }
 

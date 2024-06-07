@@ -4,7 +4,7 @@ import DetectionTypes from "../../physics/collisions/DetectionTypes.js";
 import CollisionDetector from "../../physics/collisions/CollisionDetector.js";
 import Rectangle from "../../utils/maths/Rectangle.js";
 import QuadTree from "../../services/QuadTree.js";
-import EntityTransform from "../../services/EntityTransform.js";
+import DrawingService from "../../services/DrawingService.js";
 
 export default class CollisionComponent extends BaseComponent {
     constructor(collisionResponse = null, debug = false) {
@@ -16,15 +16,32 @@ export default class CollisionComponent extends BaseComponent {
     }
 
     initializeQuadTree(entities) {
-        const boundary = new Rectangle(this.entity.pos.x - 240, this.entity.pos.y - 310, 480, 620);
-        this.quadTree = new QuadTree(boundary, 2);
-        entities.forEach(entity => this.quadTree.insert(entity));
+        const sizeX = this.entity.width;
+        const sizeY = this.entity.height;
+        const length = Math.sqrt(sizeX * sizeX + sizeY * sizeY) * 1.5;
+
+        const boundary = new Rectangle(this.entity.pos.x - length / 2, this.entity.pos.y - length / 2, length, length);
+        this.quadTree = new QuadTree(boundary, 1);
+        entities.forEach(entity => {
+            console.log('Inserting entity into quad tree');
+            this.quadTree.insert(entity)
+        });
     }
+
+    // TODO: Update the engine or the entity to support this method
+    // update(deltaTime) {
+    //     const entities = this.entity.entityManager.getAllEntities();
+    //     this.check(entities);
+    // }
 
     check(entities) {
         this.initializeQuadTree(entities);
 
-        const boundary = new Rectangle(this.entity.pos.x - 240, this.entity.pos.y - 310, 480, 620);
+        const sizeX = this.entity.width;
+        const sizeY = this.entity.height;
+        const length = Math.sqrt(sizeX * sizeX + sizeY * sizeY) * 1.5;
+
+        const boundary = new Rectangle(this.entity.pos.x - length / 2, this.entity.pos.y - length / 2, length, length);
         this.quadTree.query(boundary).forEach(candidate => {
             if(this.entity !== candidate) {
                 const collisionResult = this.checkCollision(this.entity, candidate);
@@ -34,7 +51,8 @@ export default class CollisionComponent extends BaseComponent {
             }
         });
 
-        this.entity.quadTree = this.quadTree; // Store the quad tree in the entity for future reference
+        // Store the quad tree in the entity for future reference
+        this.entity.quadTree = this.quadTree;
     }
 
     checkCollision(entity, candidate) {
@@ -43,52 +61,37 @@ export default class CollisionComponent extends BaseComponent {
             return {collided: false};
         }
 
-        console.log(entity);
         const detectionLevel = entity.collisionDetection || DetectionTypes.OUTER_BOX;
         let collisionResult = {collided: false};
 
-        // Check outer bounding box
-        if(detectionLevel >= DetectionTypes.OUTER_BOX) {
-            this.updateBoundingBox(entity);
-            collisionResult = CollisionDetector.checkBoundingBoxCollision(entity, candidate);
+        // Check outer bounding box with OBB for precise detection
+        if(detectionLevel === DetectionTypes.OUTER_BOX) {
+            collisionResult = CollisionDetector.checkBoundingBoxOBB(entity, candidate);
+            if(!collisionResult.collided) return collisionResult;
+        }
+
+        // Check bounding box with AABB for pre-check in detailed detection
+        if(detectionLevel > DetectionTypes.OUTER_BOX) {
+            collisionResult = CollisionDetector.checkBoundingBoxAABB(entity, candidate);
             if(!collisionResult.collided) return collisionResult;
         }
 
         // Check sub bounding boxes
         if(detectionLevel >= DetectionTypes.SUB_BOXES) {
-            this.updateSubBoundingBoxes(entity);
-            collisionResult = CollisionDetector.checkSubBoxCollision(entity, candidate);
+            collisionResult = CollisionDetector.checkCollisionBoxes(entity, candidate);
             if(!collisionResult.collided) return collisionResult;
         }
 
-        // Check either main entity polygon or current sprite sheet frame polygon
+        // Check either the entity polygon or the current sprite sheet frame polygon
         if(detectionLevel === DetectionTypes.POLYGON) {
-            this.updateEntityPolygon(entity);
-            collisionResult = CollisionDetector.checkEntityPolygonCollision(entity, candidate);
+            collisionResult = CollisionDetector.checkPolygon(entity, candidate);
         } else if(detectionLevel === DetectionTypes.FRAME_POLYGON) {
-            this.updateSpriteSheetFramePolygon(entity);
-            collisionResult = CollisionDetector.checkFramePolygonCollision(entity, candidate);
+            collisionResult = CollisionDetector.checkPolygon(entity, candidate); // Assuming same method for both
         }
 
         return collisionResult;
     }
 
-    updateBoundingBox(entity) {
-        EntityTransform.updateBoundingBox(entity, entity.boundingBox);
-    }
-
-    updateSubBoundingBoxes(entity) {
-        entity.collisionBoxes.forEach(box => EntityTransform.updateVertices(entity, box));
-    }
-
-    updateEntityPolygon(entity) {
-        EntityTransform.updateVertices(entity, entity.polygon);
-    }
-
-    updateSpriteSheetFramePolygon(entity) {
-        const currentFrame = entity.getComponent('sprite').getFrame();
-        EntityTransform.updateVertices(entity, entity.frames[currentFrame]);
-    }
 
     handleCollision(entity, otherEntity, collisionResult) {
         this.collisionResponse.handleCollision(entity, otherEntity, collisionResult);
@@ -97,5 +100,48 @@ export default class CollisionComponent extends BaseComponent {
         if(this.debug) {
             console.log(`${entity.id} collided with ${otherEntity.id}`);
         }
+    }
+
+    render(context, camera) {
+        if(this.debug) {
+            console.log('Rendering collision data...');
+            // Draw the quad tree
+            this.drawQuadTree(context, this.quadTree, camera);
+
+            // Draw the bounding box
+            this.drawBoundingBoxes(context, camera);
+
+            // Draw the collision boxes if any
+            this.drawCollisionBoxes(context, camera);
+
+            // Draw the sprite frame polygon
+            if(this.entity.framePolygons.length) {
+                this.drawSpriteFramePolygon(context, camera);
+            }
+        }
+    }
+
+    drawQuadTree(context, quadTree, camera) {
+        this.entity.quadTree.draw(context, camera);
+    }
+
+    drawBoundingBoxes(context, camera) {
+        const detectionLevel = this.entity.collisionDetection || DetectionTypes.OUTER_BOX;
+
+        if(detectionLevel === DetectionTypes.OUTER_BOX) {
+            console.log('Drawing OBB bounding box');
+            DrawingService.drawBoundingBoxOBB(context, this.entity.boundingBox, camera);
+        } else {
+            console.log('Drawing AABB bounding box');
+            DrawingService.drawBoundingBoxAABB(context, this.entity.boundingBox, camera);
+        }
+    }
+
+    drawCollisionBoxes(context, camera) {
+        DrawingService.drawCollisionBoxes(context, this.entity.collisionBoxes, camera);
+    }
+
+    drawSpriteFramePolygon(context, camera) {
+        DrawingService.drawPolygon(context, this.entity.framePolygon || this.entity.polygon, camera);
     }
 }

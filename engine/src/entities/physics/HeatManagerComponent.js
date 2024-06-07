@@ -10,10 +10,10 @@ export default class HeatManagerComponent extends BaseComponent {
     }
 
     registerHeatProducer(component, heatProductionRate, maxTemperature) {
-        console.log(`Registering HeatProducer for ${component.label}`, {
-            heatProductionRate,
-            maxTemperature
-        });
+        // console.log(`Registering HeatProducer for ${component.label}`, {
+        //     heatProductionRate,
+        //     maxTemperature
+        // });
 
         this.heatProducers.push(component);
     }

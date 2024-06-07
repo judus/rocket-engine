@@ -166,4 +166,8 @@ export default class Polygon {
         }
         return true;
     }
+
+    intersects(polygon) {
+
+    }
 }

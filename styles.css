@@ -1,7 +1,7 @@
 :root {
 	--primary-color: rgba(20, 148, 189, 0.8);
 	--black-color: rgba(0, 0, 0);
-	--background-color: rgba(0, 0, 0, 0.3);
+	--background-color: rgba(0, 0, 0, 0.9);
 	--text-color: rgba(58, 203, 255, 0.8);
 	--success-color: rgb(0, 115, 36);
 	--alert-color: rgb(134, 40, 0);
@@ -203,7 +203,7 @@ canvas:hover {
 	.ui-component {
 		background: linear-gradient(
 				to right,
-				rgba(9, 55, 66, 0.3) 30%,
+				rgba(6, 34, 40, 0.9) 30%,
 				var(--background-color) 100%
 		);
 		h3 {

@@ -78,6 +78,9 @@ export default class EntityInitialization {
     }
 
     createEntities() {
+        console.log(this.entityDefinitions);
+
+
         // Predefined entities
         const playerDefinition = this.entityDefinitions.get('starships', 'starship_type_3');
         console.log('Creating player entity...');
@@ -119,5 +122,8 @@ export default class EntityInitialization {
         //
         //     this.entityFactory.createAsteroidFromDefinition(asteroidDefinition, asteroidX, asteroidY, asteroidId, scale);
         // }
+
+        //this.entityFactory.createAsteroidFromDefinition(this.entityDefinitions.definitions.asteroids.asteroid_type_1, 700, 200, 'test', 2);
+
     }
 }

@@ -6,7 +6,7 @@ export default class TaskScheduler {
     addTask(task, taskName, frequency = 1 / 60, priority = 0) {
         this.tasks.push({task, name: taskName, frequency, counter: 0, priority});
         this.tasks.sort((a, b) => b.priority - a.priority);
-        console.log(`Task '${taskName}' added with priority ${priority} and frequency ${frequency}`);
+        //console.log(`Task '${taskName}' added with priority ${priority} and frequency ${frequency}`);
     }
 
     runTasks(deltaTime, ...args) {
