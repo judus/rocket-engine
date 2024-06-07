@@ -123,7 +123,7 @@ export default class EntityInitialization {
         //     this.entityFactory.createAsteroidFromDefinition(asteroidDefinition, asteroidX, asteroidY, asteroidId, scale);
         // }
 
-        this.entityFactory.createAsteroidFromDefinition(this.entityDefinitions.definitions.asteroids.asteroid_type_1, 700, 200, 'test', 8);
+        this.entityFactory.createAsteroidFromDefinition(this.entityDefinitions.definitions.asteroids.asteroid_type_1, 700, 200, 'test', 1);
 
     }
 }

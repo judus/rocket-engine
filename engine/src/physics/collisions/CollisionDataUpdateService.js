@@ -6,8 +6,8 @@ export default class CollisionDataUpdateService {
      * @param {Entity2D} entity - The entity to update.
      */
     static updateBoundingBoxOBB(entity) {
-        const halfWidth = entity.width / 2;
-        const halfHeight = entity.height / 2;
+        const halfWidth = (entity.width * entity.scale) / 2;
+        const halfHeight = (entity.height * entity.scale) / 2;
         const rotatedBoundingBox = this.getRotatedBoundingBoxOBB(entity.pos, halfWidth, halfHeight, entity.rotation);
         entity.boundingBox = rotatedBoundingBox;
     }
@@ -17,8 +17,8 @@ export default class CollisionDataUpdateService {
      * @param {Entity2D} entity - The entity to update.
      */
     static updateBoundingBoxAABB(entity) {
-        const halfWidth = entity.width / 2;
-        const halfHeight = entity.height / 2;
+        const halfWidth = (entity.width * entity.scale) / 2;
+        const halfHeight = (entity.height * entity.scale) / 2;
         const pos = entity.pos;
 
         const aabb = this.getRotatedBoundingBoxAABB(pos, halfWidth, halfHeight, entity.rotation);
@@ -26,7 +26,8 @@ export default class CollisionDataUpdateService {
             x: aabb.x,
             y: aabb.y,
             width: aabb.width,
-            height: aabb.height
+            height: aabb.height,
+            corners: aabb.corners // Ensure corners are included
         };
     }
 
@@ -98,7 +99,8 @@ export default class CollisionDataUpdateService {
             x: minX,
             y: minY,
             width: maxX - minX,
-            height: maxY - minY
+            height: maxY - minY,
+            corners: rotatedCorners
         };
     }
 
@@ -106,22 +108,23 @@ export default class CollisionDataUpdateService {
      * Updates the collision boxes of an entity.
      * @param {Entity2D} entity - The entity to update.
      */
+    /**
+     * Updates the collision boxes of an entity.
+     * @param {Entity2D} entity - The entity to update.
+     */
     static updateCollisionBoxes(entity) {
         if(!entity.initialCollisionBoxes) {
-            // Store the initial positions if not already stored
             entity.initialCollisionBoxes = entity.collisionBoxes.map(box => ({...box}));
         }
 
         entity.collisionBoxes = entity.initialCollisionBoxes.map(box => {
-            // Calculate the corners of the collision box relative to the entity's center
             const corners = [
-                {x: box.x - box.width / 2, y: box.y - box.height / 2}, // Top-left
-                {x: box.x + box.width / 2, y: box.y - box.height / 2}, // Top-right
-                {x: box.x + box.width / 2, y: box.y + box.height / 2}, // Bottom-right
-                {x: box.x - box.width / 2, y: box.y + box.height / 2}  // Bottom-left
+                {x: (box.x - box.width / 2) * entity.scale, y: (box.y - box.height / 2) * entity.scale},
+                {x: (box.x + box.width / 2) * entity.scale, y: (box.y - box.height / 2) * entity.scale},
+                {x: (box.x + box.width / 2) * entity.scale, y: (box.y + box.height / 2) * entity.scale},
+                {x: (box.x - box.width / 2) * entity.scale, y: (box.y + box.height / 2) * entity.scale}
             ];
 
-            // Rotate each corner
             const rotatedCorners = corners.map(corner => {
                 const rotatedCorner = this.rotatePoint(corner, entity.rotation);
                 return {
@@ -130,7 +133,6 @@ export default class CollisionDataUpdateService {
                 };
             });
 
-            // Reconstruct the box from rotated corners
             const minX = Math.min(...rotatedCorners.map(corner => corner.x));
             const minY = Math.min(...rotatedCorners.map(corner => corner.y));
             const maxX = Math.max(...rotatedCorners.map(corner => corner.x));
@@ -144,21 +146,6 @@ export default class CollisionDataUpdateService {
                 corners: rotatedCorners
             };
         });
-    }
-
-    /**
-     * Rotates a point around the origin by the given angle.
-     * @param {Object} point - The point to rotate, with x and y properties.
-     * @param {number} angle - The angle to rotate by, in radians.
-     * @returns {Object} - The rotated point.
-     */
-    static rotatePoint(point, angle) {
-        const cos = Math.cos(angle);
-        const sin = Math.sin(angle);
-        return {
-            x: point.x * cos - point.y * sin,
-            y: point.x * sin + point.y * cos
-        };
     }
 
 

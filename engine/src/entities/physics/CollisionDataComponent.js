@@ -24,7 +24,7 @@ export default class CollisionDataComponent extends BaseComponent {
             CollisionDataUpdateService.updateCollisionBoxes(entity);
 
             // Update frame polygon if applicable
-            if (entity.framePolygons.length) {
+            if(entity.framePolygons && entity.framePolygons.length) {
                 CollisionDataUpdateService.updateFramePolygon(entity);
             }
         }
@@ -34,3 +34,4 @@ export default class CollisionDataComponent extends BaseComponent {
         }
     }
 }
+
