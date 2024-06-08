@@ -15,16 +15,8 @@ export default class Weapon extends Entity2D {
         this.heatManager = null;
         this.ownerId = ownerId;
         this.factory = new EntityFactory(engine);
-    }
+        this.reactor = null;
 
-    onAdd(entity) {
-        super.onAdd(entity);
-        this.entity.hasComponent('energyManager', (energyManager) => {
-            this.energyManager = energyManager;
-        });
-        this.entity.hasComponent('heatManager', (heatManager) => {
-            this.heatManager = heatManager;
-        });
     }
 
     activate() {
@@ -36,30 +28,42 @@ export default class Weapon extends Entity2D {
     }
 
     canFire() {
-        return this.energyManager.availableEnergy >= this.energyConsumption;
+        if (!this.reactor) {
+            console.log('Looking for reactor');
+
+            this.parent.hasComponent('powerPlant', (component) => {
+                console.log('Found reactor');
+                this.reactor = component;
+            });
+        }
+
+        return this.reactor && this.reactor.energy >= this.energyConsumption;
     }
 
     fire() {
-
         const now = performance.now();
-        //if(now - this.lastFired >= this.rateOfFire) {
-            //this.lastFired = now;
-            // this.energyManager.consumeEnergy(this.energyConsumption);
-            // this.heatManager.produceHeat(this.heatProduction);
+        if(now - this.lastFired >= this.rateOfFire && this.canFire()) {
+            this.lastFired = now;
+            console.log(this.energyConsumption);
+
+            this.reactor.consume(this.energyConsumption);
 
             const initialPosition = this.getProjectileInitialPosition();
             const velocity = this.getProjectileVelocity();
 
             const projectile = this.factory.createProjectile('bullet_standard', initialPosition, velocity, this.ownerId);
-            console.log('Firing projectile', projectile.ownerId);
             this.entityManager.addEntity(projectile);
-        //}
+        }
     }
 
     getProjectileVelocity() {
         // Calculate the initial velocity of the projectile based on weapon orientation
         const direction = new Vector3D(Math.cos(this.rotation), Math.sin(this.rotation));
-        return direction.multiply(50); // Example speed
+        const projectileSpeed = direction.multiply(200); // Example speed
+
+        // Add the velocity of the ship to the projectile velocity
+        const parentVelocity = this.parent.velocity;
+        return projectileSpeed.add(parentVelocity);
     }
 
     getProjectileInitialPosition() {

@@ -19,6 +19,7 @@ export default class ScopedMouse extends GlobalMouse {
         this.buttons = {left: false, middle: false, right: false};
         this.selectionStart = null;
         this.selectionEnd = null;
+        this.isMouseDown = false; // New flag to track mouse down state
     }
 
     /**
@@ -67,8 +68,13 @@ export default class ScopedMouse extends GlobalMouse {
                 this.buttons.right = event.type === 'mousedown';
                 break;
         }
-    }
 
+        if(event.type === 'mousedown') {
+            this.isMouseDown = true;
+        } else if(event.type === 'mouseup') {
+            this.isMouseDown = false;
+        }
+    }
 
     /**
      * Gets the selection area based on the initial and final positions.

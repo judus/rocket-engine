@@ -1,4 +1,3 @@
-// StarShip.js
 import Entity2D from "./Entity2D.js";
 import Vector3D from "../../utils/maths/Vector3D.js";
 import EngineComponent from "./EngineComponent.js";
@@ -10,7 +9,6 @@ import EntityMountsComponent from "./EntityMountsComponent.js";
 import WeaponSystemComponent from "./WeaponSystemComponent.js";
 import MountProfile from "./MountProfile.js";
 import LaserWeapon from "./LaserWeapon.js";
-// import KineticWeapon from "./KineticWeapon.js";
 import Scanner from "./Scanner.js";
 import Jammer from "./Jammer.js";
 import ShipAttackComponent from "./ShipAttackComponent.js";
@@ -49,43 +47,21 @@ export default class StarShip extends Entity2D {
 
         super(engine, config, id);
 
-        // Don't mind these configurations, they are just for the game
-        const powerPlantProfiles = {
+        this.config = config;
+        this.isControlled = false;
+
+        // Profiles
+        this.cargoBayProfiles = {
             default: {
                 maxTemperature: 100, // in °C
                 heatProductionRate: 0.01,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
                 health: 100,
-                energyCostMW: 0,
-                maxEnergyMW: 10, // megawatts
-                rechargeRateMW: 0.3 // megawatts
+                energyCostMW: 1,
+                capacityMultiplier: 1
             }
         };
 
-        const coolingSystemProfiles = {
-            default: {
-                maxTemperature: 100,  // Maximum operational temperature in °C
-                heatProductionRate: 0.01,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
-                dissipationFactor: 0.5,  // Reduces the heat accumulation rate in other components by this factor
-                health: 100,  // Health points of the cooling system, indicating its damage threshold
-                energyCostMW: 1,  // Energy cost in megawatts for the cooling system to operate
-            }
-        };
-
-        const engineProfiles = {
-            default: {
-                maxTemperature: 100, // in °C
-                heatProductionRate: 0.01,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
-                health: 100,
-                energyCostMW: 2,
-                states: {
-                    idle: {efficiency: 1, maxThrust: 200000, maxTorque: 10},
-                    cruise: {efficiency: 1, maxThrust: 200000, maxTorque: 10},
-                    boost: {efficiency: 1, maxThrust: 200000, maxTorque: 10}
-                }
-            }
-        };
-
-        const shieldProfiles = {
+        this.shieldProfiles = {
             default: {
                 maxTemperature: 100, // in °C
                 heatProductionRate: 0.01,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
@@ -93,16 +69,6 @@ export default class StarShip extends Entity2D {
                 energyCostMW: 2,
                 shieldStrength: 1000, // 1000 units of shield strength
                 rechargeRateMW: 0.5 // megawatts for recharging
-            }
-        };
-
-        const cargoBayProfiles = {
-            default: {
-                maxTemperature: 100, // in °C
-                heatProductionRate: 0.01,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
-                health: 100,
-                energyCostMW: 1,
-                capacityMultiplier: 1
             }
         };
 
@@ -126,7 +92,6 @@ export default class StarShip extends Entity2D {
                 dragCoefficientModifier: 1
             }
         };
-
 
         const mountProfiles = new MountProfile([
             {
@@ -167,54 +132,19 @@ export default class StarShip extends Entity2D {
             }
         ]);
 
-        this.config = config;
-
-        // These are the components that make up the starship
-        // if they implement the update method, they will be updated by the task scheduler
-        // the last parameter is the priority of the task, the second last is the update rate
-
-        // The first few ones are game feature
-        this.addComponent('energyManager', new EnergyManagerComponent(), 1 / 60, 1);
-        this.addComponent('heatManager', new HeatManagerComponent(100), 1 / 60, 1);
-        this.addComponent('powerPlant', new ReactorComponent(powerPlantProfiles, 1, 'default'), 1 / 60, 2);
-        this.addComponent('cooling', new CoolingSystemComponent(coolingSystemProfiles, 1, 'default'), 1 / 60, 2);
-        this.addComponent('cargo', new CargoBayComponent(cargoBayProfiles, 2, 'default'), 1 / 60, 2);
-        this.addComponent('inventory', new InventoryComponent({}, 3), 1 / 60, 2);
-        this.addComponent('damper', new DamperComponent(damperProfiles, 5, 'default'), 1 / 60, 3);
-        this.addComponent('engine', new EngineComponent(engineProfiles, 3, 'default'), 1 / 60, 4);
-        this.addComponent('engineController', new ControllerComponent(), 1 / 60, 5);
-        this.addComponent('environment', new EnvironmentComponent(), 1 / 60, 6);
-
-        // the entity is repositioned and orientated (rotation property) by the physics engine
-        // This does not transform the polygon nor the collision boxes
+        // Add common components
         this.addComponent('physics', new PhysicsComponent(), 1 / 60, 7);
-
-
-        // more game features...
-        this.addComponent('shields', new ShieldComponent(shieldProfiles, 4), 1 / 60, 7);
         this.addComponent('mounts', new EntityMountsComponent(mountProfiles), 1 / 60, 8);
         this.addComponent('weaponSystem', new WeaponSystemComponent(), 1 / 60, 9);
         this.addComponent('attack', new ShipAttackComponent(), 1 / 60, 10);
-
-        // So far nothing updated the polygons and collision boxes of the entity
-        // We might want to do that with a new component or do it in the collision component
-        this.addComponent('collisionData', new CollisionDataComponent(), 1 / 60, 1);
-
-
-        // this is supposed to render the polygon of the entity, needs refactoring
-        // it is uses a Drawing class that update the polygon before drawing it
-        // Although it does not save the transformation of the polygon on the entity
-        this.addComponent('render', new EntityVerticesComponent(false), 1 / 60, 11);
-
-        // This is the collision component. It does not detect collision on its own,
-        // it should use a service to do that. So far it does not update the polygon nor the collision boxes
-        this.addComponent('collision', new CollisionComponent(new DefaultCollisionResponse(), true));
-
-        // The sprite component is used to render the sprite of the entity
+        this.addComponent('collisionData', new CollisionDataComponent(), 1 / 30, 1);
+        this.addComponent('collision', new CollisionComponent(new DefaultCollisionResponse(), false), 1 / 30, 1);
         this.spriteSheet = this.engine.spriteSheetManager().getSpriteSheet(this.spriteSheet.name);
-        this.addComponent('sprite', new SpriteComponent(this.spriteSheet, 0), 1 / 60, 12); // this renders the sprite of the entity
+        this.addComponent('sprite', new SpriteComponent(this.spriteSheet, 0), 1 / 60, 12);
 
-        // More game features...
+        this.addComponent('cargo', new CargoBayComponent(this.cargoBayProfiles, 2, 'default'), 1 / 10, 2);
+        this.addComponent('shields', new ShieldComponent(this.shieldProfiles, 4), 1 / 30, 7);
+
         this.hasComponent('mounts', (mounts) => {
             const laser1 = this.entityFactory.createEntity('weapons', 'laser');
             const laser2 = this.entityFactory.createEntity('weapons', 'laser');
@@ -226,37 +156,115 @@ export default class StarShip extends Entity2D {
             laser3.ownerId = this.id;
             laser4.ownerId = this.id;
 
-            //const laserWeapon1 = new LaserWeapon(engine, 'laser1', this.id);
-            //const laserWeapon2 = new LaserWeapon(engine, 'laser2');
-            // const kineticWeapon1 = new KineticWeapon(engine, 'kinetic1');
-            // const kineticWeapon2 = new KineticWeapon(engine, 'kinetic2');
-            //const scanner = new Scanner(engine);
-            //const jammer = new Jammer(engine);
-
             mounts.attachEntity(laser1, 'mount1');
             mounts.attachEntity(laser2, 'mount2');
             mounts.attachEntity(laser3, 'mount3');
             mounts.attachEntity(laser4, 'mount4');
-            // mounts.attachEntity(kineticWeapon1, 'mount3');
-            // mounts.attachEntity(kineticWeapon2, 'mount4');
         });
 
         this.hasComponent('weaponSystem', (weaponSystemComponent) => {
             weaponSystemComponent.createWeaponGroup('1', [0, 1]);
             weaponSystemComponent.createWeaponGroup('2', [2, 3]);
         });
-
-        // console.log('Constructed starship', this);
-        // this.entityManager.addEntity(this);
-        // console.log('State of store', this.engine.dataStoreManager().getStore('entities'));
     }
 
-    // This is the input from the player to steer the ship
-    setInput(ad, ws) {
-        this.getComponent('engineController').setInput(ad, ws);
+    takeControl() {
+        if(this.isControlled) return;
+
+        const powerPlantProfiles = {
+            default: {
+                maxTemperature: 100, // in °C
+                heatProductionRate: 0.01,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
+                health: 100,
+                energyCostMW: 0,
+                maxEnergyMW: 10, // megawatts
+                rechargeRateMW: 0.3 // megawatts
+            }
+        };
+
+        const coolingSystemProfiles = {
+            default: {
+                maxTemperature: 100,  // Maximum operational temperature in °C
+                heatProductionRate: 0.01,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
+                dissipationFactor: 0.5,  // Reduces the heat accumulation rate in other components by this factor
+                health: 100,  // Health points of the cooling system, indicating its damage threshold
+                energyCostMW: 1,  // Energy cost in megawatts for the cooling system to operate
+            }
+        };
+
+        const engineProfiles = {
+            default: {
+                maxTemperature: 100, // in °C
+                heatProductionRate: 0.01,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
+                health: 100,
+                energyCostMW: 2,
+                states: {
+                    idle: {efficiency: 1, maxThrust: 200000, maxTorque: 10},
+                    cruise: {efficiency: 1, maxThrust: 200000, maxTorque: 10},
+                    boost: {efficiency: 1, maxThrust: 200000, maxTorque: 10}
+                }
+            }
+        };
+
+        const damperProfiles = {
+            default: {
+                maxTemperature: 100, // in °C
+                heatProductionRate: 0.01,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
+                health: 100,
+                energyCostMW: 2,
+                accelerationModifier: 1,
+                inertiaModifier: 0.1,
+                dragCoefficientModifier: 500
+            },
+            advanced: {
+                maxTemperature: 100, // in °C
+                heatProductionRate: 0.01,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
+                health: 100,
+                energyCostMW: 2,
+                accelerationModifier: 1,
+                inertiaModifier: 1,
+                dragCoefficientModifier: 1
+            }
+        };
+
+        // Remove existing cargo and shields before re-adding them
+        this.removeComponent('cargo');
+        this.removeComponent('shields');
+
+        this.addComponent('energyManager', new EnergyManagerComponent(), 1 / 30, 1);
+        this.addComponent('heatManager', new HeatManagerComponent(100), 1 / 30, 1);
+        this.addComponent('powerPlant', new ReactorComponent(powerPlantProfiles, 1, 'default'), 1 / 30, 2);
+        this.addComponent('cooling', new CoolingSystemComponent(coolingSystemProfiles, 1, 'default'), 1 / 30, 2);
+        this.addComponent('inventory', new InventoryComponent({}, 3), 1 / 10, 2);
+        this.addComponent('damper', new DamperComponent(damperProfiles, 5, 'default'), 1 / 60, 3);
+        this.addComponent('engine', new EngineComponent(engineProfiles, 3, 'default'), 1 / 60, 4);
+        this.addComponent('engineController', new ControllerComponent(), 1 / 60, 5);
+        this.addComponent('environment', new EnvironmentComponent(), 1 / 30, 6);
+        this.addComponent('cargo', new CargoBayComponent(this.cargoBayProfiles, 2, 'default'), 1 / 10, 2);
+        this.addComponent('shields', new ShieldComponent(this.shieldProfiles, 4), 1 / 30, 7);
+
+        this.isControlled = true;
     }
 
-    onCollision(otherEntity, collisionResult) {
-        super.onCollision(otherEntity, collisionResult);
+    releaseControl() {
+        if(!this.isControlled) return;
+
+        this.removeComponent('energyManager');
+        this.removeComponent('heatManager');
+        this.removeComponent('powerPlant');
+        this.removeComponent('cooling');
+        this.removeComponent('inventory');
+        this.removeComponent('damper');
+        this.removeComponent('engine');
+        this.removeComponent('engineController');
+        this.removeComponent('environment');
+
+        // Remove and re-add common components
+        this.removeComponent('cargo');
+        this.removeComponent('shields');
+        this.addComponent('cargo', new CargoBayComponent(this.cargoBayProfiles, 2, 'default'), 1 / 10, 2);
+        this.addComponent('shields', new ShieldComponent(this.shieldProfiles, 4), 1 / 30, 7);
+
+        this.isControlled = false;
     }
 }

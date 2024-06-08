@@ -47,6 +47,9 @@ export default class InputManager extends EngineBase {
                 this.addScopedMouse(scopedMouse);
             }
         });
+
+        // Start the interval to check for continuous mouse down events
+        this.startContinuousMouseDownCheck();
     }
 
     /**
@@ -180,6 +183,9 @@ export default class InputManager extends EngineBase {
 
         scopedMouse.element.addEventListener('mousemove', event => {
             scopedMouse.updatePosition(event);
+            if(scopedMouse.isMouseDown) {
+                this.eventBus.emit('scopedMouseContinuousDown', scopedMouse);
+            }
             this.eventBus.emit('scopedMouseMove', scopedMouse);
         });
 
@@ -219,5 +225,18 @@ export default class InputManager extends EngineBase {
                 eventBus.emit(`${eventType}Secondary`, scopedMouse);
                 break;
         }
+    }
+
+    /**
+     * Starts an interval to check for continuous mouse down events.
+     */
+    startContinuousMouseDownCheck() {
+        setInterval(() => {
+            this.scopedMice.forEach(scopedMouse => {
+                if(scopedMouse.isMouseDown) {
+                    this.eventBus.emit('scopedMouseIsDown', scopedMouse);
+                }
+            });
+        }, 10); // Check every 100ms (adjust the interval as needed)
     }
 }

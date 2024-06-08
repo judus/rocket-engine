@@ -30,9 +30,9 @@ export default class Projectile extends Entity2D {
         this.age = 0;
 
         // Add necessary components
-        this.addComponent('physics', new PhysicsComponent(), 1 / 60, 1);
-        this.addComponent('collisionData', new CollisionDataComponent(), 1 / 60, 2);
-        this.addComponent('collision', new CollisionComponent(new DefaultCollisionResponse(), false), 1 / 60, 3);
+        this.addComponent('physics', new PhysicsComponent(), 1 / 30, 1);
+        this.addComponent('collisionData', new CollisionDataComponent(), 1 / 30, 2);
+        this.addComponent('collision', new CollisionComponent(new DefaultCollisionResponse(), false), 1 / 30, 3);
         this.addComponent('render', new RenderComponent((deltaTime, context, camera) => {
             this.renderPolygon(context, camera);
             //12this.renderRedDot(context, camera);

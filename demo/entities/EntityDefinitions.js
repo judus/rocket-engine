@@ -362,7 +362,7 @@ export default class EntityDefinitions {
                 entityClass: 'laser',
                 type: 'laser',
                 damage: 10,
-                energyConsumption: 5,
+                energyConsumption: 10000,
                 rateOfFire: 10, // ms
                 width: 12,
                 height: 60,
@@ -381,8 +381,8 @@ export default class EntityDefinitions {
             bullet_standard: {
                 entityClass: 'projectile',
                 damage: 5,
-                speed: 300, // Example speed
-                lifetime: 30, // Example lifetime in seconds
+                speed: 300,
+                lifetime: 5,
                 width: 2,
                 height: 2,
                 pos: {x: 0, y: 0, z: 0},
@@ -400,8 +400,8 @@ export default class EntityDefinitions {
             laser_standard: {
                 entityClass: 'projectile',
                 damage: 10,
-                speed: 500, // Example speed
-                lifetime: 30, // Example lifetime in seconds
+                speed: 500,
+                lifetime: 5,
                 width: 2,
                 height: 10,
                 pos: {x: 0, y: 0, z: 0},

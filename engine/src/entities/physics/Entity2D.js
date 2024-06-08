@@ -62,8 +62,7 @@ export default class Entity2D {
         this.spatialHash = null;
 
         // Add this entity to the hash grid
-        console.log(`Entity ${this.id} constructed.`, this);
-        // this.entityManager.addEntity(this);
+12        // this.entityManager.addEntity(this);
         // console.log('State of store', this.engine.dataStoreManager().getStore('entities'));
     }
 

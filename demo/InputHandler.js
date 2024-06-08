@@ -28,8 +28,9 @@ export default class InputHandler {
         this.eventBus.on('scopedMouseDown', this.handleScopedMouseDown.bind(this));
         this.eventBus.on('scopedMouseUp', this.handleScopedMouseUp.bind(this));
         this.eventBus.on('scopedMouseMove', this.handleScopedMouseMove.bind(this));
-        this.eventBus.on('scopedMouseDownPrimary', (event) => this.playerActions.handleAttack(event));
+        //this.eventBus.on('scopedMouseDownPrimary', (event) => this.playerActions.handleAttack(event));
         this.eventBus.on('scopedMouseDownSecondary', (event) => this.playerActions.handleContextClick(event));
+        this.eventBus.on('scopedMouseIsDown', (event) => this.playerActions.handleAttack(event));
         this.eventBus.on('mouse.selection', (area, scopedMouse) => this.playerActions.handleMouseSelection(area, scopedMouse));
         this.eventBus.on("controlEntity", (entityId) => this.playerActions.handleControlEntity(entityId));
         this.eventBus.on("entityDestroyed", (event) => this.playerActions.handleEntityDestroyed(event));

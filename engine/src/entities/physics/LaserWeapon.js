@@ -8,9 +8,6 @@ export default class LaserWeapon extends Weapon {
     constructor(engine, config, x, y, id = null, ownerId = null) {
         config = {
             ...config,
-            damage: 10,
-            energyConsumption: 5,
-            rateOfFire: 500, // ms
             width: 12,
             height: 46,
             pos: new Vector3D(100, 100, 0)

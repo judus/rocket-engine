@@ -25,7 +25,7 @@ export default class EnergyManagerComponent extends BaseComponent {
         const component = this.components.find(info => info.label === componentName);
         if(component) {
             component.userRequestedState = !component.userRequestedState;
-            console.log(`${component.label} userRequestedState: ${component.userRequestedState}`);
+            // console.log(`${component.label} userRequestedState: ${component.userRequestedState}`);
             this.manageEnergyConsumption();
         }
     }
@@ -39,10 +39,12 @@ export default class EnergyManagerComponent extends BaseComponent {
         let currentEnergy = this.availableEnergy;
         let stateChanged = false;
 
+
         this.components.forEach(component => {
             //console.log(`Component: ${component.label}, userRequestedState: ${component.userRequestedState}, isActive: ${component.isActive}`);
 
             if(component.userRequestedState && currentEnergy >= component.energyCost) {
+
                 if(!component.isActive) {
                     component.isActive = true;
                     component.activate();
@@ -59,7 +61,9 @@ export default class EnergyManagerComponent extends BaseComponent {
         });
 
         if(stateChanged) {
-            this.entity.eventBus.emit('component.update', this.getComponentStates());
+            if (this.entity.id === 'player') {
+                this.entity.eventBus.emit('component.update', this.getComponentStates());
+            }
         }
     }
 

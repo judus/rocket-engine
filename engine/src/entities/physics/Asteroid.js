@@ -65,9 +65,9 @@ export default class Asteroid extends Entity2D {
         }
         this.addComponent('physics', new PhysicsComponent(), 1 / 60, 7);
         this.addComponent('collisionData', new CollisionDataComponent(this.isStatic), 1 / 60, 1);
-        this.addComponent('collision', new CollisionComponent(new DefaultCollisionResponse(), true), 1 / 60, 1);
+        this.addComponent('collision', new CollisionComponent(new DefaultCollisionResponse(), false), 1 / 60, 1);
 
-        this.addComponent('render', new EntityVerticesComponent(false));
+        //this.addComponent('render', new EntityVerticesComponent(false));
 
         this.spriteSheet = this.engine.spriteSheetManager().getSpriteSheet(this.spriteSheet.name);
         this.addComponent('sprite', new SpriteComponent(this.spriteSheet, 0), 1 / 60, 12); // this renders the sprite of the entity
