@@ -74,6 +74,8 @@ export default class WeaponSystemComponent extends BaseComponent {
 
     // Fire all weapons in the current group
     fire(scopedMouse) {
+        console.log('WeaponSystemComponent.fire() called.');
+
         const slots = this.weaponGroups[this.currentGroup];
         if(!slots) {
             console.error(`Weapon group ${this.currentGroup} is empty or does not exist`);

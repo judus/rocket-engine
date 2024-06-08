@@ -3,6 +3,7 @@ import EntityDefinitions from './EntityDefinitions.js';
 import SeededRandom from "../../engine/src/utils/noise/SeededRandom.js";
 import CollisionShapeGenerator from "../../engine/src/physics/collisions/CollisionShapeGenerator.js";
 import Polygon from "../../engine/src/utils/maths/Polygon.js";
+import EntityManager from "../../engine/src/entities/EntityManager.js";
 
 export default class EntityInitialization {
     constructor(engine, seed = 12345) {
@@ -11,12 +12,13 @@ export default class EntityInitialization {
         this.dataStoreManager = this.engine.dataStoreManager();
         this.seededRandom = new SeededRandom(seed);
         this.entityDefinitions = new EntityDefinitions();
-        this.entityFactory = new EntityFactory(this.engine);
+        this.entityFactory = new EntityFactory(engine);
+        this.entityManager = new EntityManager(this.dataStoreManager);
     }
 
     initializeFactions() {
-        for(const factionKey in this.entityDefinitions.definitions.factions) {
-            const factionDefinition = this.entityDefinitions.definitions.factions[factionKey];
+        for(const factionKey in EntityDefinitions.definitions.factions) {
+            const factionDefinition = EntityDefinitions.definitions.factions[factionKey];
             console.log(`Creating faction: ${factionKey}`);
             this.entityFactory.createFaction(factionDefinition);
         }
@@ -26,8 +28,8 @@ export default class EntityInitialization {
         const spriteSheetManager = this.engine.service('spriteSheetManager');
         const promises = [];
 
-        for(const type in this.entityDefinitions.definitions) {
-            const entities = this.entityDefinitions.definitions[type];
+        for(const type in EntityDefinitions.definitions) {
+            const entities = EntityDefinitions.definitions[type];
             for(const key in entities) {
                 const definition = entities[key];
                 if(definition.sprite) {
@@ -36,7 +38,7 @@ export default class EntityInitialization {
                 }
             }
         }
-        console.log(this.entityDefinitions.definitions.weapons.laser);
+        //console.log(EntityDefinitions.definitions.weapons.laser);
 
         await Promise.all(promises);
     }
@@ -68,8 +70,8 @@ export default class EntityInitialization {
     }
 
     async initializeEntityDefinitions() {
-        for(const type in this.entityDefinitions.definitions) {
-            const entities = this.entityDefinitions.definitions[type];
+        for(const type in EntityDefinitions.definitions) {
+            const entities = EntityDefinitions.definitions[type];
             for(const key in entities) {
                 const entityDefinition = entities[key];
                 await this.initializeEntityDefinition(entityDefinition);
@@ -78,13 +80,13 @@ export default class EntityInitialization {
     }
 
     createEntities() {
-        console.log(this.entityDefinitions);
+        console.log(EntityDefinitions);
 
 
         // Predefined entities
-        const playerDefinition = this.entityDefinitions.get('starships', 'starship_type_3');
         console.log('Creating player entity...');
-        this.entityFactory.createPlayer(playerDefinition, 0, 0);
+        const player = this.entityFactory.createEntity('starships', 'starship_type_3', 100, 100, 'player');
+        this.entityManager.addEntity(player);
         console.log('Entities created.');
 
         //Example: dynamically creating stations, ships, and asteroids
@@ -123,7 +125,7 @@ export default class EntityInitialization {
         //     this.entityFactory.createAsteroidFromDefinition(asteroidDefinition, asteroidX, asteroidY, asteroidId, scale);
         // }
 
-        this.entityFactory.createAsteroidFromDefinition(this.entityDefinitions.definitions.asteroids.asteroid_type_1, 700, 200, 'test', 1);
+        //this.entityFactory.createAsteroidFromDefinition(EntityDefinitions.definitions.asteroids.asteroid_type_1, 700, 200, 'test', 1);
 
     }
 }

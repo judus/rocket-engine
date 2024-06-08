@@ -10,7 +10,7 @@ import EntityMountsComponent from "./EntityMountsComponent.js";
 import WeaponSystemComponent from "./WeaponSystemComponent.js";
 import MountProfile from "./MountProfile.js";
 import LaserWeapon from "./LaserWeapon.js";
-import KineticWeapon from "./KineticWeapon.js";
+// import KineticWeapon from "./KineticWeapon.js";
 import Scanner from "./Scanner.js";
 import Jammer from "./Jammer.js";
 import ShipAttackComponent from "./ShipAttackComponent.js";
@@ -30,20 +30,21 @@ import DefaultCollisionResponse from "../../components/collisions/DefaultCollisi
 import TransformComponent from "../../components/TransformComponent.js";
 import CollisionDataComponent from "./CollisionDataComponent.js";
 
+
 export default class StarShip extends Entity2D {
-    constructor(engine, config, id) {
+    constructor(engine, config, x, y, id) {
         config = {
             ...config,
-            pos: new Vector3D(0, 0, 0),
+            pos: new Vector3D(x, y, 0),
             velocity: new Vector3D(0, 0, 0),
             mass: 1000,
             momentOfInertia: 1,
             accelerationModifier: 1,
             inertiaModifier: 1,
-            dragCoefficient: 500,
+            dragCoefficient: 5000,
             dragCoefficientModifier: 1,
             rotationalDragCoefficient: 0.999,
-            staticFrictionCoefficient: 10,
+            staticFrictionCoefficient: 100,
         };
 
         super(engine, config, id);
@@ -52,7 +53,7 @@ export default class StarShip extends Entity2D {
         const powerPlantProfiles = {
             default: {
                 maxTemperature: 100, // in °C
-                heatProductionRate: 1,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
+                heatProductionRate: 0.01,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
                 health: 100,
                 energyCostMW: 0,
                 maxEnergyMW: 10, // megawatts
@@ -63,7 +64,7 @@ export default class StarShip extends Entity2D {
         const coolingSystemProfiles = {
             default: {
                 maxTemperature: 100,  // Maximum operational temperature in °C
-                heatProductionRate: 1,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
+                heatProductionRate: 0.01,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
                 dissipationFactor: 0.5,  // Reduces the heat accumulation rate in other components by this factor
                 health: 100,  // Health points of the cooling system, indicating its damage threshold
                 energyCostMW: 1,  // Energy cost in megawatts for the cooling system to operate
@@ -73,7 +74,7 @@ export default class StarShip extends Entity2D {
         const engineProfiles = {
             default: {
                 maxTemperature: 100, // in °C
-                heatProductionRate: 1,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
+                heatProductionRate: 0.01,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
                 health: 100,
                 energyCostMW: 2,
                 states: {
@@ -87,7 +88,7 @@ export default class StarShip extends Entity2D {
         const shieldProfiles = {
             default: {
                 maxTemperature: 100, // in °C
-                heatProductionRate: 5,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
+                heatProductionRate: 0.01,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
                 health: 100,
                 energyCostMW: 2,
                 shieldStrength: 1000, // 1000 units of shield strength
@@ -98,7 +99,7 @@ export default class StarShip extends Entity2D {
         const cargoBayProfiles = {
             default: {
                 maxTemperature: 100, // in °C
-                heatProductionRate: 1,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
+                heatProductionRate: 0.01,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
                 health: 100,
                 energyCostMW: 1,
                 capacityMultiplier: 1
@@ -108,7 +109,7 @@ export default class StarShip extends Entity2D {
         const damperProfiles = {
             default: {
                 maxTemperature: 100, // in °C
-                heatProductionRate: 1,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
+                heatProductionRate: 0.01,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
                 health: 100,
                 energyCostMW: 2,
                 accelerationModifier: 1,
@@ -117,7 +118,7 @@ export default class StarShip extends Entity2D {
             },
             advanced: {
                 maxTemperature: 100, // in °C
-                heatProductionRate: 1,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
+                heatProductionRate: 0.01,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
                 health: 100,
                 energyCostMW: 2,
                 accelerationModifier: 1,
@@ -215,25 +216,30 @@ export default class StarShip extends Entity2D {
 
         // More game features...
         this.hasComponent('mounts', (mounts) => {
-            const laserWeapon1 = new LaserWeapon(engine, 'laser1');
-            const laserWeapon2 = new LaserWeapon(engine, 'laser2');
-            const kineticWeapon1 = new KineticWeapon(engine, 'kinetic1');
-            const kineticWeapon2 = new KineticWeapon(engine, 'kinetic2');
+            const laser1 = this.entityFactory.createEntity('weapons', 'laser');
+            const laser2 = this.entityFactory.createEntity('weapons', 'laser');
+
+            //const laserWeapon1 = new LaserWeapon(engine, 'laser1', this.id);
+            //const laserWeapon2 = new LaserWeapon(engine, 'laser2');
+            // const kineticWeapon1 = new KineticWeapon(engine, 'kinetic1');
+            // const kineticWeapon2 = new KineticWeapon(engine, 'kinetic2');
             //const scanner = new Scanner(engine);
             //const jammer = new Jammer(engine);
 
-            mounts.attachEntity(laserWeapon1, 'mount1');
-            mounts.attachEntity(laserWeapon2, 'mount2');
-            mounts.attachEntity(kineticWeapon1, 'mount3');
-            mounts.attachEntity(kineticWeapon2, 'mount4');
+            mounts.attachEntity(laser1, 'mount1');
+            mounts.attachEntity(laser2, 'mount2');
+            // mounts.attachEntity(kineticWeapon1, 'mount3');
+            // mounts.attachEntity(kineticWeapon2, 'mount4');
         });
 
         this.hasComponent('weaponSystem', (weaponSystemComponent) => {
             weaponSystemComponent.createWeaponGroup('1', [0, 1]);
-            weaponSystemComponent.createWeaponGroup('2', [2, 3]);
+            //weaponSystemComponent.createWeaponGroup('2', [2, 3]);
         });
 
-        console.log('Constructed starhship', this);
+        // console.log('Constructed starship', this);
+        // this.entityManager.addEntity(this);
+        // console.log('State of store', this.engine.dataStoreManager().getStore('entities'));
     }
 
     // This is the input from the player to steer the ship

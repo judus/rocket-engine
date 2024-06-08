@@ -9,11 +9,11 @@ export default class DefaultCollisionResponse extends CollisionResponse {
     constructor(particleSystem) {
         super();
         if (particleSystem) {
-        this.behavior = new SequentialBehavior([
-            new ShowExplosionBehavior(particleSystem),
-            new ApplyBounceBackBehavior(0.5),
-            new TakeDamageBehavior(10)
-        ]);
+            this.behavior = new SequentialBehavior([
+                new ShowExplosionBehavior(particleSystem),
+                new ApplyBounceBackBehavior(0.5),
+                new TakeDamageBehavior(10)
+            ]);
         }
     }
 

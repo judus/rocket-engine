@@ -52,6 +52,8 @@ export default class WorldScene1 extends BaseScene {
         const player = this.dataStoreManager.getStore('entities').get('player');
         const camera = this.cameraManager.getCamera('main');
 
+        console.log(this.dataStoreManager.getStore('entities'));
+
         if(player || camera) {
             this.eventBus.emit('controlEntity', 'player');
             this.setCameraTarget(player);

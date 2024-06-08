@@ -116,7 +116,7 @@ export default class PlayerActions {
     }
 
     handleControlEntity(entityId) {
-        console.log("Control entity: ", entityId);
+        console.log("Handling Control entity: ", entityId);
         this.currentEntity = entityId;
         this.entityController.controlEntity(entityId);
     }
@@ -126,6 +126,7 @@ export default class PlayerActions {
     }
 
     handleMoveEvent(axis, value, state, isStarting) {
+        console.log("Move event: ", axis, value, state, isStarting)
         this.entityController.handleMoveEvent(axis, value, state, isStarting);
     }
 

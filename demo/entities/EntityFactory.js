@@ -5,6 +5,8 @@ import ProjectilePool from "../../engine/src/datastores/ProjectilePool.js";
 import ProjectileGrid from "../../engine/src/datastores/ProjectileGrid.js";
 import ParticleGrid from "../../engine/src/datastores/ParticleGrid.js";
 import ParticleSystem from "../../engine/src/particles/ParticleSystem.js";
+import EntityDefinitions from "./EntityDefinitions.js";
+import EntityClasses from "./EntityClasses.js";
 
 export default class EntityFactory {
     constructor(engine) {
@@ -54,10 +56,20 @@ export default class EntityFactory {
 
     }
 
-    createPlayer(definition, x, y) {
-        const player = new Player(this.engine, definition, x, y, 'player');
-        console.log(`Player created: ${player.id}`);
-        return player;
+
+    // createPlayer(_definition, x, y) {
+    //     const definition = EntityDefinitions.get('starships', 'starship_type_3');
+    //
+    //     const player = new definition.entityClass(this.engine, definition, x, y, 'player');
+    //     console.log(`Player created: ${player.id}`);
+    //     return player;
+    // }
+
+    createEntity(type, name, x = 0, y = 0, id = null) {
+        const definition = EntityDefinitions.get(type, name);
+        const entityClass = EntityClasses.getClass(definition.entityClass);
+        return new entityClass(this.engine, definition, x, y, id);
     }
+
 }
 

@@ -33,6 +33,7 @@ export default class ReactorComponent extends ShipComponent {
 
     update(deltaTime) {
         this.recharge(deltaTime);
+        this.entity.eventBus.emit('reactor.update', this);
     }
 
     activate() {

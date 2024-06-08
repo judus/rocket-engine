@@ -1,13 +1,16 @@
 export default class EntityController {
     constructor(dataStoreManager) {
         this.dataStoreManager = dataStoreManager
-        this.entities = this.dataStoreManager.getStore("entities");
         this.currentEntity = null;
         this.movementDirections = {x: 0, y: 0}; // Track movement direction
     }
 
     controlEntity(entityId) {
-        this.currentEntity = this.entities.get(entityId);
+        console.log(`Setting entity controls to: #${entityId}`);
+        console.log('State of store: ', this.dataStoreManager.getStore("entities"));
+        this.currentEntity = this.dataStoreManager.getStore("entities").get(entityId);
+        console.log('currentEntity: ', this.currentEntity);
+
     }
 
     handleAttack(scopedMouse, mainCamera) {
@@ -21,11 +24,12 @@ export default class EntityController {
     }
 
     handleMoveEvent(axis, value, state, isStarting) {
+
+        console.log('Handling move event: ', axis, value, state, isStarting);
         if(!this.currentEntity) return;
+        console.log('Current entity: ', this.currentEntity);
 
-        const engine = this.currentEntity.getComponent("engine");
-
-        if(engine) {
+        this.currentEntity.hasComponent('engine', (engine) => {
             if(state) {
                 if(isStarting) {
                     engine.setState(state);
@@ -41,10 +45,7 @@ export default class EntityController {
                     this.stopDirection(axis, value);
                 }
             }
-
-            // Update the entity in the SpatialHashGrid
-            this.entities.updateEntity(this.currentEntity);
-        }
+        });
     }
 
     setDirection(axis, value) {

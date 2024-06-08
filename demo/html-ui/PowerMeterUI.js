@@ -3,7 +3,6 @@ import ProgressBarComponent from "./ProgressBarComponent.js";
 export default class PowerMeterUI extends ProgressBarComponent {
     constructor(label, maxValue) {
         super(label, maxValue);
-
         this.element.className = 'ui-component max-width-small';
 
     }
@@ -12,12 +11,15 @@ export default class PowerMeterUI extends ProgressBarComponent {
         this.progressBar.max = maxValue;
     }
 
-    update(deltaTime) {
-        if(this.ui.currentEntity) {
-            this.ui.currentEntity.hasComponent('powerPlant', (powerPlant) => {
-                this.setMaxValue(powerPlant.maxEnergy);
-                this.setValue(powerPlant.energy);
-            });
-        }
+    onAdd(ui) {
+        super.onAdd(ui);
+        this.ui.eventBus.on('reactor.update', (reactor) => {
+            this.updatePowerMeter(reactor);
+        });
+    }
+
+    updatePowerMeter(reactor) {
+        this.setMaxValue(reactor.maxEnergy);
+        this.setValue(reactor.energy);
     }
 }

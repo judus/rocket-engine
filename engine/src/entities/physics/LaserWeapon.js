@@ -5,9 +5,9 @@ import SpriteComponent from "../../sprites/SpriteComponent.js";
 import Vector3D from "../../utils/maths/Vector3D.js";
 
 export default class LaserWeapon extends Weapon {
-    constructor(engine, id = null) {
-        const config = {
-            type: 'laser',
+    constructor(engine, config, x, y, id = null, ownerId = null) {
+        config = {
+            ...config,
             damage: 10,
             energyConsumption: 5,
             rateOfFire: 500, // ms
@@ -16,7 +16,7 @@ export default class LaserWeapon extends Weapon {
             pos: new Vector3D(100, 100, 0)
         };
 
-        super(engine, config, id);
+        super(engine, config, ownerId, id);
 
         this.spriteSheet = this.engine.spriteSheetManager().getSpriteSheet('gunship-fighter-2-weapontype-1');
         this.addComponent('sprite', new SpriteComponent(this.spriteSheet, 0), 1 / 60);

@@ -32,9 +32,16 @@ export default class EntityMountsComponent extends BaseComponent {
         let attached = false;
         Object.values(this.mounts).forEach(mountArray => {
             mountArray.forEach(mount => {
+
+
                 if(mount.id === mountId && mount.typeCompatibility.includes(entity.type)) {
+                    console.log(`Mounting entity ${entity.id} at ${mount.id}`, entity);
                     mount.currentEntity = entity;
                     this.entity.addChild(entity);
+                    entity.pos = mount.position.clone(); // Set entity position to mount position
+                    console.log(entity.pos);
+
+
                     attached = true;
                 }
             });
