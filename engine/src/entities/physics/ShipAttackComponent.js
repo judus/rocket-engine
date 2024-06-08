@@ -6,7 +6,6 @@ export default class ShipAttackComponent extends AttackComponent {
     }
 
     attack(scopedMouse, camera) {
-        console.log('ShipAttackComponent.attack() called.');
         this.entity.hasComponent('weaponSystem', (component) => {
             component.fire();
         }, () => {

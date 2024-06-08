@@ -122,6 +122,7 @@ export default class PlayerActions {
     }
 
     handleAttack(scopedMouse) {
+        console.log('Attack!');
         this.entityController.handleAttack(scopedMouse, this.mainCamera);
     }
 

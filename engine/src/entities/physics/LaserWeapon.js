@@ -24,6 +24,5 @@ export default class LaserWeapon extends Weapon {
 
     fire() {
         super.fire();
-        console.log('Pew Pew! Laser fired.');
     }
 }

@@ -145,13 +145,13 @@ export default class StarShip extends Entity2D {
                 id: 'mount3',
                 type: 'weapon',
                 typeCompatibility: ['laser', 'kinetic'],
-                position: {x: 80, y: 20}
+                position: {x: 16, y: -35}
             },
             {
                 id: 'mount4',
                 type: 'weapon',
                 typeCompatibility: ['laser', 'kinetic'],
-                position: {x: -80, y: 20}
+                position: {x: 16, y: 35}
             },
             {
                 id: 'mount5',
@@ -218,6 +218,8 @@ export default class StarShip extends Entity2D {
         this.hasComponent('mounts', (mounts) => {
             const laser1 = this.entityFactory.createEntity('weapons', 'laser');
             const laser2 = this.entityFactory.createEntity('weapons', 'laser');
+            const laser3 = this.entityFactory.createEntity('weapons', 'laser');
+            const laser4 = this.entityFactory.createEntity('weapons', 'laser');
 
             //const laserWeapon1 = new LaserWeapon(engine, 'laser1', this.id);
             //const laserWeapon2 = new LaserWeapon(engine, 'laser2');
@@ -228,13 +230,15 @@ export default class StarShip extends Entity2D {
 
             mounts.attachEntity(laser1, 'mount1');
             mounts.attachEntity(laser2, 'mount2');
+            mounts.attachEntity(laser3, 'mount3');
+            mounts.attachEntity(laser4, 'mount4');
             // mounts.attachEntity(kineticWeapon1, 'mount3');
             // mounts.attachEntity(kineticWeapon2, 'mount4');
         });
 
         this.hasComponent('weaponSystem', (weaponSystemComponent) => {
             weaponSystemComponent.createWeaponGroup('1', [0, 1]);
-            //weaponSystemComponent.createWeaponGroup('2', [2, 3]);
+            weaponSystemComponent.createWeaponGroup('2', [2, 3]);
         });
 
         // console.log('Constructed starship', this);

@@ -27,7 +27,7 @@ export default class EntityDefinitions {
             },
             starship_type_2: {
                 entityClass: 'starship',
-                collisionDetection: DetectionTypes.POLYGON,
+                collisionDetection: DetectionTypes.SUB_BOXES,
                 sprite: {
                     orientation: Math.PI / 2,
                     name: 'gunship-heavyfighter-1',
@@ -49,7 +49,7 @@ export default class EntityDefinitions {
             },
             starship_type_3: {
                 entityClass: 'starship',
-                collisionDetection: DetectionTypes.POLYGON,
+                collisionDetection: DetectionTypes.SUB_BOXES,
                 sprite: {
                     orientation: Math.PI / 2,
                     name: 'gunship-fighter-3',
@@ -92,14 +92,14 @@ export default class EntityDefinitions {
         },
         projectiles: {
             bullet_standard: {
-                entityClass: 'laser',
+                entityClass: 'projectile',
                 damage: 5,
                 speed: 300, // Example speed
                 lifetime: 30, // Example lifetime in seconds
                 width: 2,
                 height: 2,
                 pos: {x: 0, y: 0, z: 0},
-                collisionDetection: DetectionTypes.POLYGON,
+                collisionDetection: DetectionTypes.SUB_BOXES,
                 polygon: {
                     orientation: 0,
                     fillColor: 'yellow',
@@ -111,16 +111,16 @@ export default class EntityDefinitions {
                 },
             },
             laser_standard: {
-                entityClass: 'laser',
+                entityClass: 'projectile',
                 damage: 10,
                 speed: 500, // Example speed
                 lifetime: 30, // Example lifetime in seconds
                 width: 2,
                 height: 10,
                 pos: {x: 0, y: 0, z: 0},
-                collisionDetection: DetectionTypes.POLYGON,
+                collisionDetection: DetectionTypes.SUB_BOXES,
                 polygon: {
-                    orientation: 0,
+                    orientation: -Math.PI / 2,
                     fillColor: 'red',
                     vertices: [
                         {x: 0, y: -5},
@@ -135,13 +135,6 @@ export default class EntityDefinitions {
     static get(type, name) {
         if(this.definitions[type] && this.definitions[type][name]) {
             return this.definitions[type][name];
-        }
-        throw new Error(`Entity of type ${type} with name ${name} not found.`);
-    }
-
-    static getEntityClass(name) {
-        if(this.entityClasses[name]) {
-            return this.entityClasses[name];
         }
         throw new Error(`Entity of type ${type} with name ${name} not found.`);
     }

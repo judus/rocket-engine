@@ -12,13 +12,11 @@ export default class Entity2D {
         this.engine = engine;
         this.id = id || config.id || StringHelpers.generateUUID();
         this.type = config.type || this.constructor.name;
-        console.log(`Constructing ${this.id} with config:`, config);
 
         // Geometry
         this.width = config.collisionData?.sprite?.width || config.collisionData?.boundingBox?.width || config.width || 0;
         this.height = config.collisionData?.sprite?.height || config.collisionData?.boundingBox?.height || config.height || 0;
         this.scale = config.scale || 1;
-        console.log('Entity width:', this.width, 'height:', this.height, 'scale:', this.scale);
 
         // Physics
         this.mass = config.mass || 1;
@@ -145,8 +143,6 @@ export default class Entity2D {
     }
 
     update(deltaTime) {
-
-
         // Run all update component tasks
         this.updateTaskScheduler.runTasks(deltaTime);
 

@@ -20,8 +20,6 @@ export default class WeaponSystemComponent extends BaseComponent {
     }
 
     fire() {
-        console.log('WeaponSystemComponent.fire() called.');
-
         this.activeGroups.forEach(groupKey => {
             const weaponIndices = this.weaponGroups[groupKey];
             if(weaponIndices) {
@@ -29,7 +27,7 @@ export default class WeaponSystemComponent extends BaseComponent {
                     const weaponMounts = this.entity.getComponent('mounts').getMounts('weapon');
                     const mount = weaponMounts[index];
                     if(mount && mount.currentEntity) {
-                        console.log(`Firing weapon at mount ${index}`);
+                        //console.log(`Firing weapon at mount ${index}`);
                         mount.currentEntity.fire();
                     }
                 });

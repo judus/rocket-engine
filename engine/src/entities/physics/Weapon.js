@@ -1,7 +1,5 @@
 import Entity2D from "./Entity2D.js";
-import Projectile from "./Projectile.js";
 import Vector3D from "../../utils/maths/Vector3D.js";
-import EntityDefinitions from "../../../../demo/entities/EntityDefinitions.js";
 import EntityFactory from "../../../../demo/entities/EntityFactory.js";
 
 export default class Weapon extends Entity2D {
@@ -16,7 +14,7 @@ export default class Weapon extends Entity2D {
         this.energyManager = null;
         this.heatManager = null;
         this.ownerId = ownerId;
-        //this.factory = new EntityFactory(engine);
+        this.factory = new EntityFactory(engine);
     }
 
     onAdd(entity) {
@@ -42,25 +40,20 @@ export default class Weapon extends Entity2D {
     }
 
     fire() {
-        // console.log('Weapon.fire() called.');
-        //
-        // const now = performance.now();
-        // if(now - this.lastFired >= this.rateOfFire) {
-        //     console.log('Creating projectile');
-        //     this.lastFired = now;
-        //     // this.energyManager.consumeEnergy(this.energyConsumption);
-        //     // this.heatManager.produceHeat(this.heatProduction);
-        //
-        //     const initialPosition = this.getProjectileInitialPosition();
-        //     const velocity = this.getProjectileVelocity();
-        //
-        //     const projectile = this.factory.createProjectile('bullet_standard', initialPosition, velocity, this.ownerId);
-        //
-        //     console.log('Projectile created:', projectile);
-        //     console.log(`${this.type} weapon fired! Damage: ${this.damage}`);
-        // }
-    }
 
+        const now = performance.now();
+        //if(now - this.lastFired >= this.rateOfFire) {
+            //this.lastFired = now;
+            // this.energyManager.consumeEnergy(this.energyConsumption);
+            // this.heatManager.produceHeat(this.heatProduction);
+
+            const initialPosition = this.getProjectileInitialPosition();
+            const velocity = this.getProjectileVelocity();
+
+            const projectile = this.factory.createProjectile('bullet_standard', initialPosition, velocity, this.ownerId);
+            this.entityManager.addEntity(projectile);
+        //}
+    }
 
     getProjectileVelocity() {
         // Calculate the initial velocity of the projectile based on weapon orientation
@@ -71,7 +64,6 @@ export default class Weapon extends Entity2D {
     getProjectileInitialPosition() {
         // Calculate the initial position of the projectile based on weapon orientation and dimensions
         const direction = new Vector3D(Math.cos(this.rotation), Math.sin(this.rotation));
-        console.log(this.width, this.height, direction);
         const offset = direction.multiply(this.height / 2); // Adjust for weapon's width
         return this.pos.clone().add(offset);
     }

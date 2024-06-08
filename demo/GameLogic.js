@@ -33,22 +33,17 @@ export default class GameLogic {
             entity.update(deltaTime);
         });
 
-        this.dataStore.getStore('projectiles').update(deltaTime);
 
         const entities = this.dataStore.getStore('entities').getEntitiesInArea(this.mainCamera.getArea());
-        const projectiles = this.dataStore.getStore('projectiles').getProjectilesInArea(this.mainCamera.getArea());
 
-        // Combine entities and projectiles
-        const allObjects = [...entities, ...projectiles];
-
-        allObjects.forEach(object => {
-            CollisionSystem.check(object, allObjects);
+        entities.forEach(entity => {
+            CollisionSystem.check(entity, entities);
         });
         //this.movementSystem.update(deltaTime, allObjects);
         //this.unifiedCollisionSystem.update(allObjects);
 
         // Update the particle system
-        this.dataStore.getStore('particles').update(deltaTime);
+        //this.dataStore.getStore('particles').update(deltaTime);
     }
 
     checkGameConditions() {

@@ -110,6 +110,11 @@ canvas:hover {
 	padding: 5px;
 	cursor: crosshair;
 
+	user-select: none; /* Standard syntax */
+	-webkit-user-select: none; /* Safari */
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* Internet Explorer/Edge */
+
 
 	.font-small {
 		font-size: 12px;

@@ -6,12 +6,15 @@ import Cockpit from "./html-ui/Cockpit.js";
 import AudioLoader from "./AudioLoader.js";
 import AudioEventHandler from "./AudioEventHandler.js";
 import UserInteractionHandler from "./UserInteractionHandler.js";
+import SpatialHashGrid2DDataStore from "../engine/src/datastores/SpatialHashGrid2DDataStore.js";
 
 export default class Application extends EngineBase {
     init(engine) {
         this.engine = engine;
         this.eventBus = this.engine.eventBus();
-        this.dataStore = this.engine.dataStoreManager();
+        this.dataStoreManager = this.engine.dataStoreManager();
+        this.dataStoreManager.create('entities', new SpatialHashGrid2DDataStore(this.eventBus, 100));
+
         this.entityInitialization = new EntityInitialization(this.engine);
         this.playerActions = new PlayerActions(this.engine);
         this.gameLogic = new GameLogic(this.engine);
@@ -68,8 +71,5 @@ export default class Application extends EngineBase {
     update(deltaTime) {
         this.gameLogic.update(deltaTime);
         this.cockpit.update(deltaTime);
-        // Temporarily speed up the update for testing heat accumulation
-        const testDeltaTime = deltaTime * 10; // Speed up time by a factor of 10 for testing
-        this.cockpit.update(testDeltaTime);
     }
 }

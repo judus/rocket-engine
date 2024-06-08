@@ -21,42 +21,6 @@ export default class Projectile extends Entity2D {
             dragCoefficientModifier: 1,
             rotationalDragCoefficient: 0,
             staticFrictionCoefficient: 0,
-            collisionDetection: config.collisionDetection || DetectionTypes.POLYGON,
-            polygon: config.polygon || {
-                orientation: 0,
-                fillColor: 'yellow',
-                vertices: [
-                    {x: 0, y: -1},
-                    {x: 1, y: 1},
-                    {x: -1, y: 1},
-                ],
-            },
-            collisionData: {
-                boundingBox: {
-                    width: 2,
-                    height: 2,
-                    x: 0,
-                    y: 0,
-                    corners: [
-                        {x: 0, y: 0},
-                        {x: 2, y: 0},
-                        {x: 2, y: 2},
-                        {x: 0, y: 2}
-                    ]
-                },
-                subBoundingBoxes: [
-                    {x: 0, y: 0, width: 1, height: 1},
-                    {x: 1, y: 0, width: 1, height: 1},
-                    {x: 0, y: 1, width: 1, height: 1},
-                    {x: 1, y: 1, width: 1, height: 1}
-                ],
-                polygon: [
-                    {x: 0, y: -1},
-                    {x: 1, y: 1},
-                    {x: -1, y: 1}
-                ],
-                framePolygons: []
-            }
         };
 
         super(engine, config, id);
@@ -67,15 +31,12 @@ export default class Projectile extends Entity2D {
 
         // Add necessary components
         this.addComponent('physics', new PhysicsComponent(), 1 / 60, 1);
-        this.addComponent('collisionData', new CollisionDataComponent(true), 1 / 60, 2);
-        //this.addComponent('collision', new CollisionComponent(new DefaultCollisionResponse()), 1 / 60, 3);
+        this.addComponent('collisionData', new CollisionDataComponent(), 1 / 60, 2);
+        this.addComponent('collision', new CollisionComponent(new DefaultCollisionResponse(), false), 1 / 60, 3);
         this.addComponent('render', new RenderComponent((deltaTime, context, camera) => {
             this.renderPolygon(context, camera);
-            //11this.renderRedDot(context, camera);
+            //12this.renderRedDot(context, camera);
         }), 1 / 60, 4);
-
-        console.log(`Projectile ${this.id} created with damage: ${this.damage}, velocity: ${this.velocity}, lifetime: ${this.lifetime}`);
-        console.log('Projectile polygon:', this.polygon);
     }
 
     onCollision(otherEntity, collisionResult) {
@@ -99,8 +60,6 @@ export default class Projectile extends Entity2D {
         const {x, y} = this.pos;
         const rotation = this.rotation || 0;
 
-        console.log(this.boundingBox);
-
         for(let i = 0; i < vertices.length; i++) {
             const vertex = vertices[i];
             const rotatedX = vertex.x * Math.cos(rotation) - vertex.y * Math.sin(rotation);
@@ -114,7 +73,7 @@ export default class Projectile extends Entity2D {
             }
         }
         context.closePath();
-        context.fillStyle = this.polygon.fillColor;
+        context.fillStyle = this.color;
         context.fill();
     }
 
