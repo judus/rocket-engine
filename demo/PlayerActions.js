@@ -122,12 +122,10 @@ export default class PlayerActions {
     }
 
     handleAttack(scopedMouse) {
-        console.log('Attack!');
         this.entityController.handleAttack(scopedMouse, this.mainCamera);
     }
 
     handleMoveEvent(axis, value, state, isStarting) {
-        console.log("Move event: ", axis, value, state, isStarting)
         this.entityController.handleMoveEvent(axis, value, state, isStarting);
     }
 

@@ -27,24 +27,18 @@ export default class GameLogic {
     }
 
     processGameLogic(deltaTime) {
-
-
         this.dataStore.getStore('entities').forEach(entity => {
             entity.update(deltaTime);
         });
 
-
         const entities = this.dataStore.getStore('entities').getEntitiesInArea(this.mainCamera.getArea());
 
         entities.forEach(entity => {
-            CollisionSystem.check(entity, entities);
+            CollisionSystem.update(entity); // Update collision data for dynamic entities
+            CollisionSystem.check(entity, entities); // Perform collision detection
         });
-        //this.movementSystem.update(deltaTime, allObjects);
-        //this.unifiedCollisionSystem.update(allObjects);
-
-        // Update the particle system
-        //this.dataStore.getStore('particles').update(deltaTime);
     }
+
 
     checkGameConditions() {
         // Check for end-game conditions or other important game events

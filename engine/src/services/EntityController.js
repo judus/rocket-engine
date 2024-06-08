@@ -25,9 +25,7 @@ export default class EntityController {
 
     handleMoveEvent(axis, value, state, isStarting) {
 
-        console.log('Handling move event: ', axis, value, state, isStarting);
         if(!this.currentEntity) return;
-        console.log('Current entity: ', this.currentEntity);
 
         this.currentEntity.hasComponent('engine', (engine) => {
             if(state) {

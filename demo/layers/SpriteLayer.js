@@ -8,10 +8,7 @@ export default class SpriteLayer extends BaseLayer {
     }
 
     getEntities(scene) {
-        if (this.entities.length === 0) {
-            this.entities = scene.dataStoreManager.getStore('entities').getEntitiesInArea(scene.camera.getArea());
-        }
-        return this.entities;
+        return scene.dataStoreManager.getStore('entities').getEntitiesInArea(scene.camera.getArea());
     }
 
     render(scene, deltaTime, tickCount, totalTime) {

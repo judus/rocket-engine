@@ -18,9 +18,8 @@ export default class EntityInitialization {
 
     initializeFactions() {
         for(const factionKey in EntityDefinitions.definitions.factions) {
-            const factionDefinition = EntityDefinitions.definitions.factions[factionKey];
             console.log(`Creating faction: ${factionKey}`);
-            this.entityFactory.createFaction(factionDefinition);
+            this.entityFactory.createEntity('factions', factionKey);
         }
     }
 
@@ -115,17 +114,28 @@ export default class EntityInitialization {
             // }
         }
 
-        // for(let i = 0; i < 5000; i++) {
-        //     const asteroidX = this.seededRandom.between(-10000, 10000);
-        //     const asteroidY = this.seededRandom.between(-10000, 10000);
-        //     const asteroidDefinition = this.seededRandom.from(Object.values(this.entityDefinitions.definitions.asteroids));
-        //     const asteroidId = `asteroid-${i}`;
-        //     const scale = this.seededRandom.from([0.3, 0.4, 10, 15], [1000, 1000, 50, 10]);
-        //
-        //     this.entityFactory.createAsteroidFromDefinition(asteroidDefinition, asteroidX, asteroidY, asteroidId, scale);
-        // }
+        for(let i = 0; i < 1000; i++) {
+            const asteroidX = this.seededRandom.between(-50000, 50000);
+            const asteroidY = this.seededRandom.between(-50000, 50000);
 
-        //this.entityFactory.createAsteroidFromDefinition(EntityDefinitions.definitions.asteroids.asteroid_type_1, 700, 200, 'test', 1);
+            // Get the keys of the asteroid definitions
+            const asteroidKeys = Object.keys(EntityDefinitions.definitions.asteroids);
+
+            // Select a random key from the asteroid keys
+            const asteroidKey = this.seededRandom.from(asteroidKeys);
+
+            // Get the asteroid definition using the selected key
+            const asteroidDefinition = EntityDefinitions.definitions.asteroids[asteroidKey];
+
+            const asteroidId = `asteroid-${i}`;
+            const scale = this.seededRandom.from([0.3, 0.4, 10, 15], [1000, 1000, 50, 10]);
+
+            const asteroid = this.entityFactory.createEntity('asteroids', asteroidKey, asteroidX, asteroidY, asteroidId, scale);
+            this.entityManager.addEntity(asteroid);
+        }
+
+        const asteroid = this.entityFactory.createEntity('asteroids', 'asteroid_type_1_256', 700, 400, 'asteroid-home');
+        this.entityManager.addEntity(asteroid);
 
     }
 }

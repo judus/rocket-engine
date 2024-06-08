@@ -3,12 +3,21 @@ import CollisionDataUpdateService from "../../physics/collisions/CollisionDataUp
 import DetectionTypes from "../../physics/collisions/DetectionTypes.js";
 
 export default class CollisionDataComponent extends BaseComponent {
-    constructor(debug = false) {
+    constructor(isStatic = false, debug = false) {
         super();
+        this.isStatic = isStatic;
         this.debug = debug;
     }
 
-    update(deltaTime) {
+    initialize() {
+        this.updateCollisionData(true);
+    }
+
+    updateCollisionData(isInitialization = false) {
+        if(this.isStatic && !isInitialization) {
+            return;
+        }
+
         const entity = this.entity;
         const detectionLevel = entity.collisionDetection || DetectionTypes.OUTER_BOX;
 
@@ -30,8 +39,11 @@ export default class CollisionDataComponent extends BaseComponent {
         }
 
         if(this.debug) {
-            console.log(`Updated collision data for entity ${entity.id}`);
+            console.log(`${isInitialization ? 'Initialized' : 'Updated'} collision data for entity ${entity.id}`);
         }
     }
-}
 
+    update(deltaTime) {
+        this.updateCollisionData();
+    }
+}

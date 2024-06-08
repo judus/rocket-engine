@@ -15,6 +15,8 @@ export default class SpatialHashGrid2DDataStore extends BaseDataStore {
         super(eventBus);
         this.grid = new Map(); // Spatial grid map
         this.cellSize = cellSize;
+        this.staticEntities = new Set();
+        this.movingEntities = new Set();
     }
 
     set(id, entity) {
@@ -28,6 +30,12 @@ export default class SpatialHashGrid2DDataStore extends BaseDataStore {
         }
 
         this.setSpatial(entity.pos.x, entity.pos.y, width, height, entity);
+
+        if(entity.isStatic) {
+            this.staticEntities.add(entity);
+        } else {
+            this.movingEntities.add(entity);
+        }
     }
 
     delete(id) {
@@ -35,6 +43,11 @@ export default class SpatialHashGrid2DDataStore extends BaseDataStore {
         if(entity) {
             this.deleteSpatial(entity);
             super.delete(id); // Use BaseDataStore's delete method
+            if(entity.isStatic) {
+                this.staticEntities.delete(entity);
+            } else {
+                this.movingEntities.delete(entity);
+            }
         } else {
             console.warn(`Entity with ID '${id}' not found.`);
         }
@@ -45,10 +58,13 @@ export default class SpatialHashGrid2DDataStore extends BaseDataStore {
     }
 
     setSpatial(x, y, width, height, entity) {
-        const minX = Math.floor((x - width / 2) / this.cellSize);
-        const maxX = Math.floor((x + width / 2) / this.cellSize);
-        const minY = Math.floor((y - height / 2) / this.cellSize);
-        const maxY = Math.floor((y + height / 2) / this.cellSize);
+        const scaledWidth = width * entity.scale;
+        const scaledHeight = height * entity.scale;
+
+        const minX = Math.floor((x - scaledWidth / 2) / this.cellSize);
+        const maxX = Math.floor((x + scaledWidth / 2) / this.cellSize);
+        const minY = Math.floor((y - scaledHeight / 2) / this.cellSize);
+        const maxY = Math.floor((y + scaledHeight / 2) / this.cellSize);
 
         entity.spatialHashes = []; // Initialize spatialHashes array
 
@@ -108,8 +124,8 @@ export default class SpatialHashGrid2DDataStore extends BaseDataStore {
 
     isEntityInArea(entity, rectangle) {
         const pos = this.getEntityPosition(entity);
-        const width = entity.width || 0;
-        const height = entity.height || 0;
+        const width = entity.width * entity.scale || 0;
+        const height = entity.height * entity.scale || 0;
 
         const left = pos.x - width / 2;
         const right = pos.x + width / 2;
@@ -130,7 +146,7 @@ export default class SpatialHashGrid2DDataStore extends BaseDataStore {
 
         const width = entity.width || 0;
         const height = entity.height || 0;
-        const newHashes = this.calculateHashes(entity.pos.x, entity.pos.y, width, height);
+        const newHashes = this.calculateHashes(entity.pos.x, entity.pos.y, width, height, entity.scale);
         const oldHashes = entity.spatialHashes || [];
 
         if(this.hashesChanged(newHashes, oldHashes)) {
@@ -140,12 +156,15 @@ export default class SpatialHashGrid2DDataStore extends BaseDataStore {
         }
     }
 
-    calculateHashes(x, y, width, height) {
+    calculateHashes(x, y, width, height, scale) {
+        const scaledWidth = width * scale;
+        const scaledHeight = height * scale;
+
         const hashes = [];
-        const minX = Math.floor((x - width / 2) / this.cellSize);
-        const maxX = Math.floor((x + width / 2) / this.cellSize);
-        const minY = Math.floor((y - height / 2) / this.cellSize);
-        const maxY = Math.floor((y + height / 2) / this.cellSize);
+        const minX = Math.floor((x - scaledWidth / 2) / this.cellSize);
+        const maxX = Math.floor((x + scaledWidth / 2) / this.cellSize);
+        const minY = Math.floor((y - scaledHeight / 2) / this.cellSize);
+        const maxY = Math.floor((y + scaledHeight / 2) / this.cellSize);
 
         for(let cellX = minX; cellX <= maxX; cellX++) {
             for(let cellY = minY; cellY <= maxY; cellY++) {
@@ -178,5 +197,13 @@ export default class SpatialHashGrid2DDataStore extends BaseDataStore {
         for(const entity of entitiesToUpdate) {
             this.updateEntity(entity);
         }
+    }
+
+    getStaticEntities() {
+        return Array.from(this.staticEntities);
+    }
+
+    getMovingEntities() {
+        return Array.from(this.movingEntities);
     }
 }

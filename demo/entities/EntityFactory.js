@@ -16,10 +16,23 @@ export default class EntityFactory {
 
     }
 
+    createFaction(definition) {
+        const faction = new definition.entityClass(definition.id, definition.name, definition.color, definition.emblemVertices);
+        this.dataStoreManager.getStore('global').set(faction.id, faction);
+        return faction;
+    }
+
     createEntity(type, name, x = 0, y = 0, id = null) {
         const definition = EntityDefinitions.get(type, name);
         const entityClass = EntityClasses.getClass(definition.entityClass);
-        return new entityClass(this.engine, definition, x, y, id);
+        const entity = new entityClass(this.engine, definition, x, y, id);
+
+        // Initialize collision data if the entity has a CollisionDataComponent
+        entity.hasComponent('collisionData', (component) => {
+            component.initialize(true); // Initialize collision data
+        });
+
+        return entity;
     }
 
     createProjectile(name, initialPosition, velocity, ownerId) {

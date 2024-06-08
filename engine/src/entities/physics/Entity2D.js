@@ -12,6 +12,7 @@ export default class Entity2D {
         this.engine = engine;
         this.id = id || config.id || StringHelpers.generateUUID();
         this.type = config.type || this.constructor.name;
+        this.isStatic = config.isStatic || false;
 
         // Geometry
         this.width = config.collisionData?.sprite?.width || config.collisionData?.boundingBox?.width || config.width || 0;
@@ -61,7 +62,7 @@ export default class Entity2D {
         this.spatialHash = null;
 
         // Add this entity to the hash grid
-        // console.log(`Adding entity ${this.id} to the entity manager`);
+        console.log(`Entity ${this.id} constructed.`, this);
         // this.entityManager.addEntity(this);
         // console.log('State of store', this.engine.dataStoreManager().getStore('entities'));
     }

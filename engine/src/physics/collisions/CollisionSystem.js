@@ -1,11 +1,16 @@
 export default class CollisionSystem {
+    static update(entity) {
+        entity.hasComponent('collisionData', (component) => {
+            component.updateCollisionData();
+        });
+    }
+
     static check(entity, entities) {
-        const collisionComponent = entity.getComponent('collision');
-        if(collisionComponent) {
-            const collisionResult = collisionComponent.check(entities);
+        entity.hasComponent('collision', (component) => {
+            const collisionResult = component.check(entities);
             if(collisionResult) {
-                collisionComponent.handleCollision(entity, collisionResult.otherEntity, collisionResult);
+                component.handleCollision(entity, collisionResult.otherEntity, collisionResult);
             }
-        }
+        });
     }
 }
