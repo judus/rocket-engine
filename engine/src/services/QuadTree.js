@@ -22,7 +22,14 @@ export default class QuadTree {
     }
 
     insert(entity) {
-        if(!this.boundary.containsPoint(entity.pos.x, entity.pos.y)) {
+        const entityBoundary = new Rectangle(
+            entity.pos.x - entity.width / 2,
+            entity.pos.y - entity.height / 2,
+            entity.width,
+            entity.height
+        );
+
+        if(!this.boundary.intersects(entityBoundary)) {
             return false;
         }
 
@@ -47,7 +54,13 @@ export default class QuadTree {
         }
 
         for(const entity of this.entities) {
-            if(range.containsPoint(entity.pos.x, entity.pos.y)) {
+            const entityBoundary = new Rectangle(
+                entity.pos.x - entity.width / 2,
+                entity.pos.y - entity.height / 2,
+                entity.width,
+                entity.height
+            );
+            if(range.intersects(entityBoundary)) {
                 found.push(entity);
             }
         }
