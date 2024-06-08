@@ -17,9 +17,12 @@ export default class EntityInitialization {
     }
 
     initializeFactions() {
+        this.dataStoreManager.create('global');
+
         for(const factionKey in EntityDefinitions.definitions.factions) {
             console.log(`Creating faction: ${factionKey}`);
-            this.entityFactory.createEntity('factions', factionKey);
+            const faction = this.entityFactory.createEntity('factions', factionKey);
+            this.dataStoreManager.getStore('global').set(factionKey, faction);
         }
     }
 
@@ -90,31 +93,40 @@ export default class EntityInitialization {
 
         //Example: dynamically creating stations, ships, and asteroids
         const factionStore = this.dataStoreManager.getStore('global');
-        for(let i = 0; i < 200; i++) {
-            // const stationX = this.seededRandom.between(-10000, 10000);
-            // const stationY = this.seededRandom.between(-10000, 10000);
-            // const stationDefinition = this.seededRandom.from(Object.values(this.entityDefinitions.definitions.stations));
-            // const randomFactionDefinition = this.seededRandom.from(Object.values(this.entityDefinitions.definitions.factions));
-            // const randomFaction = factionStore.get(randomFactionDefinition.id);
-            //
-            // if(!randomFaction) {
-            //     throw new Error(`Faction ${randomFactionDefinition.id} not found`);
-            // }
-            //
-            // const stationId = `station-${i}`;
-            // const station = this.entityFactory.createStationFromDefinition(stationDefinition, stationX, stationY, stationId, randomFaction);
+        for(let i = 0; i < 100; i++) {
+            const stationX = this.seededRandom.between(-50000, 50000);
+            const stationY = this.seededRandom.between(-50000, 50000);
+            const stationKey = this.seededRandom.from(Object.keys(EntityDefinitions.definitions.stations));
+            const stationDefinition = EntityDefinitions.definitions.stations[stationKey];
+            const randomFactionKey = this.seededRandom.from(Object.keys(EntityDefinitions.definitions.factions));
+            const randomFactionDefinition = EntityDefinitions.definitions.factions[randomFactionKey];
+            const randomFaction = factionStore.get(randomFactionKey);
 
-            // for(let j = 0; j < 5; j++) {
-            //     const shipX = this.seededRandom.between(stationX - 500, stationX + 500);
-            //     const shipY = this.seededRandom.between(stationY - 500, stationY + 500);
-            //     const shipDefinition = this.seededRandom.from(Object.values(this.entityDefinitions.definitions.starships));
-            //     const shipId = `ship-${i}-${j}`;
-            //
-            //     this.entityFactory.createShipFromDefinition(shipDefinition, shipX, shipY, shipId, randomFaction, station);
-            // }
+            if(!randomFaction) {
+                throw new Error(`Faction ${randomFactionDefinition.id} not found`);
+            }
+
+            const stationId = `station-${i}`;
+            const station = this.entityFactory.createEntity('stations', stationKey, stationX, stationY, stationId);
+            randomFaction.addStation(station); // Add the station to the faction
+            this.entityManager.addEntity(station);
+
+
+            for(let j = 0; j < 1; j++) {
+                const shipX = this.seededRandom.between(stationX - 1000, stationX + 1000);
+                const shipY = this.seededRandom.between(stationY - 1000, stationY + 1000);
+                const shipKey = this.seededRandom.from(Object.keys(EntityDefinitions.definitions.starships));
+                const shipDefinition = EntityDefinitions.definitions.starships[shipKey];
+                const shipId = `ship-${i}-${j}`;
+
+                const ship = this.entityFactory.createEntity('starships', shipKey, shipX, shipY, shipId);
+                ship.isStatic = true;
+                randomFaction.addShip(ship); // Add the ship to the faction
+                station.addShip(ship); // Add the ship to the station
+                this.entityManager.addEntity(ship);
+            }
         }
-
-        for(let i = 0; i < 1000; i++) {
+        for(let i = 0; i < 500; i++) {
             const asteroidX = this.seededRandom.between(-50000, 50000);
             const asteroidY = this.seededRandom.between(-50000, 50000);
 
@@ -133,6 +145,9 @@ export default class EntityInitialization {
             const asteroid = this.entityFactory.createEntity('asteroids', asteroidKey, asteroidX, asteroidY, asteroidId, scale);
             this.entityManager.addEntity(asteroid);
         }
+
+        const station = this.entityFactory.createEntity('stations', 'station_type_1', -600, -600, 'station-home');
+        this.entityManager.addEntity(station);
 
         const asteroid = this.entityFactory.createEntity('asteroids', 'asteroid_type_1_256', 700, 400, 'asteroid-home');
         this.entityManager.addEntity(asteroid);

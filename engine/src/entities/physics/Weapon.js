@@ -51,6 +51,7 @@ export default class Weapon extends Entity2D {
             const velocity = this.getProjectileVelocity();
 
             const projectile = this.factory.createProjectile('bullet_standard', initialPosition, velocity, this.ownerId);
+            console.log('Firing projectile', projectile.ownerId);
             this.entityManager.addEntity(projectile);
         //}
     }

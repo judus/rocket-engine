@@ -34,7 +34,10 @@ export default class CollisionComponent extends BaseComponent {
 
         const boundary = this.calculateBoundary(this.entity);
         this.quadTree.query(boundary).forEach(candidate => {
-            if(this.entity !== candidate && (this.entity.id !== candidate.ownerId || this.entity.ownerId !== candidate.ownerId)) {
+
+            if(this.entity !== candidate && this.entity.id !== candidate.ownerId && this.entity.ownerId !== candidate.id && this.entity.ownerId !== candidate.ownerId) {
+                console.log('checking for detection', this.entity, candidate);
+
                 const collisionResult = this.checkCollision(this.entity, candidate);
                 if(collisionResult.collided) {
                     this.handleCollision(this.entity, candidate, collisionResult);

@@ -221,6 +221,11 @@ export default class StarShip extends Entity2D {
             const laser3 = this.entityFactory.createEntity('weapons', 'laser');
             const laser4 = this.entityFactory.createEntity('weapons', 'laser');
 
+            laser1.ownerId = this.id;
+            laser2.ownerId = this.id;
+            laser3.ownerId = this.id;
+            laser4.ownerId = this.id;
+
             //const laserWeapon1 = new LaserWeapon(engine, 'laser1', this.id);
             //const laserWeapon2 = new LaserWeapon(engine, 'laser2');
             // const kineticWeapon1 = new KineticWeapon(engine, 'kinetic1');

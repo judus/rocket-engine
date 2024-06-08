@@ -50,6 +50,15 @@ export default class EntityDefinitions {
             station_type_1: {
                 entityClass: "station",
                 collisionDetection: DetectionTypes.SUB_BOXES,
+                isStatic: true,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: '001_st_01.png',
+                    image: 'demo/assets/images/stations/001/st_01.png',
+                    width: 524,
+                    height: 512,
+                    frames: 1
+                },
                 polygon: {
                     orientation: 0,
                     fillColor: '#FF0000',
@@ -66,6 +75,15 @@ export default class EntityDefinitions {
             station_type_2: {
                 entityClass: "station",
                 collisionDetection: DetectionTypes.SUB_BOXES,
+                isStatic: true,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: '001_st_02.png',
+                    image: 'demo/assets/images/stations/001/st_02.png',
+                    width: 980,
+                    height: 980,
+                    frames: 1
+                },
                 polygon: {
                     orientation: 0,
                     fillColor: '#00FF00',
@@ -84,6 +102,176 @@ export default class EntityDefinitions {
             station_type_3: {
                 entityClass: "station",
                 collisionDetection: DetectionTypes.SUB_BOXES,
+                isStatic: true,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: '001_st_03.png',
+                    image: 'demo/assets/images/stations/001/st_03.png',
+                    width: 524,
+                    height: 984,
+                    frames: 1
+                },
+                polygon: {
+                    orientation: 0,
+                    fillColor: '#0000FF',
+                    vertices: [
+                        {x: 0, y: -25},
+                        {x: 20, y: 0},
+                        {x: 0, y: 25},
+                        {x: -20, y: 0},
+                    ],
+                },
+            },
+            station_type_4: {
+                entityClass: "station",
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                isStatic: true,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: '001_st_04.png',
+                    image: 'demo/assets/images/stations/001/st_04.png',
+                    width: 481,
+                    height: 480,
+                    frames: 1
+                },
+                polygon: {
+                    orientation: 0,
+                    fillColor: '#0000FF',
+                    vertices: [
+                        {x: 0, y: -25},
+                        {x: 20, y: 0},
+                        {x: 0, y: 25},
+                        {x: -20, y: 0},
+                    ],
+                },
+            },
+            station_type_5: {
+                entityClass: "station",
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                isStatic: true,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: '001_st_05.png',
+                    image: 'demo/assets/images/stations/001/st_05.png',
+                    width: 482,
+                    height: 480,
+                    frames: 1
+                },
+                polygon: {
+                    orientation: 0,
+                    fillColor: '#0000FF',
+                    vertices: [
+                        {x: 0, y: -25},
+                        {x: 20, y: 0},
+                        {x: 0, y: 25},
+                        {x: -20, y: 0},
+                    ],
+                },
+            },
+            station_type_6: {
+                entityClass: "station",
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                isStatic: true,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: '002_st_01.png',
+                    image: 'demo/assets/images/stations/002/st_01.png',
+                    width: 482,
+                    height: 770,
+                    frames: 1
+                },
+                polygon: {
+                    orientation: 0,
+                    fillColor: '#0000FF',
+                    vertices: [
+                        {x: 0, y: -25},
+                        {x: 20, y: 0},
+                        {x: 0, y: 25},
+                        {x: -20, y: 0},
+                    ],
+                },
+            },
+            station_type_7: {
+                entityClass: "station",
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                isStatic: true,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: '002_st_02.png',
+                    image: 'demo/assets/images/stations/002/st_02.png',
+                    width: 548,
+                    height: 548,
+                    frames: 1
+                },
+                polygon: {
+                    orientation: 0,
+                    fillColor: '#0000FF',
+                    vertices: [
+                        {x: 0, y: -25},
+                        {x: 20, y: 0},
+                        {x: 0, y: 25},
+                        {x: -20, y: 0},
+                    ],
+                },
+            },
+            station_type_8: {
+                entityClass: "station",
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                isStatic: true,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: '002_st_03.png',
+                    image: 'demo/assets/images/stations/002/st_03.png',
+                    width: 447,
+                    height: 324,
+                    frames: 1
+                },
+                polygon: {
+                    orientation: 0,
+                    fillColor: '#0000FF',
+                    vertices: [
+                        {x: 0, y: -25},
+                        {x: 20, y: 0},
+                        {x: 0, y: 25},
+                        {x: -20, y: 0},
+                    ],
+                },
+            },
+            station_type_9: {
+                entityClass: "station",
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                isStatic: true,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: '002_st_04.png',
+                    image: 'demo/assets/images/stations/002/st_04.png',
+                    width: 780,
+                    height: 984,
+                    frames: 1
+                },
+                polygon: {
+                    orientation: 0,
+                    fillColor: '#0000FF',
+                    vertices: [
+                        {x: 0, y: -25},
+                        {x: 20, y: 0},
+                        {x: 0, y: 25},
+                        {x: -20, y: 0},
+                    ],
+                },
+            },
+            station_type_10: {
+                entityClass: "station",
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                isStatic: true,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: '002_st_05.png',
+                    image: 'demo/assets/images/stations/002/st_05.png',
+                    width: 386,
+                    height: 580,
+                    frames: 1
+                },
                 polygon: {
                     orientation: 0,
                     fillColor: '#0000FF',
