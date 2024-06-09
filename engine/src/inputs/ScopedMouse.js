@@ -39,7 +39,7 @@ export default class ScopedMouse extends GlobalMouse {
             this.pos.x = mouseX;
             this.pos.y = mouseY;
 
-            const camera = this.engine.sceneDirector().getSceneManager('world').getCurrentScene().cameraManager.getCamera('main');
+            const camera = this.engine.sceneDirector().getSceneManager('world').getCurrentScene()?.cameraManager.getCamera('main');
             if(camera) {
                 this.world.x = (mouseX / camera.zoomLevel) + camera.pos.x;
                 this.world.y = (mouseY / camera.zoomLevel) + camera.pos.y;

@@ -6,11 +6,9 @@ export default class EntityController {
     }
 
     controlEntity(entityId) {
-        console.log(`Setting entity controls to: #${entityId}`);
-        this.currentEntity?.releaseControl(); // Release control from the previous entity
+        this.currentEntity?.releaseControl();
         this.currentEntity = this.dataStoreManager.getStore("entities").get(entityId);
-        this.currentEntity.takeControl(); // Take control of the new entity
-        console.log('currentEntity: ', this.currentEntity);
+        this.currentEntity.takeControl();
     }
 
     handleAttack(scopedMouse, mainCamera) {

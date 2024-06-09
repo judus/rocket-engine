@@ -49,7 +49,7 @@ export default class SpatialHashGrid2DDataStore extends BaseDataStore {
                 this.movingEntities.delete(entity);
             }
         } else {
-            console.warn(`Entity with ID '${id}' not found.`);
+            //console.warn(`Entity with ID '${id}' not found.`);
         }
     }
 

@@ -234,7 +234,6 @@ export default class StarShip extends Entity2D {
         this.addComponent('environment', new EnvironmentComponent(), 1 / 30, 6);
         this.addComponent('cargo', new CargoBayComponent(this.cargoBayProfiles, 2, 'default'), 1 / 10, 2);
         this.addComponent('shields', new ShieldComponent(this.shieldProfiles, 4), 1 / 30, 7);
-        this.addComponent('highlight', new EntityHighlightRenderComponent(), 1 / 60, 7);
 
         this.isControlled = true;
     }
@@ -250,7 +249,6 @@ export default class StarShip extends Entity2D {
         this.removeComponent('damper');
         this.removeComponent('engine');
         this.removeComponent('environment');
-        this.removeComponent('highlight');
 
         // Remove and re-add common components
         this.removeComponent('cargo');

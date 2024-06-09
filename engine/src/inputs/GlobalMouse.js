@@ -13,7 +13,6 @@ export default class GlobalMouse extends EngineBase {
 
     init(engine) {
         this.engine = engine;
-        console.log('GlobalMouse initialized');
     }
 
     /**

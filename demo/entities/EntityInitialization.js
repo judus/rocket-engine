@@ -20,7 +20,6 @@ export default class EntityInitialization {
         this.dataStoreManager.create('global');
 
         for(const factionKey in EntityDefinitions.definitions.factions) {
-            console.log(`Creating faction: ${factionKey}`);
             const faction = this.entityFactory.createEntity('factions', factionKey);
             this.dataStoreManager.getStore('global').set(factionKey, faction);
         }
@@ -40,7 +39,6 @@ export default class EntityInitialization {
                 }
             }
         }
-        //console.log(EntityDefinitions.definitions.weapons.laser);
 
         await Promise.all(promises);
     }
@@ -56,14 +54,14 @@ export default class EntityInitialization {
                 const spriteSheet = spriteSheetManager.getSpriteSheet(sprite.name);
 
                 if(spriteSheet) {
-                    console.log(`Generating collision data for sprite: ${sprite.name}`);
+                    //console.log(`Generating collision data for sprite: ${sprite.name}`);
                     collisionData = await CollisionShapeGenerator.generateCollisionData(spriteSheet, entityDefinition.collisionDetection);
                 } else {
                     console.error(`Sprite sheet not found: ${sprite.name}`);
                 }
             } else {
                 // Generate default bounding box data if no sprite is available
-                console.log(`Generating default collision data`);
+                //console.log(`Generating default collision data`);
                 collisionData = CollisionShapeGenerator.generateDefaultCollisionData(entityDefinition.collisionDetection);
             }
 
@@ -82,16 +80,11 @@ export default class EntityInitialization {
     }
 
     createEntities() {
-        console.log(EntityDefinitions);
-
 
         // Predefined entities
-        console.log('Creating player entity...');
         const player = this.entityFactory.createEntity('starships', 'starship_type_3', 100, 100, 'player');
         this.entityManager.addEntity(player);
-        console.log('Entities created.');
 
-        //Example: dynamically creating stations, ships, and asteroids
         const factionStore = this.dataStoreManager.getStore('global');
         for(let i = 0; i < 100; i++) {
             const stationX = this.seededRandom.between(-50000, 50000);
@@ -108,9 +101,8 @@ export default class EntityInitialization {
 
             const stationId = `station-${i}`;
             const station = this.entityFactory.createEntity('stations', stationKey, stationX, stationY, stationId);
-            randomFaction.addStation(station); // Add the station to the faction
+            randomFaction.addStation(station);
             this.entityManager.addEntity(station);
-
 
             for(let j = 0; j < 1; j++) {
                 const shipX = this.seededRandom.between(stationX - 1000, stationX + 1000);
@@ -121,24 +113,17 @@ export default class EntityInitialization {
 
                 const ship = this.entityFactory.createEntity('starships', shipKey, shipX, shipY, shipId);
                 ship.isStatic = true;
-                randomFaction.addShip(ship); // Add the ship to the faction
-                station.addShip(ship); // Add the ship to the station
+                randomFaction.addShip(ship);
+                station.addShip(ship);
                 this.entityManager.addEntity(ship);
             }
         }
         for(let i = 0; i < 500; i++) {
             const asteroidX = this.seededRandom.between(-50000, 50000);
             const asteroidY = this.seededRandom.between(-50000, 50000);
-
-            // Get the keys of the asteroid definitions
             const asteroidKeys = Object.keys(EntityDefinitions.definitions.asteroids);
-
-            // Select a random key from the asteroid keys
             const asteroidKey = this.seededRandom.from(asteroidKeys);
-
-            // Get the asteroid definition using the selected key
             const asteroidDefinition = EntityDefinitions.definitions.asteroids[asteroidKey];
-
             const asteroidId = `asteroid-${i}`;
             const scale = this.seededRandom.from([0.3, 0.4, 10, 15], [1000, 1000, 50, 10]);
 
@@ -151,6 +136,5 @@ export default class EntityInitialization {
 
         const asteroid = this.entityFactory.createEntity('asteroids', 'asteroid_type_1_256', 700, 400, 'asteroid-home');
         this.entityManager.addEntity(asteroid);
-
     }
 }

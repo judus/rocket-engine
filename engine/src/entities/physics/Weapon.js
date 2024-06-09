@@ -28,9 +28,7 @@ export default class Weapon extends Entity2D {
 
     canFire() {
         if(!this.reactor) {
-            console.log('Looking for reactor');
             this.parent.hasComponent('powerPlant', (component) => {
-                console.log('Found reactor');
                 this.reactor = component;
             });
         }

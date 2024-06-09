@@ -11,7 +11,6 @@ export default class GameLogic {
     }
 
     onSceneEnter(scene) {
-        console.log('GameLogic: onSceneEnter...');
         this.sceneDirector = this.engine.sceneDirector();
         this.sceneManager = this.sceneDirector.getSceneManager('world');
         this.currentScene = this.sceneManager.getCurrentScene();
@@ -34,8 +33,8 @@ export default class GameLogic {
         const entities = this.dataStore.getStore('entities').getEntitiesInArea(this.mainCamera.getArea());
 
         entities.forEach(entity => {
-            CollisionSystem.update(entity); // Update collision data for dynamic entities
-            CollisionSystem.check(entity, entities); // Perform collision detection
+            CollisionSystem.update(entity);
+            CollisionSystem.check(entity, entities);
         });
 
         this.engine.particleSystem().update(deltaTime);

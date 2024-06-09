@@ -46,13 +46,10 @@ export default class WorldScene1 extends BaseScene {
     }
 
     onEnter() {
-        console.log('WorldScene1: onEnter...');
         super.onEnter();
 
         const player = this.dataStoreManager.getStore('entities').get('player');
         const camera = this.cameraManager.getCamera('main');
-
-        console.log(this.dataStoreManager.getStore('entities'));
 
         if(player || camera) {
             this.eventBus.emit('controlEntity', 'player');

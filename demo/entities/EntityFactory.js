@@ -26,9 +26,8 @@ export default class EntityFactory {
         const entityClass = EntityClasses.getClass(definition.entityClass);
         const entity = new entityClass(this.engine, definition, x, y, id);
 
-        // Initialize collision data if the entity has a CollisionDataComponent
         entity.hasComponent('collisionData', (component) => {
-            component.initialize(true); // Initialize collision data
+            component.initialize(true);
         });
 
         return entity;

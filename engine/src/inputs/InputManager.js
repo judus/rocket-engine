@@ -201,7 +201,7 @@ export default class InputManager extends EngineBase {
 
         scopedMouse.element.addEventListener('wheel', event => {
             this.eventBus.emit('mouseWheelScroll', {deltaY: event.deltaY});
-        });
+        }, {passive: true});
     }
 
     /**
