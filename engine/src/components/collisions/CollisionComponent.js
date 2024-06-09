@@ -13,7 +13,7 @@ export default class CollisionComponent extends BaseComponent {
         super();
         this.collidingEntities = [];
         this.debug = debug;
-        this.collisionResponse = collisionResponse || new DefaultCollisionResponse();
+        this.collisionResponse = collisionResponse;
         this.quadTree = null;
     }
 
@@ -21,11 +21,9 @@ export default class CollisionComponent extends BaseComponent {
         if(!this.isValidEntity(this.entity)) return;
 
         const boundary = this.calculateBoundary(this.entity);
-        this.quadTree = new QuadTree(boundary, 8);
+        this.quadTree = new QuadTree(boundary, 1);
         entities.forEach(entity => {
-            if (entity.ownerId !== this.entity.id) {
-                this.quadTree.insert(entity);
-            }
+            this.quadTree.insert(entity);
         });
     }
 
@@ -98,8 +96,14 @@ export default class CollisionComponent extends BaseComponent {
     }
 
     handleCollision(entity, otherEntity, collisionResult) {
-        this.collisionResponse.handleCollision(entity, otherEntity, collisionResult);
-        otherEntity.onCollision(entity, collisionResult);
+        if(this.collisionResponse) {
+            this.collisionResponse.handleCollision(entity, otherEntity, collisionResult);
+        }
+
+        // Optional: If the other entity needs to know about the collision
+        if(otherEntity && otherEntity.onCollision) {
+            otherEntity.onCollision(entity, collisionResult);
+        }
 
         if(this.debug) {
             console.log(`${entity.id} collided with ${otherEntity.id}`);

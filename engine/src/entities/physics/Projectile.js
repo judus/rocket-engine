@@ -5,7 +5,6 @@ import CollisionDataComponent from "./CollisionDataComponent.js";
 import CollisionComponent from "../../components/collisions/CollisionComponent.js";
 import RenderComponent from "../../components/RenderComponent.js";
 import DetectionTypes from "../../physics/collisions/DetectionTypes.js";
-import DefaultCollisionResponse from "../../components/collisions/DefaultCollisionResponse.js";
 
 export default class Projectile extends Entity2D {
     constructor(engine, config, id = null) {
@@ -41,20 +40,24 @@ export default class Projectile extends Entity2D {
         // Add necessary components
         this.addComponent('physics', new PhysicsComponent(), 1 / 60, 1);
         this.addComponent('collisionData', new CollisionDataComponent(), 1 / 60, 2);
-        this.addComponent('collision', new CollisionComponent(new DefaultCollisionResponse(), false), 1 / 60, 3);
+        this.addComponent('collision', new CollisionComponent(null, false), 1 / 60, 3); // No default collision response
         this.addComponent('render', new RenderComponent((deltaTime, context, camera) => {
             this.renderPolygon(context, camera);
         }), 1 / 60, 4);
-        //
-        // console.log(`Projectile ${this.id} created with damage: ${this.damage}, velocity: ${this.velocity}, lifetime: ${this.lifetime}`);
-        // console.log('Projectile polygon:', this.polygon);
     }
 
     onCollision(otherEntity, collisionResult) {
         if(otherEntity && otherEntity.takeDamage) {
-            otherEntity.takeDamage(this.damage);
+            otherEntity.takeDamage(this.damage); // Apply damage to the other entity
         }
-        this.destroy();
+
+        if(this.particleSystem) {
+            this.particleSystem.createExplosion(this.pos.x, this.pos.y, 1, () => ({
+                color: '#FF9900'
+            }));
+        }
+
+        this.destroy(); // Destroy the projectile after collision
     }
 
     update(deltaTime) {

@@ -1,18 +1,11 @@
 import Behavior from "./Behavior.js";
-/*
-// Sequential behavior example
-const ship = new Player(dataStoreManager, eventBus, x, y, id);
-const burningBehavior = new BurningBehavior();
-const explodingBehavior = new ExplodingBehavior();
 
-const shipBehavior = new SequentialBehavior([burningBehavior, explodingBehavior]);
-ship.setBehavior(shipBehavior);
- */
 export default class SequentialBehavior extends Behavior {
-    constructor(behaviors) {
+    constructor(behaviors, repeat = false) {
         super();
         this.behaviors = behaviors;
         this.currentIndex = 0;
+        this.repeat = repeat; // Add a flag to indicate whether the sequence should repeat
     }
 
     perform(entity) {
@@ -24,10 +17,12 @@ export default class SequentialBehavior extends Behavior {
             if(currentBehavior.isComplete && currentBehavior.isComplete(entity)) {
                 this.currentIndex++;
             }
+        } else if(this.repeat) {
+            this.currentIndex = 0; // Reset the sequence if repeat is enabled
         }
     }
 
     isComplete(entity) {
-        return this.currentIndex >= this.behaviors.length;
+        return !this.repeat && this.currentIndex >= this.behaviors.length;
     }
 }

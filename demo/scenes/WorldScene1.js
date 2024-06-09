@@ -27,7 +27,7 @@ export default class WorldScene1 extends BaseScene {
         this.addLayer('highlight', HighlightBackground);
         this.addLayer('spriteLayer', SpriteLayer); // Add the new sprite layer
         this.addLayer('foregroundLayer', PolygonLayer);
-        //this.addLayer('ParticleLayer', ParticleLayer);
+        this.addLayer('ParticleLayer', ParticleLayer);
         //this.addLayer('ProjectileLayer', ProjectileLayer);
 
         this.addLayer('mouseSelectionLayer', MouseSelectionLayer); // Add the new layer

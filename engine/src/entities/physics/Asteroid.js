@@ -11,6 +11,7 @@ import EntityVerticesComponent from "../../../../demo/components/EntityVerticesC
 import FaceVelocityBehavior from "../../behaviors/FaceVelocityBehavior.js";
 import SpriteComponent from "../../sprites/SpriteComponent.js";
 import EntityHighlightRenderComponent from "../../../../demo/components/EntityHighlightRenderComponent.js";
+import ShowExplosionBehavior from "../../../../demo/behaviors/ShowExplosionBehavior.js";
 
 export default class Asteroid extends Entity2D {
     constructor(engine, config, x = 0, y = 0, id = null, scale = 1) {
@@ -66,14 +67,14 @@ export default class Asteroid extends Entity2D {
         }
         this.addComponent('physics', new PhysicsComponent(), 1 / 60, 7);
         this.addComponent('collisionData', new CollisionDataComponent(this.isStatic), 1 / 60, 1);
-        this.addComponent('collision', new CollisionComponent(new DefaultCollisionResponse(), false), 1 / 60, 1);
+        this.addComponent('collision', new CollisionComponent(new DefaultCollisionResponse(this.particleSystem), false), 1 / 30, 1);
 
         //this.addComponent('render', new EntityVerticesComponent(false));
 
         this.spriteSheet = this.engine.spriteSheetManager().getSpriteSheet(this.spriteSheet.name);
         this.addComponent('sprite', new SpriteComponent(this.spriteSheet, 0), 1 / 60, 12); // this renders the sprite of the entity
 
-        this.addComponent('health', new HealthComponent(100));
+        this.addComponent('health', new HealthComponent(10000));
         this.addComponent('highlight', new EntityHighlightRenderComponent(), 1 / 60, 12);
 
 
@@ -93,7 +94,22 @@ export default class Asteroid extends Entity2D {
     //     }
     // }
 
+    takeDamage(amount) {
+        this.hasComponent('health', (component) => {
+            component.takeDamage(amount);
+        });
+    }
+
     onCollision(otherEntity, collisionResult) {
-        super.onCollision(otherEntity, collisionResult);
+        if(otherEntity && otherEntity.damage) {
+            this.takeDamage(otherEntity.damage); // Apply incoming damage from the other entity
+        }
+    }
+
+    destroy() {
+        if(this.particleSystem) {
+            (new ShowExplosionBehavior(this.particleSystem)).perform(this);
+        }
+        super.destroy();
     }
 }

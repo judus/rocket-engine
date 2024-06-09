@@ -19,6 +19,8 @@ import ScopedMouse from "./inputs/ScopedMouse.js";
 import EntitySelector from "./services/EntitySelector.js";
 import EntityController from "./services/EntityController.js";
 import TaskScheduler from "./services/TaskScheduler.js";
+import ParticleSystem from "./particles/ParticleSystem.js";
+import ParticleGrid from "./datastores/ParticleGrid.js";
 
 export default class EngineInit {
     initializeServices(engine) {
@@ -29,6 +31,7 @@ export default class EngineInit {
         this.engine.service(EngineParts.ENTITY_SELECTOR, this.engine.service(EngineParts.ENTITY_SELECTOR) || this.defaultEntitySelector());
         this.engine.service(EngineParts.ENTITY_CONTROLLER, this.engine.service(EngineParts.ENTITY_CONTROLLER) || this.defaultEntityController());
         this.engine.service(EngineParts.TASK_SCHEDULER, this.engine.service(EngineParts.TASK_SCHEDULER) || this.defaultTaskScheduler());
+        this.engine.service(EngineParts.PARTICLE_SYSTEM, this.engine.service(EngineParts.PARTICLE_SYSTEM) || this.defaultParticleSystem());
 
 
         if(!this.engine.config.disableEventBus) {
@@ -174,5 +177,9 @@ export default class EngineInit {
 
     defaultTaskScheduler() {
         return TaskScheduler;
+    }
+
+    defaultParticleSystem() {
+        return new ParticleSystem();
     }
 }

@@ -37,6 +37,8 @@ export default class GameLogic {
             CollisionSystem.update(entity); // Update collision data for dynamic entities
             CollisionSystem.check(entity, entities); // Perform collision detection
         });
+
+        this.engine.particleSystem().update(deltaTime);
     }
 
 

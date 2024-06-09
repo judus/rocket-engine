@@ -24,15 +24,33 @@ export default class ParticleSystem {
         this.particleGrid.addParticle(particle);
     }
 
-    createExplosion(x, y, numParticles, color) {
+    createExplosion(x, y, numParticles, particleCallback) {
         for(let i = 0; i < numParticles; i++) {
             const angle = Math.random() * 2 * Math.PI;
             const speed = Math.random() * 50 + 50;
             const vx = Math.cos(angle) * speed;
             const vy = Math.sin(angle) * speed;
             const lifetime = Math.random() * 0.5 + 0.5;
-            const particle = new Particle(x, y, vx, vy, lifetime, color);
+
+            let particleProps = {
+                vx,
+                vy,
+                lifetime,
+                color: '#FF0000' // Default color
+            };
+
+            if(particleCallback) {
+                const callbackProps = particleCallback();
+                particleProps = {
+                    ...particleProps,
+                    ...callbackProps
+                };
+            }
+
+            const particle = new Particle(x, y, particleProps.vx, particleProps.vy, particleProps.lifetime, particleProps.color);
             this.addParticle(particle);
         }
     }
+
+
 }

@@ -50,6 +50,7 @@ export default class StarShip extends Entity2D {
         super(engine, config, id);
 
         this.config = config;
+        this.particleSystem = engine.particleSystem();
         this.isControlled = false;
 
         // Profiles
@@ -121,7 +122,7 @@ export default class StarShip extends Entity2D {
         this.addComponent('weaponSystem', new WeaponSystemComponent(), 1 / 60, 9);
         this.addComponent('attack', new ShipAttackComponent(), 1 / 60, 10);
         this.addComponent('collisionData', new CollisionDataComponent(), 1 / 30, 1);
-        this.addComponent('collision', new CollisionComponent(new DefaultCollisionResponse(), false), 1 / 30, 1);
+        this.addComponent('collision', new CollisionComponent(new DefaultCollisionResponse(this.particleSystem), false), 1 / 30, 1);
         this.spriteSheet = this.engine.spriteSheetManager().getSpriteSheet(this.spriteSheet.name);
         this.addComponent('sprite', new SpriteComponent(this.spriteSheet, 0), 1 / 60, 12);
 

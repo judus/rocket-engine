@@ -6,24 +6,14 @@ export default class ColorHelper {
         this.a = a;
     }
 
-    /**
-     * Sets the color using RGB values.
-     * @param {number} r - The red component (0-255).
-     * @param {number} g - The green component (0-255).
-     * @param {number} b - The blue component (0-255).
-     * @param {number} [a=1] - The alpha component (0-1).
-     */
     setRGB(r, g, b, a = 1) {
         this.r = r;
         this.g = g;
         this.b = b;
         this.a = a;
+        return this;
     }
 
-    /**
-     * Sets the color using a hex string.
-     * @param {string} hex - The hex color string (e.g., "#ff0000").
-     */
     setHex(hex) {
         const match = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
         if(match) {
@@ -32,15 +22,9 @@ export default class ColorHelper {
             this.b = parseInt(match[3], 16);
             this.a = 1;
         }
+        return this;
     }
 
-    /**
-     * Sets the color using HSL values.
-     * @param {number} h - The hue component (0-360).
-     * @param {number} s - The saturation component (0-100).
-     * @param {number} l - The lightness component (0-100).
-     * @param {number} [a=1] - The alpha component (0-1).
-     */
     setHSL(h, s, l, a = 1) {
         h /= 360;
         s /= 100;
@@ -65,10 +49,6 @@ export default class ColorHelper {
         this.a = a;
     }
 
-    /**
-     * Returns the color as a hex string.
-     * @returns {string} The hex color string.
-     */
     toHex() {
         const toHex = (value) => {
             const hex = value.toString(16);
@@ -77,26 +57,14 @@ export default class ColorHelper {
         return `#${toHex(this.r)}${toHex(this.g)}${toHex(this.b)}`;
     }
 
-    /**
-     * Returns the color as an RGB string.
-     * @returns {string} The RGB color string.
-     */
     toRGB() {
         return `rgb(${this.r}, ${this.g}, ${this.b})`;
     }
 
-    /**
-     * Returns the color as an RGBA string.
-     * @returns {string} The RGBA color string.
-     */
     toRGBA() {
         return `rgba(${this.r}, ${this.g}, ${this.b}, ${this.a})`;
     }
 
-    /**
-     * Returns the color as an HSL string.
-     * @returns {string} The HSL color string.
-     */
     toHSL() {
         const r = this.r / 255;
         const g = this.g / 255;
@@ -127,11 +95,6 @@ export default class ColorHelper {
         return `hsl(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
     }
 
-    /**
-     * Lightens the color by a given amount.
-     * @param {number} amount - The amount to lighten (0-1).
-     * @returns {ColorHelper} The lightened color.
-     */
     lighten(amount) {
         const hsl = this.toHSL().match(/(\d+)/g);
         let h = parseInt(hsl[0]);
@@ -142,67 +105,41 @@ export default class ColorHelper {
         return this;
     }
 
-    /**
-     * Darkens the color by a given amount.
-     * @param {number} amount - The amount to darken (0-1).
-     * @returns {ColorHelper} The darkened color.
-     */
     darken(amount) {
         const hsl = this.toHSL().match(/(\d+)/g);
         let h = parseInt(hsl[0]);
         let s = parseInt(hsl[1]);
         let l = parseInt(hsl[2]);
         l = Math.max(0, l - amount * 100);
+        console.log(`Darken - H: ${h}, S: ${s}, L: ${l}`); // Debugging output
         this.setHSL(h, s, l, this.a);
         return this;
     }
 
-    /**
-     * Rotates the hue of the color by a given amount.
-     * @param {number} amount - The amount to rotate the hue (0-360).
-     * @returns {ColorHelper} The color with rotated hue.
-     */
     rotateHue(amount) {
         const hsl = this.toHSL().match(/(\d+)/g);
         let h = parseInt(hsl[0]);
         let s = parseInt(hsl[1]);
         let l = parseInt(hsl[2]);
         h = (h + amount) % 360;
+        console.log(`Rotate Hue - H: ${h}, S: ${s}, L: ${l}`); // Debugging output
         this.setHSL(h, s, l, this.a);
         return this;
     }
 
-    /**
-     * Sets the opacity of the color.
-     * @param {number} alpha - The alpha component (0-1).
-     * @returns {ColorHelper} The color with the new opacity.
-     */
     setOpacity(alpha) {
         this.a = alpha;
         return this;
     }
 
-    /**
-     * Creates a copy of this color.
-     * @returns {ColorHelper} The copy of the color.
-     */
     clone() {
         return new ColorHelper(this.r, this.g, this.b, this.a);
     }
 
-    /**
-     * Returns a string representation of this color.
-     * @returns {string} The string representation.
-     */
     toString() {
         return this.toRGBA();
     }
 
-    /**
-     * Checks if this color is equal to another color.
-     * @param {ColorHelper} color - The other color.
-     * @returns {boolean} True if the colors are equal, false otherwise.
-     */
     equals(color) {
         return this.r === color.r && this.g === color.g &&
             this.b === color.b && this.a === color.a;

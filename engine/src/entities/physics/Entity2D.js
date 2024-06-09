@@ -38,6 +38,8 @@ export default class Entity2D {
         this.updateTaskScheduler = engine.create(EngineParts.TASK_SCHEDULER);
         this.renderTaskScheduler = engine.create(EngineParts.TASK_SCHEDULER);
         this.eventBus = engine.service(EngineParts.EVENT_BUS);
+        this.particleSystem = engine.particleSystem();
+
         this.entityFactory = new EntityFactory(engine);
         this.components = {};
         this.behavior = config.behavior || null;

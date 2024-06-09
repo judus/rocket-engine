@@ -1,4 +1,5 @@
 import EngineParts from './EngineParts.js';
+import SpatialHashGrid2DDataStore from "./datastores/SpatialHashGrid2DDataStore.js";
 
 export default class Engine {
     constructor(rocket) {
@@ -93,6 +94,10 @@ export default class Engine {
 
     entityManager() {
         return this.service(EngineParts.ENTITY_MANAGER);
+    }
+
+    particleSystem() {
+        return this.service(EngineParts.PARTICLE_SYSTEM);
     }
 
     globalMouse() {

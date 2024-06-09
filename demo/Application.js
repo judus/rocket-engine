@@ -7,13 +7,17 @@ import AudioLoader from "./AudioLoader.js";
 import AudioEventHandler from "./AudioEventHandler.js";
 import UserInteractionHandler from "./UserInteractionHandler.js";
 import SpatialHashGrid2DDataStore from "../engine/src/datastores/SpatialHashGrid2DDataStore.js";
+import ParticleGrid from "../engine/src/datastores/ParticleGrid.js";
 
 export default class Application extends EngineBase {
     init(engine) {
         this.engine = engine;
         this.eventBus = this.engine.eventBus();
         this.dataStoreManager = this.engine.dataStoreManager();
-        this.dataStoreManager.create('entities', new SpatialHashGrid2DDataStore(this.eventBus, 100));
+        this.dataStoreManager.create('entities', new SpatialHashGrid2DDataStore(this.eventBus, 200));
+        this.dataStoreManager.create('particles', new ParticleGrid(this.eventBus, 200));
+        this.particleSystem = this.engine.particleSystem();
+        this.particleSystem.particleGrid = this.dataStoreManager.getStore('particles');
 
         this.entityInitialization = new EntityInitialization(this.engine);
         this.playerActions = new PlayerActions(this.engine);

@@ -22,6 +22,7 @@ export default class EngineParts {
     static ENTITY_CONTROLLER = 'entityController';
     static TASK_SCHEDULER = 'taskScheduler';
     static ENTITY_STORE_NAME = 'entities';
+    static PARTICLE_SYSTEM = 'particleSystem';
 
     static worldScale = (meterInPixels, screenHeight) => {
         const scaleFactor = screenHeight / meterInPixels;

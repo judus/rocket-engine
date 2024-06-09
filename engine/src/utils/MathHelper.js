@@ -1,4 +1,4 @@
-class MathHelper {
+export default class MathHelper {
 
     /**
      * Clamps a number between a minimum and maximum value.
