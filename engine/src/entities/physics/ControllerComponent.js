@@ -16,6 +16,9 @@ export default class ControllerComponent extends BaseComponent {
         entity.eventBus.on('scopedMouseMove', (mouse) => {
             this.mousePosition = {x: mouse.world.x, y: mouse.world.y};
         });
+
+        // Apply initial damper state based on profile
+        this.applyProfile();
     }
 
     setInput(ad, ws) {
@@ -76,18 +79,16 @@ export default class ControllerComponent extends BaseComponent {
     update(deltaTime) {
         const {ad, ws} = this.currentInput;
         if(this.profile === 'arcade') {
-
             this.setArcadeInput(ad, ws);
             this.handleAutoOrientation();
         } else if(this.profile === 'advanced') {
-
             this.setAdvancedInput(ad, ws);
             this.entity.rotation = this.entity.orientation;
         }
     }
 
     handleAutoOrientation() {
-        if(this.autoOrient) {
+        if(this.autoOrient && this.profile === 'arcade') {
             if(this.target) {
                 const directionToTarget = this.target.pos.subtract(this.entity.pos).normalize();
                 this.entity.rotation = Math.atan2(directionToTarget.y, directionToTarget.x);
@@ -104,26 +105,26 @@ export default class ControllerComponent extends BaseComponent {
 
     setProfile(profile) {
         this.profile = profile;
+        this.applyProfile();
     }
 
-    switchProfile() {
-        console.log('Switching controller profile...');
-        this.profile = this.profile === 'arcade' ? 'advanced' : 'arcade';
-        this.updateDamperState();
-    }
-
-    updateDamperState() {
+    applyProfile() {
         this.entity.hasComponent('damper', (component) => {
             if(this.profile === 'arcade') {
-                component.activate1();
+                component.enable();
             } else {
-                component.deactivate1();
+                component.disable();
             }
         });
     }
 
+    switchProfile() {
+        this.setProfile(this.profile === 'arcade' ? 'advanced' : 'arcade');
+    }
+
     switchOrientationMode() {
-        this.autoOrient = !this.autoOrient;
-        console.log(`Auto orientation: ${this.autoOrient}`);
+        if(this.profile === 'arcade') {
+            this.autoOrient = !this.autoOrient;
+        }
     }
 }

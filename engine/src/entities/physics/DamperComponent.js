@@ -4,6 +4,7 @@ export default class DamperComponent extends ShipComponent {
     constructor(profiles, priority, defaultProfile = 'default') {
         super(profiles, defaultProfile, priority);
         this.label = 'Inertia Dampers';
+        this.userRequestedState = false;
     }
 
     onAdd(entity) {
@@ -13,32 +14,45 @@ export default class DamperComponent extends ShipComponent {
         this.defaultInertiaModifier = entity.inertiaModifier;
         this.defaultDragCoefficient = entity.dragCoefficient;
         this.defaultAccelerationModifier = entity.accelerationModifier;
-        this.staticFrictionCoefficient = entity.staticFrictionCoefficient;
+        this.defaultStaticFrictionCoefficient = entity.staticFrictionCoefficient;
+
+        // Apply initial state
+        this.applyCurrentMode();
     }
 
-    activate1() {
+    activate() {
         this.isActive = true;
-        this.applyArcadeMode();
-        //console.log(`${this.label} activated`);
+        if(this.userRequestedState) {
+            this.applyArcadeMode();
+        }
     }
 
-    deactivate1() {
+    deactivate() {
         this.isActive = false;
         this.applyAdvancedMode();
-        //console.log(`${this.label} deactivated`);
+    }
+
+    enable() {
+        this.userRequestedState = true;
+        if(this.isActive) {
+            this.applyArcadeMode();
+        }
+    }
+
+    disable() {
+        this.userRequestedState = false;
+        this.applyAdvancedMode();
     }
 
     applyArcadeMode() {
         const profile = this.profiles[this.currentProfile];
 
         // Use the profile to adjust the effectiveness of the dampener
-        this.entity.mass = this.defaultMass * (profile.massModifier || 1); // Use profile mass or minimal mass
-        this.entity.inertiaModifier = this.defaultInertiaModifier * (profile.inertiaModifier || 1); // Use profile inertia modifier or no inertia
-        this.entity.dragCoefficient = this.defaultDragCoefficient * (profile.dragCoefficientModifier || 1); // Use profile drag coefficient or no drag
-        //this.entity.accelerationModifier = profile.accelerationModifier || this.defaultAccelerationModifier; // Use profile acceleration modifier or default
-        //this.entity.staticFrictionCoefficient = profile.staticFrictionCoefficient || this.defaultAccelerationModifier; // Use profile acceleration modifier or default
-        console.log('Arcade Mode Activated: Adjusting Physics Properties');
-        console.log(`Mass: ${this.entity.mass}, Inertia Modifier: ${this.entity.inertiaModifier}, Drag Coefficient: ${this.entity.dragCoefficient}`);
+        this.entity.mass = this.defaultMass * (profile.massModifier || 1);
+        this.entity.inertiaModifier = this.defaultInertiaModifier * (profile.inertiaModifier || 1);
+        this.entity.dragCoefficient = this.defaultDragCoefficient * (profile.dragCoefficientModifier || 1);
+        this.entity.accelerationModifier = profile.accelerationModifier || this.defaultAccelerationModifier;
+        this.entity.staticFrictionCoefficient = profile.staticFrictionCoefficient || this.defaultStaticFrictionCoefficient;
     }
 
     applyAdvancedMode() {
@@ -47,11 +61,14 @@ export default class DamperComponent extends ShipComponent {
         this.entity.inertiaModifier = this.defaultInertiaModifier;
         this.entity.dragCoefficient = this.defaultDragCoefficient;
         this.entity.accelerationModifier = this.defaultAccelerationModifier;
-        this.entity.staticFrictionCoefficient = this.defaultAccelerationModifier;
-
-        console.log('Advanced Mode Activated: Resetting Physics Properties to Default Values');
-        console.log(`Mass: ${this.entity.mass}, Inertia Modifier: ${this.entity.inertiaModifier}, Drag Coefficient: ${this.entity.dragCoefficient}`);
+        this.entity.staticFrictionCoefficient = this.defaultStaticFrictionCoefficient;
     }
 
-
+    applyCurrentMode() {
+        if(this.isActive && this.userRequestedState) {
+            this.applyArcadeMode();
+        } else {
+            this.applyAdvancedMode();
+        }
+    }
 }

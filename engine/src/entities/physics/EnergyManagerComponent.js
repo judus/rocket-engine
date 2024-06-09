@@ -39,14 +39,13 @@ export default class EnergyManagerComponent extends BaseComponent {
         let currentEnergy = this.availableEnergy;
         let stateChanged = false;
 
-
         this.components.forEach(component => {
             //console.log(`Component: ${component.label}, userRequestedState: ${component.userRequestedState}, isActive: ${component.isActive}`);
 
             if(component.userRequestedState && currentEnergy >= component.energyCost) {
-
                 if(!component.isActive) {
                     component.isActive = true;
+                    console.log(`Energy Manager: ${component.label} activated`);
                     component.activate();
                     stateChanged = true;
                 }
@@ -54,6 +53,7 @@ export default class EnergyManagerComponent extends BaseComponent {
             } else {
                 if(component.isActive) {
                     component.isActive = false;
+                    console.log(`Energy Manager: ${component.label} deactivated`);
                     component.deactivate();
                     stateChanged = true;
                 }
