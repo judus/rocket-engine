@@ -13,7 +13,6 @@ export default class EntityFactory {
         this.engine = engine;
         this.eventBus = this.engine.eventBus();
         this.dataStoreManager = this.engine.dataStoreManager();
-
     }
 
     createFaction(definition) {
@@ -35,16 +34,17 @@ export default class EntityFactory {
         return entity;
     }
 
-    createProjectile(name, initialPosition, velocity, ownerId) {
+    createProjectile(name, initialPosition, orientation, velocity, ownerId) {
         const definition = EntityDefinitions.get('projectiles', name);
         const entityClass = EntityClasses.getClass(definition.entityClass);
         const config = {
             ...definition,
             pos: initialPosition,
-            velocity: velocity
+            velocity: velocity,
         };
         const projectile = new entityClass(this.engine, config);
         projectile.ownerId = ownerId;
+        projectile.rotation = orientation;
         return projectile;
     }
 

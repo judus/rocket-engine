@@ -7,9 +7,15 @@ export default class ControllerComponent extends BaseComponent {
         this.profile = 'arcade';
         this.autoOrient = true;
         this.target = null;
-
-
+        this.mousePosition = {x: 0, y: 0};
         this.currentInput = {ad: 0, ws: 0};
+    }
+
+    onAdd(entity) {
+        super.onAdd(entity);
+        entity.eventBus.on('scopedMouseMove', (mouse) => {
+            this.mousePosition = {x: mouse.world.x, y: mouse.world.y};
+        });
     }
 
     setInput(ad, ws) {
@@ -61,7 +67,6 @@ export default class ControllerComponent extends BaseComponent {
 
     applyTorque(torqueDirection, powerPercentage) {
         this.entity.hasComponent('engine', (engine) => {
-            //console.log('Applying torque', torqueDirection, powerPercentage);
             engine.applyTorque(this.entity, torqueDirection, powerPercentage);
         }, () => {
             console.log("No engine attached to apply thrust");
@@ -84,11 +89,14 @@ export default class ControllerComponent extends BaseComponent {
             if(this.target) {
                 const directionToTarget = this.target.pos.subtract(this.entity.pos).normalize();
                 this.entity.rotation = Math.atan2(directionToTarget.y, directionToTarget.x);
-            } else if(this.entity.velocity.magnitude() > 0) {
-                //console.log("Auto orienting based on velocity");
-                const direction = this.entity.velocity.normalize();
-                this.entity.rotation = Math.atan2(direction.y, direction.x);
+            } else {
+                const directionToMouse = new Vector3D(this.mousePosition.x, this.mousePosition.y).subtract(this.entity.pos).normalize();
+                this.entity.rotation = Math.atan2(directionToMouse.y, directionToMouse.x);
             }
+        } else if(this.entity.velocity.magnitude() > 0) {
+            // Auto orienting based on velocity
+            const direction = this.entity.velocity.normalize();
+            this.entity.rotation = Math.atan2(direction.y, direction.x);
         }
     }
 
@@ -99,13 +107,10 @@ export default class ControllerComponent extends BaseComponent {
     switchProfile() {
         this.profile = this.profile === 'arcade' ? 'advanced' : 'arcade';
         this.entity.eventBus.emit('component.engineController.mode', this.profile);
-
-        //console.log('Switched profile to', this.profile);
     }
 
-
     switchOrientationMode() {
-        this.autoOrient = this.autoOrient !== true;
-        //console.log(`Switched auto orientation ${this.autoOrient?'ON':'OFF'}`);
+        this.autoOrient = !this.autoOrient;
+        console.log(`Auto orientation: ${this.autoOrient}`);
     }
 }

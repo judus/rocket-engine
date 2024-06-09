@@ -34,7 +34,7 @@ export default class EntityManager {
         if(!store) {
             throw new Error(`Data store for type ${entity.type} not found`);
         }
-        console.log(`Removing entity ${entity.id} from store ${storeName}`);
+        //console.log(`Removing entity ${entity.id} from store ${storeName}`);
         store.delete(entity.id);
     }
 

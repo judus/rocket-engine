@@ -362,7 +362,7 @@ export default class EntityDefinitions {
                 entityClass: 'laser',
                 type: 'laser',
                 damage: 10,
-                energyConsumption: 10000,
+                energyConsumption: 3000,
                 rateOfFire: 10, // ms
                 width: 12,
                 height: 60,
@@ -388,7 +388,7 @@ export default class EntityDefinitions {
                 pos: {x: 0, y: 0, z: 0},
                 collisionDetection: DetectionTypes.SUB_BOXES,
                 polygon: {
-                    orientation: 0,
+                    orientation: Math.PI / 2,
                     fillColor: 'yellow',
                     vertices: [
                         {x: 0, y: -5},
@@ -407,7 +407,7 @@ export default class EntityDefinitions {
                 pos: {x: 0, y: 0, z: 0},
                 collisionDetection: DetectionTypes.SUB_BOXES,
                 polygon: {
-                    orientation: -Math.PI / 2,
+                    orientation: Math.PI / 2,
                     fillColor: 'red',
                     vertices: [
                         {x: 0, y: -5},

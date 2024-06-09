@@ -166,6 +166,9 @@ export default class StarShip extends Entity2D {
             weaponSystemComponent.createWeaponGroup('1', [0, 1]);
             weaponSystemComponent.createWeaponGroup('2', [2, 3]);
         });
+
+        this.addComponent('engineController', new ControllerComponent(engine.eventBus()), 1 / 60, 5);
+
     }
 
     takeControl() {
@@ -233,12 +236,11 @@ export default class StarShip extends Entity2D {
 
         this.addComponent('energyManager', new EnergyManagerComponent(), 1 / 30, 1);
         this.addComponent('heatManager', new HeatManagerComponent(100), 1 / 30, 1);
-        this.addComponent('powerPlant', new ReactorComponent(powerPlantProfiles, 1, 'default'), 1 / 30, 2);
+        this.addComponent('powerPlant', new ReactorComponent(powerPlantProfiles, 1, 'default'), 1 / 60, 2);
         this.addComponent('cooling', new CoolingSystemComponent(coolingSystemProfiles, 1, 'default'), 1 / 30, 2);
         this.addComponent('inventory', new InventoryComponent({}, 3), 1 / 10, 2);
         this.addComponent('damper', new DamperComponent(damperProfiles, 5, 'default'), 1 / 60, 3);
         this.addComponent('engine', new EngineComponent(engineProfiles, 3, 'default'), 1 / 60, 4);
-        this.addComponent('engineController', new ControllerComponent(), 1 / 60, 5);
         this.addComponent('environment', new EnvironmentComponent(), 1 / 30, 6);
         this.addComponent('cargo', new CargoBayComponent(this.cargoBayProfiles, 2, 'default'), 1 / 10, 2);
         this.addComponent('shields', new ShieldComponent(this.shieldProfiles, 4), 1 / 30, 7);
@@ -256,7 +258,6 @@ export default class StarShip extends Entity2D {
         this.removeComponent('inventory');
         this.removeComponent('damper');
         this.removeComponent('engine');
-        this.removeComponent('engineController');
         this.removeComponent('environment');
 
         // Remove and re-add common components

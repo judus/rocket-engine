@@ -16,7 +16,6 @@ export default class Weapon extends Entity2D {
         this.ownerId = ownerId;
         this.factory = new EntityFactory(engine);
         this.reactor = null;
-
     }
 
     activate() {
@@ -28,15 +27,13 @@ export default class Weapon extends Entity2D {
     }
 
     canFire() {
-        if (!this.reactor) {
+        if(!this.reactor) {
             console.log('Looking for reactor');
-
             this.parent.hasComponent('powerPlant', (component) => {
                 console.log('Found reactor');
                 this.reactor = component;
             });
         }
-
         return this.reactor && this.reactor.energy >= this.energyConsumption;
     }
 
@@ -44,14 +41,14 @@ export default class Weapon extends Entity2D {
         const now = performance.now();
         if(now - this.lastFired >= this.rateOfFire && this.canFire()) {
             this.lastFired = now;
-            console.log(this.energyConsumption);
 
             this.reactor.consume(this.energyConsumption);
 
             const initialPosition = this.getProjectileInitialPosition();
             const velocity = this.getProjectileVelocity();
+            const orientation = this.getProjectileOrientation();
 
-            const projectile = this.factory.createProjectile('bullet_standard', initialPosition, velocity, this.ownerId);
+            const projectile = this.factory.createProjectile('bullet_standard', initialPosition, orientation, velocity, this.ownerId);
             this.entityManager.addEntity(projectile);
         }
     }
@@ -69,8 +66,13 @@ export default class Weapon extends Entity2D {
     getProjectileInitialPosition() {
         // Calculate the initial position of the projectile based on weapon orientation and dimensions
         const direction = new Vector3D(Math.cos(this.rotation), Math.sin(this.rotation));
-        const offset = direction.multiply(this.height / 2); // Adjust for weapon's width
+        const offset = direction.multiply(this.width / 2 + 5); // Adjust for weapon's width
         return this.pos.clone().add(offset);
+    }
+
+    getProjectileOrientation() {
+        // Combine weapon and ship orientation
+        return this.rotation;
     }
 
     update(deltaTime) {

@@ -29,14 +29,25 @@ export default class Projectile extends Entity2D {
         this.lifetime = config.lifetime;
         this.age = 0;
 
+        // Set collision and polygon properties
+        this.collisionDetection = config.collisionDetection || null;
+        this.boundingBox = config.collisionData?.boundingBox || null;
+        this.collisionBoxes = config.collisionData?.subBoundingBoxes || [];
+        this.polygon = config.polygon?.vertices || [];
+        this.framePolygons = config.collisionData?.framePolygons || {};
+        this.color = config.polygon?.fillColor || 'red';
+        this.initialOrientation = config.polygon?.orientation || 0;
+
         // Add necessary components
-        this.addComponent('physics', new PhysicsComponent(), 1 / 30, 1);
-        this.addComponent('collisionData', new CollisionDataComponent(), 1 / 30, 2);
-        this.addComponent('collision', new CollisionComponent(new DefaultCollisionResponse(), false), 1 / 30, 3);
+        this.addComponent('physics', new PhysicsComponent(), 1 / 60, 1);
+        this.addComponent('collisionData', new CollisionDataComponent(), 1 / 60, 2);
+        this.addComponent('collision', new CollisionComponent(new DefaultCollisionResponse(), false), 1 / 60, 3);
         this.addComponent('render', new RenderComponent((deltaTime, context, camera) => {
             this.renderPolygon(context, camera);
-            //12this.renderRedDot(context, camera);
         }), 1 / 60, 4);
+        //
+        // console.log(`Projectile ${this.id} created with damage: ${this.damage}, velocity: ${this.velocity}, lifetime: ${this.lifetime}`);
+        // console.log('Projectile polygon:', this.polygon);
     }
 
     onCollision(otherEntity, collisionResult) {
@@ -55,36 +66,33 @@ export default class Projectile extends Entity2D {
     }
 
     renderPolygon(context, camera) {
+        if(!this.polygon || this.polygon.length === 0) {
+            console.error('No polygon defined for rendering');
+            return;
+        }
+
         context.beginPath();
         const vertices = this.polygon;
         const {x, y} = this.pos;
-        const rotation = this.rotation || 0;
+        const rotation = this.initialOrientation + this.rotation;
+
+        const cameraOffsetX = camera.pos.x;
+        const cameraOffsetY = camera.pos.y;
 
         for(let i = 0; i < vertices.length; i++) {
             const vertex = vertices[i];
             const rotatedX = vertex.x * Math.cos(rotation) - vertex.y * Math.sin(rotation);
             const rotatedY = vertex.x * Math.sin(rotation) + vertex.y * Math.cos(rotation);
-            const camX = x - camera.pos.x;
-            const camY = y - camera.pos.y;
+            const screenX = (x + rotatedX - cameraOffsetX) * camera.zoomLevel;
+            const screenY = (y + rotatedY - cameraOffsetY) * camera.zoomLevel;
             if(i === 0) {
-                context.moveTo(camX + rotatedX, camY + rotatedY);
+                context.moveTo(screenX, screenY);
             } else {
-                context.lineTo(camX + rotatedX, camY + rotatedY);
+                context.lineTo(screenX, screenY);
             }
         }
         context.closePath();
         context.fillStyle = this.color;
-        context.fill();
-    }
-
-    renderRedDot(context, camera) {
-        //console.log(`Rendering red dot at position: ${this.pos.x}, ${this.pos.y}`);
-        const screenX = (this.pos.x - camera.pos.x) * camera.zoomLevel;
-        const screenY = (this.pos.y - camera.pos.y) * camera.zoomLevel;
-
-        context.beginPath();
-        context.arc(screenX, screenY, 10, 0, 2 * Math.PI); // Big red dot with radius 10
-        context.fillStyle = 'red';
         context.fill();
     }
 }
