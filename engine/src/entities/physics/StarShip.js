@@ -27,6 +27,7 @@ import CollisionComponent from "../../components/collisions/CollisionComponent.j
 import DefaultCollisionResponse from "../../components/collisions/DefaultCollisionResponse.js";
 import TransformComponent from "../../components/TransformComponent.js";
 import CollisionDataComponent from "./CollisionDataComponent.js";
+import EntityHighlightRenderComponent from "../../../../demo/components/EntityHighlightRenderComponent.js";
 
 
 export default class StarShip extends Entity2D {
@@ -36,12 +37,12 @@ export default class StarShip extends Entity2D {
             pos: new Vector3D(x, y, 0),
             velocity: new Vector3D(0, 0, 0),
             mass: 1000,
-            momentOfInertia: 1,
+            momentOfInertia: 50,
             accelerationModifier: 1,
             inertiaModifier: 1,
             dragCoefficient: 5000,
             dragCoefficientModifier: 1,
-            rotationalDragCoefficient: 0.999,
+            rotationalDragCoefficient: 1,
             staticFrictionCoefficient: 100,
         };
 
@@ -72,26 +73,7 @@ export default class StarShip extends Entity2D {
             }
         };
 
-        const damperProfiles = {
-            default: {
-                maxTemperature: 100, // in °C
-                heatProductionRate: 0.01,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
-                health: 100,
-                energyCostMW: 2,
-                accelerationModifier: 1,
-                inertiaModifier: 0.1,
-                dragCoefficientModifier: 500
-            },
-            advanced: {
-                maxTemperature: 100, // in °C
-                heatProductionRate: 0.01,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
-                health: 100,
-                energyCostMW: 2,
-                accelerationModifier: 1,
-                inertiaModifier: 1,
-                dragCoefficientModifier: 1
-            }
-        };
+
 
         const mountProfiles = new MountProfile([
             {
@@ -165,6 +147,8 @@ export default class StarShip extends Entity2D {
         this.hasComponent('weaponSystem', (weaponSystemComponent) => {
             weaponSystemComponent.createWeaponGroup('1', [0, 1]);
             weaponSystemComponent.createWeaponGroup('2', [2, 3]);
+            weaponSystemComponent.switchGroup(1);
+            weaponSystemComponent.switchGroup(2);
         });
 
         this.addComponent('engineController', new ControllerComponent(engine.eventBus()), 1 / 60, 5);
@@ -180,7 +164,7 @@ export default class StarShip extends Entity2D {
                 heatProductionRate: 0.01,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
                 health: 100,
                 energyCostMW: 0,
-                maxEnergyMW: 10, // megawatts
+                maxEnergyMW: 100, // megawatts
                 rechargeRateMW: 0.3 // megawatts
             }
         };
@@ -215,9 +199,10 @@ export default class StarShip extends Entity2D {
                 heatProductionRate: 0.01,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
                 health: 100,
                 energyCostMW: 2,
-                accelerationModifier: 1,
-                inertiaModifier: 0.1,
-                dragCoefficientModifier: 500
+                massModifier: 0.4,
+                inertiaModifier: 0.08,
+                dragCoefficientModifier: 3,
+                accelerationModifier: 1
             },
             advanced: {
                 maxTemperature: 100, // in °C
@@ -244,6 +229,7 @@ export default class StarShip extends Entity2D {
         this.addComponent('environment', new EnvironmentComponent(), 1 / 30, 6);
         this.addComponent('cargo', new CargoBayComponent(this.cargoBayProfiles, 2, 'default'), 1 / 10, 2);
         this.addComponent('shields', new ShieldComponent(this.shieldProfiles, 4), 1 / 30, 7);
+        this.addComponent('highlight', new EntityHighlightRenderComponent(), 1 / 60, 7);
 
         this.isControlled = true;
     }
@@ -259,6 +245,7 @@ export default class StarShip extends Entity2D {
         this.removeComponent('damper');
         this.removeComponent('engine');
         this.removeComponent('environment');
+        this.removeComponent('highlight');
 
         // Remove and re-add common components
         this.removeComponent('cargo');

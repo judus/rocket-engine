@@ -14,7 +14,7 @@ export default class EntityController {
     }
 
     handleAttack(scopedMouse, mainCamera) {
-        if(this.currentEntity) {
+        if(this.currentEntity && scopedMouse.buttons.left === true) {
             this.currentEntity.hasComponent("attack", (component) =>{
                 component.attack(scopedMouse, mainCamera);
             }, () => {
@@ -24,7 +24,6 @@ export default class EntityController {
     }
 
     handleMoveEvent(axis, value, state, isStarting) {
-
         if(!this.currentEntity) return;
 
         this.currentEntity.hasComponent('engine', (engine) => {
@@ -63,9 +62,10 @@ export default class EntityController {
         this.currentEntity.setInput(this.movementDirections.x, this.movementDirections.y);
     }
 
-    switchEngineProfile() {
+    switchControllerProfile() {
         if(!this.currentEntity) return;
         this.currentEntity.hasComponent("engineController", (engineController) => {
+            console.log('Switching controller profile...');
             engineController.switchProfile();
         });
     }

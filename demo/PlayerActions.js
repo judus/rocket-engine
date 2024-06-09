@@ -69,6 +69,7 @@ export default class PlayerActions {
     }
 
     handleMouseSelection(selection, scopedMouse) {
+        console.log("Mouse selection: ", selection);
         if(!selection) {
             if(this.mouseSelectionLayer) {
                 this.mouseSelectionLayer.clearSelection();
@@ -76,7 +77,7 @@ export default class PlayerActions {
             return;
         }
 
-        if(this.mouseSelectionLayer) {
+        if(this.mouseSelectionLayer && scopedMouse.buttons.right === true) {
             this.mouseSelectionLayer.setSelectionArea(selection);
         }
 
@@ -140,7 +141,7 @@ export default class PlayerActions {
     }
 
     handleInertiaDamperSwitch(event) {
-        this.entityController.switchEngineProfile();
+        this.entityController.switchControllerProfile();
     }
 
     handleDropHeatSink(event) {

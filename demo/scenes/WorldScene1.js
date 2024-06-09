@@ -30,8 +30,8 @@ export default class WorldScene1 extends BaseScene {
         //this.addLayer('ParticleLayer', ParticleLayer);
         //this.addLayer('ProjectileLayer', ProjectileLayer);
 
-        //this.addLayer('mouseSelectionLayer', MouseSelectionLayer); // Add the new layer
-        //this.addLayer('contextMenuLayer', DynamicContextMenuLayer); // Add context menu layer
+        this.addLayer('mouseSelectionLayer', MouseSelectionLayer); // Add the new layer
+        this.addLayer('contextMenuLayer', DynamicContextMenuLayer); // Add context menu layer
     }
 
     load(callback) {

@@ -16,6 +16,8 @@ export default class EntitySelector {
      * @returns {Array} - The list of selected entities.
      */
     selectEntitiesInArea(area) {
+        console.log('Selecting entities in area: ', area);
+        console.log('Entities: ', this.entities.getEntitiesInArea(area));
         return this.entities.getEntitiesInArea(area);
     }
 
@@ -26,6 +28,8 @@ export default class EntitySelector {
      * @returns {Array} - The list of selected entities.
      */
     selectEntitiesAtPoint(x, y) {
+        console.log('Selecting entities at point: ', x, y);
+        console.log('Entities: ', this.entities.getEntitiesInArea(new Area(x, y, x, y)));
         return this.entities.getEntitiesInArea(new Area(x, y, x, y));
     }
 

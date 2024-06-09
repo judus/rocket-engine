@@ -76,9 +76,11 @@ export default class ControllerComponent extends BaseComponent {
     update(deltaTime) {
         const {ad, ws} = this.currentInput;
         if(this.profile === 'arcade') {
+
             this.setArcadeInput(ad, ws);
             this.handleAutoOrientation();
         } else if(this.profile === 'advanced') {
+
             this.setAdvancedInput(ad, ws);
             this.entity.rotation = this.entity.orientation;
         }
@@ -105,8 +107,19 @@ export default class ControllerComponent extends BaseComponent {
     }
 
     switchProfile() {
+        console.log('Switching controller profile...');
         this.profile = this.profile === 'arcade' ? 'advanced' : 'arcade';
-        this.entity.eventBus.emit('component.engineController.mode', this.profile);
+        this.updateDamperState();
+    }
+
+    updateDamperState() {
+        this.entity.hasComponent('damper', (component) => {
+            if(this.profile === 'arcade') {
+                component.activate1();
+            } else {
+                component.deactivate1();
+            }
+        });
     }
 
     switchOrientationMode() {
