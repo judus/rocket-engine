@@ -169,7 +169,7 @@ export default class StarShip extends Entity2D {
                 heatProductionRate: 0.01,  // The rate at which the cooling system itself adds heat, as a percentage of its max temperature
                 health: 100,
                 energyCostMW: 0,
-                maxEnergyMW: 100, // megawatts
+                maxEnergyMW: 20, // megawatts
                 rechargeRateMW: 0.3 // megawatts
             }
         };

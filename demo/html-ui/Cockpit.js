@@ -17,6 +17,11 @@ export default class Cockpit extends HtmlUI {
             this.updateComponentUI();
         });
 
+        this.eventBus.on('component.damper.stateChange', (isDamperActive) => {
+            const primaryColor = isDamperActive ? 'rgba(206,149,65,0.8)' : 'rgba(20, 148, 189, 0.8)';
+            document.documentElement.style.setProperty('--primary-color', primaryColor);
+        });
+
         this.addComponent('lifeSupport', new LifeSupportUI('Life Support', 100), 1 / 60);
         this.addComponent('power', new PowerMeterUI('Power', 100), 1 / 60);
         this.addComponent('systems', new SystemsWidgetUI('Systems'), 1 / 60);

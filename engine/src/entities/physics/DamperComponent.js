@@ -22,26 +22,28 @@ export default class DamperComponent extends ShipComponent {
 
     activate() {
         this.isActive = true;
-        if(this.userRequestedState) {
-            this.applyArcadeMode();
-        }
+        this.applyArcadeMode();
+        this.entity.eventBus.emit('component.damper.stateChange', this.isActive && this.userRequestedState);
+        //console.log(`${this.label} activated`);
     }
 
     deactivate() {
         this.isActive = false;
         this.applyAdvancedMode();
+        this.entity.eventBus.emit('component.damper.stateChange', this.isActive && this.userRequestedState);
+        //console.log(`${this.label} deactivated`);
     }
 
     enable() {
         this.userRequestedState = true;
-        if(this.isActive) {
-            this.applyArcadeMode();
-        }
+        this.applyArcadeMode();
+        this.entity.eventBus.emit('component.damper.stateChange', this.isActive && this.userRequestedState);
     }
 
     disable() {
         this.userRequestedState = false;
         this.applyAdvancedMode();
+        this.entity.eventBus.emit('component.damper.stateChange', this.isActive && this.userRequestedState);
     }
 
     applyArcadeMode() {
@@ -51,8 +53,6 @@ export default class DamperComponent extends ShipComponent {
         this.entity.mass = this.defaultMass * (profile.massModifier || 1);
         this.entity.inertiaModifier = this.defaultInertiaModifier * (profile.inertiaModifier || 1);
         this.entity.dragCoefficient = this.defaultDragCoefficient * (profile.dragCoefficientModifier || 1);
-        this.entity.accelerationModifier = profile.accelerationModifier || this.defaultAccelerationModifier;
-        this.entity.staticFrictionCoefficient = profile.staticFrictionCoefficient || this.defaultStaticFrictionCoefficient;
     }
 
     applyAdvancedMode() {

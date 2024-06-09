@@ -4,8 +4,8 @@ import Vector3D from "../../utils/maths/Vector3D.js";
 export default class ControllerComponent extends BaseComponent {
     constructor() {
         super();
-        this.profile = 'arcade';
-        this.autoOrient = true;
+        this.profile = 'advanced';
+        this.autoOrient = false;
         this.target = null;
         this.mousePosition = {x: 0, y: 0};
         this.currentInput = {ad: 0, ws: 0};
@@ -123,8 +123,6 @@ export default class ControllerComponent extends BaseComponent {
     }
 
     switchOrientationMode() {
-        if(this.profile === 'arcade') {
-            this.autoOrient = !this.autoOrient;
-        }
+        this.autoOrient = !this.autoOrient;
     }
 }
