@@ -35,10 +35,17 @@ export default class SystemsWidgetUI extends UIComponent {
         const flexContainer = document.createElement('div');
         flexContainer.className = 'flex';
 
-        const energy = document.createElement('div');
-        energy.className = 'component-energy';
-        energy.textContent = `${data.energyCost.toFixed(2)} MW`;
-        flexContainer.appendChild(energy);
+        if(data.name === 'Reactor') {
+            const specialMetric = document.createElement('div');
+            specialMetric.className = 'component-special';
+            specialMetric.textContent = `Special Metric: ${data.specialMetric}`;
+            flexContainer.appendChild(specialMetric);
+        } else {
+            const energy = document.createElement('div');
+            energy.className = 'component-energy';
+            energy.textContent = `${data.energyCost.toFixed(2)} MW`;
+            flexContainer.appendChild(energy);
+        }
 
         const temperature = document.createElement('div');
         temperature.className = 'component-temperature';
@@ -54,12 +61,20 @@ export default class SystemsWidgetUI extends UIComponent {
 
         this.listElement.appendChild(listItem);
 
-        this.componentElements[data.name] = {listItem, label, energy, temperature, button};
+        this.componentElements[data.name] = {listItem, label, flexContainer, temperature, button};
     }
 
     updateComponentElement(data) {
-        const {listItem, energy, temperature, button} = this.componentElements[data.name];
-        energy.textContent = `${data.energyCost.toFixed(2)} MW`;
+        const {listItem, flexContainer, temperature, button} = this.componentElements[data.name];
+
+        if(data.name === 'Reactor') {
+            const specialMetric = flexContainer.querySelector('.component-special');
+            specialMetric.textContent = ``;
+        } else {
+            const energy = flexContainer.querySelector('.component-energy');
+            energy.textContent = `${data.energyCost.toFixed(2)} MW`;
+        }
+
         temperature.textContent = `${data.temperature.toFixed(2)}°C`;
         button.textContent = data.health <= 0 ? 'Repair' : (data.userRequestedState ? 'Deactivate' : 'Activate');
 

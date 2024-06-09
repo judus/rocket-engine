@@ -7,7 +7,13 @@ export default class HtmlUI {
         this.eventBus = engine.eventBus();
         this.components = {};
         this.taskScheduler = new TaskScheduler();
-        this.container = null;
+        this.regions = {
+            topLeft: document.querySelector('.region-top-left'),
+            topCenter: document.querySelector('.region-top-center'),
+            bottomLeft: document.querySelector('.region-bottom-left'),
+            bottomCenter: document.querySelector('.region-bottom-center'),
+            right: document.querySelector('.region-right')
+        };
     }
 
     getComponent(name) {
@@ -22,7 +28,7 @@ export default class HtmlUI {
         }
     }
 
-    addComponent(componentType, component, updateFrequency = 1, renderFrequency = 1) {
+    addComponent(componentType, component, updateFrequency = 1, renderFrequency = 1, region = 'right') {
         if(this.components[componentType]) {
             console.warn(`Component ${componentType} already exists on entity ${this.id}`);
             return;
@@ -30,6 +36,13 @@ export default class HtmlUI {
 
         this.components[componentType] = component;
         component.onAdd(this);
+
+        if(this.regions[region]) {
+            this.regions[region].appendChild(component.element);
+        } else {
+            console.warn(`Region ${region} does not exist`);
+            return;
+        }
 
         if(component.update) {
             this.taskScheduler.addTask(component.update.bind(component), component.constructor.name, updateFrequency);
@@ -45,6 +58,9 @@ export default class HtmlUI {
             component.onRemove();
             this.taskScheduler.removeTask(component.update.bind(component));
             this.taskScheduler.removeTask(component.render.bind(component));
+            if(component.element.parentNode) {
+                component.element.parentNode.removeChild(component.element);
+            }
             delete this.components[componentType];
         }
     }

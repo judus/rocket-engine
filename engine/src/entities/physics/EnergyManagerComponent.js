@@ -72,7 +72,7 @@ export default class EnergyManagerComponent extends BaseComponent {
             name: component.label,
             isActive: component.isActive,
             userRequestedState: component.userRequestedState,
-            energyCost: component.energyCost / 1000000, // Convert back to MW
+            energyCost: component.energyCost / 1000000, // Convert J/s to MW
             temperature: component.currentTemperature,
             isOverheated: component.currentTemperature >= component.maxTemperature,
         }));
