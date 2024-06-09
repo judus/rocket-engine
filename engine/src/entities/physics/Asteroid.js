@@ -10,6 +10,7 @@ import HealthComponent from "../../components/HealthComponent.js";
 import EntityVerticesComponent from "../../../../demo/components/EntityVerticesComponent.js";
 import FaceVelocityBehavior from "../../behaviors/FaceVelocityBehavior.js";
 import SpriteComponent from "../../sprites/SpriteComponent.js";
+import EntityHighlightRenderComponent from "../../../../demo/components/EntityHighlightRenderComponent.js";
 
 export default class Asteroid extends Entity2D {
     constructor(engine, config, x = 0, y = 0, id = null, scale = 1) {
@@ -73,6 +74,7 @@ export default class Asteroid extends Entity2D {
         this.addComponent('sprite', new SpriteComponent(this.spriteSheet, 0), 1 / 60, 12); // this renders the sprite of the entity
 
         this.addComponent('health', new HealthComponent(100));
+        this.addComponent('highlight', new EntityHighlightRenderComponent(), 1 / 60, 12);
 
 
         // Initialize behavior

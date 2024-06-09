@@ -12,12 +12,9 @@ export default class HighlightBackground extends BaseLayer {
     render(scene, deltaTime, tickCount, totalTime) {
         this.clear();
         this.getEntities(scene).forEach(entity => {
-            if(entity.getComponent) {
-                const component = entity.getComponent('highlight');
-                if(component) {
-                    component.render(deltaTime, this.context, scene.camera);
-                }
-            }
+            entity.hasComponent('highlight', (component) => {
+                component.render(deltaTime, this.context, scene.camera);
+            });
         });
     }
 }

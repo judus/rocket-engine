@@ -28,6 +28,7 @@ import DefaultCollisionResponse from "../../components/collisions/DefaultCollisi
 import TransformComponent from "../../components/TransformComponent.js";
 import CollisionDataComponent from "./CollisionDataComponent.js";
 import EntityHighlightRenderComponent from "../../../../demo/components/EntityHighlightRenderComponent.js";
+import HealthComponent from "../../components/HealthComponent.js";
 
 
 export default class StarShip extends Entity2D {
@@ -123,6 +124,9 @@ export default class StarShip extends Entity2D {
         this.addComponent('collision', new CollisionComponent(new DefaultCollisionResponse(), false), 1 / 30, 1);
         this.spriteSheet = this.engine.spriteSheetManager().getSpriteSheet(this.spriteSheet.name);
         this.addComponent('sprite', new SpriteComponent(this.spriteSheet, 0), 1 / 60, 12);
+
+        this.addComponent('health', new HealthComponent(100));
+        this.addComponent('highlight', new EntityHighlightRenderComponent(), 1 / 60, 12);
 
         this.addComponent('cargo', new CargoBayComponent(this.cargoBayProfiles, 2, 'default'), 1 / 10, 2);
         this.addComponent('shields', new ShieldComponent(this.shieldProfiles, 4), 1 / 30, 7);
