@@ -40,6 +40,7 @@ export default class SpriteSheet {
 
         const offscreenCanvas = new OffscreenCanvas(newWidth, newHeight);
         const ctx = offscreenCanvas.getContext('2d');
+        ctx.imageSmoothingEnabled = false;
 
         // Translate and rotate the canvas
         ctx.translate(newWidth / 2, newHeight / 2);

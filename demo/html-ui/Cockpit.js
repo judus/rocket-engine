@@ -3,6 +3,8 @@ import InertiaDamperSwitch from "./InertiaDamperSwitch.js";
 import PowerMeterUI from "./PowerMeterUI.js";
 import SystemsWidgetUI from "./SystemsWidgetUI.js";
 import LifeSupportUI from "./LifeSupportUI.js";
+import TelemetryUI from "./TelemetryUI.js";
+import WeaponSystemUI from "./WeaponSystemUI.js"; // Import the new component
 
 export default class Cockpit extends HtmlUI {
     constructor(engine, currentEntity) {
@@ -22,9 +24,11 @@ export default class Cockpit extends HtmlUI {
             document.documentElement.style.setProperty('--primary-color', primaryColor);
         });
 
-        this.addComponent('lifeSupport', new LifeSupportUI('Life Support', 100), 1 / 60, 'right');
-        this.addComponent('power', new PowerMeterUI('Power', 100), 1 / 60, 'right');
-        this.addComponent('systems', new SystemsWidgetUI('Systems'), 1 / 60, 'right');
+        this.addComponent('lifeSupport', new LifeSupportUI('Life Support', 100), 1 / 60, 1, 'right');
+        this.addComponent('power', new PowerMeterUI('Power', 100), 1 / 60, 1, 'right');
+        this.addComponent('systems', new SystemsWidgetUI('Systems'), 1 / 60, 1, 'right');
+        this.addComponent('weaponSystem', new WeaponSystemUI('Weapon System'), 1 / 60, 1, 'right');
+        this.addComponent('telemetry', new TelemetryUI('Telemetry'), 1 / 60, 1, 'right'); // Add the TelemetryUI component
     }
 
     updateComponentUI() {
@@ -40,6 +44,15 @@ export default class Cockpit extends HtmlUI {
                 const globalTemperature = heatManager.globalTemperature;
                 this.eventBus.emit('globalTemperature.update', globalTemperature);
             }
+
+            this.currentEntity.hasComponent('mounts', (mounts) => {
+                this.currentEntity.hasComponent('weaponSystem', (weaponSystem) => {
+                    const mountLength = mounts.mounts.weapon.length;
+                    const weaponGroups = weaponSystem.getWeaponGroups();
+                    const activeGroup = weaponSystem.getActiveGroup();
+                    this.components.weaponSystem.updateGroups(weaponGroups, activeGroup, mountLength);
+                });
+            });
         }
     }
 }

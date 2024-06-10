@@ -8,6 +8,7 @@ export default class LayerManager {
     addLayer(name, LayerClass) {
         const canvas = new OffscreenCanvas(this.width, this.height);
         const context = canvas.getContext('2d');
+        context.imageSmoothingEnabled = false;
         const layer = new LayerClass(canvas, context);
         this.layers.set(name, layer);
     }

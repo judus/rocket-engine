@@ -4,35 +4,44 @@ export default class WeaponSystemComponent extends BaseComponent {
     constructor() {
         super();
         this.weaponGroups = {};
-        this.activeGroups = new Set();
+        this.activeGroup = null;
     }
 
     createWeaponGroup(groupKey, weaponIndices) {
         this.weaponGroups[groupKey] = weaponIndices;
+        this.entity.eventBus.emit('weaponGroups.update', this.weaponGroups);
     }
 
     switchGroup(groupKey) {
-        if(this.activeGroups.has(groupKey)) {
-            this.activeGroups.delete(groupKey);
+        if(this.weaponGroups[groupKey]) {
+            this.activeGroup = groupKey;
+            this.entity.eventBus.emit('activeGroup.update', groupKey);
         } else {
-            this.activeGroups.add(groupKey);
+            console.warn(`Weapon group ${groupKey} does not exist.`);
         }
     }
 
     fire() {
-        this.activeGroups.forEach(groupKey => {
-            const weaponIndices = this.weaponGroups[groupKey];
+        if(this.activeGroup) {
+            const weaponIndices = this.weaponGroups[this.activeGroup];
             if(weaponIndices) {
                 weaponIndices.forEach(index => {
                     const weaponMounts = this.entity.getComponent('mounts').getMounts('weapon');
                     const mount = weaponMounts[index];
                     if(mount && mount.currentEntity) {
-                        //console.log(`Firing weapon at mount ${index}`);
                         mount.currentEntity.fire();
                     }
                 });
             }
-        });
+        }
+    }
+
+    getWeaponGroups() {
+        return this.weaponGroups;
+    }
+
+    getActiveGroup() {
+        return this.activeGroup;
     }
 
     update(deltaTime) {

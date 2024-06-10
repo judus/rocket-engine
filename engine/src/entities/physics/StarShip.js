@@ -29,6 +29,7 @@ import TransformComponent from "../../components/TransformComponent.js";
 import CollisionDataComponent from "./CollisionDataComponent.js";
 import EntityHighlightRenderComponent from "../../../../demo/components/EntityHighlightRenderComponent.js";
 import HealthComponent from "../../components/HealthComponent.js";
+import TelemetryComponent from "./TelemetryComponent.js";
 
 
 export default class StarShip extends Entity2D {
@@ -38,12 +39,12 @@ export default class StarShip extends Entity2D {
             pos: new Vector3D(x, y, 0),
             velocity: new Vector3D(0, 0, 0),
             mass: 1000,
-            momentOfInertia: 50,
+            momentOfInertia: 1000,
             accelerationModifier: 1,
             inertiaModifier: 1,
-            dragCoefficient: 5000,
+            dragCoefficient: 0.5, // More reasonable drag coefficient
             dragCoefficientModifier: 1,
-            rotationalDragCoefficient: 1,
+            rotationalDragCoefficient: 0.9,
             staticFrictionCoefficient: 100,
         };
 
@@ -104,15 +105,27 @@ export default class StarShip extends Entity2D {
             },
             {
                 id: 'mount5',
-                type: 'utility',
-                typeCompatibility: ['scanner', 'jammer'],
-                position: {x: -0, y: 0}
+                type: 'weapon',
+                typeCompatibility: ['laser', 'kinetic'],
+                position: {x: 29, y: -68}
             },
             {
                 id: 'mount6',
-                type: 'utility',
-                typeCompatibility: ['scanner', 'jammer'],
-                position: {x: -0, y: 0}
+                type: 'weapon',
+                typeCompatibility: ['laser', 'kinetic'],
+                position: {x: 29, y: 66}
+            },
+            {
+                id: 'mount7',
+                type: 'weapon',
+                typeCompatibility: ['laser', 'kinetic'],
+                position: {x: 29, y: -78}
+            },
+            {
+                id: 'mount8',
+                type: 'weapon',
+                typeCompatibility: ['laser', 'kinetic'],
+                position: {x: 29, y: 76}
             }
         ]);
 
@@ -133,30 +146,24 @@ export default class StarShip extends Entity2D {
         this.addComponent('shields', new ShieldComponent(this.shieldProfiles, 4), 1 / 30, 7);
 
         this.hasComponent('mounts', (mounts) => {
-            const laser1 = this.entityFactory.createEntity('weapons', 'laser');
-            const laser2 = this.entityFactory.createEntity('weapons', 'laser');
-            const laser3 = this.entityFactory.createEntity('weapons', 'laser');
-            const laser4 = this.entityFactory.createEntity('weapons', 'laser');
-
-            laser1.ownerId = this.id;
-            laser2.ownerId = this.id;
-            laser3.ownerId = this.id;
-            laser4.ownerId = this.id;
-
-            mounts.attachEntity(laser1, 'mount1');
-            mounts.attachEntity(laser2, 'mount2');
-            mounts.attachEntity(laser3, 'mount3');
-            mounts.attachEntity(laser4, 'mount4');
+            config.mounts.forEach((mount, index) => {
+                const weapon = this.entityFactory.createEntity('weapons', mount.defaultWeapon);
+                weapon.ownerId = this.id;
+                mounts.attachEntity(weapon, `mount${index + 1}`);
+            });
         });
 
         this.hasComponent('weaponSystem', (weaponSystemComponent) => {
             weaponSystemComponent.createWeaponGroup('1', [0, 1]);
-            weaponSystemComponent.createWeaponGroup('2', [2, 3]);
+            weaponSystemComponent.createWeaponGroup('2', [0, 1, 2, 3]);
+            weaponSystemComponent.createWeaponGroup('3', [4, 5, 6, 7]);
+            weaponSystemComponent.createWeaponGroup('4', [0, 1, 2, 3, 4, 5, 6, 7]);
             weaponSystemComponent.switchGroup(1);
-            weaponSystemComponent.switchGroup(2);
         });
 
         this.addComponent('engineController', new ControllerComponent(engine.eventBus()), 1 / 60, 5);
+
+        this.rotation = -Math.PI / 2;
 
     }
 
@@ -206,7 +213,7 @@ export default class StarShip extends Entity2D {
                 energyCostMW: 2,
                 massModifier: 0.4,
                 inertiaModifier: 0.08,
-                dragCoefficientModifier: 3,
+                dragCoefficientModifier: 20000,
                 accelerationModifier: 1
             },
             advanced: {
@@ -234,6 +241,7 @@ export default class StarShip extends Entity2D {
         this.addComponent('environment', new EnvironmentComponent(), 1 / 30, 6);
         this.addComponent('cargo', new CargoBayComponent(this.cargoBayProfiles, 2, 'default'), 1 / 10, 2);
         this.addComponent('shields', new ShieldComponent(this.shieldProfiles, 4), 1 / 30, 7);
+        this.addComponent('telemetry', new TelemetryComponent(1), 1 / 10, 5); // Update every 1 second
 
         this.isControlled = true;
     }
@@ -249,6 +257,7 @@ export default class StarShip extends Entity2D {
         this.removeComponent('damper');
         this.removeComponent('engine');
         this.removeComponent('environment');
+        this.removeComponent('telemetry');
 
         // Remove and re-add common components
         this.removeComponent('cargo');

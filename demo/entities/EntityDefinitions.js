@@ -1,4 +1,5 @@
 import DetectionTypes from "../../engine/src/physics/collisions/DetectionTypes.js";
+import defaults from "../../engine/src/defaults.js";
 
 export default class EntityDefinitions {
     static definitions = {
@@ -311,6 +312,50 @@ export default class EntityDefinitions {
                         {x: -10, y: 10},
                     ],
                 },
+                mounts: [
+                    {
+                        id: 'mount1',
+                        type: 'weapon',
+                        position: {x: 20, y: -25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount2',
+                        type: 'weapon',
+                        position: {x: 20, y: 25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount3',
+                        type: 'weapon',
+                        position: {x: 16, y: -35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount4',
+                        type: 'weapon',
+                        position: {x: 16, y: 35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount5',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount6',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    }
+                ]
             },
             starship_type_2: {
                 entityClass: 'starship',
@@ -355,6 +400,64 @@ export default class EntityDefinitions {
                         {x: -12, y: 12},
                     ],
                 },
+                mounts: [
+                    {
+                        id: 'mount1',
+                        type: 'weapon',
+                        position: {x: 20, y: -25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount2',
+                        type: 'weapon',
+                        position: {x: 20, y: 25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount3',
+                        type: 'weapon',
+                        position: {x: 16, y: -35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount4',
+                        type: 'weapon',
+                        position: {x: 16, y: 35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount5',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount6',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount7',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount8',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    }
+                ]
             },
         },
         weapons: {
@@ -363,15 +466,33 @@ export default class EntityDefinitions {
                 type: 'laser',
                 damage: 10,
                 energyConsumption: 3000,
-                rateOfFire: 10, // ms
+                rateOfFire: 200, // ms
                 width: 12,
                 height: 60,
                 pos: {x: 0, y: 0, z: 0},
                 sprite: {
                     orientation: Math.PI / 2,
-                    name: 'gunship-fighter-2-weapontype-1',
-                    image: 'demo/assets/images/gunship-fighter-2-weapontype-1.png',
+                    name: 'gunship-fighter-3-weapontype-3',
+                    image: 'demo/assets/images/gunship-fighter-3-weapontype-3.png',
                     width: 46,
+                    height: 12,
+                    frames: 1
+                },
+            },
+            kinetic: {
+                entityClass: 'kinetic',
+                type: 'kinetic',
+                damage: 10,
+                energyConsumption: 3000,
+                rateOfFire: 200, // ms
+                width: 24,
+                height: 12,
+                pos: {x: 0, y: 0, z: 0},
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'gunship-fighter-3-weapontype-2',
+                    image: 'demo/assets/images/gunship-fighter-3-weapontype-2.png',
+                    width: 24,
                     height: 12,
                     frames: 1
                 },

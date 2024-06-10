@@ -308,6 +308,50 @@ canvas {
 				padding-bottom: 3px;
 			}
 		}
+	}
 
+	.component-telemetry {
+		font-size: 12px;
+	}
+
+	.weapon-system-row {
+		display: flex;
+		flex: 1 1;
+		gap: 5px;
+		margin: 10px 0;
+	}
+
+	.mount-cell {
+		flex: 1 1;
+		border: 2px solid var(--primary-color);
+		text-align: center;
+		aspect-ratio: 1 / 1;
+		padding: 3px;
+		background-color: var(--background-color);
+
+
+		.active-indicator {
+			background-color: var(--success-color);
+			aspect-ratio: 1 / 1;
+		}
+	}
+
+	.weapon-system-buttons {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 5px;
+	}
+
+	.weapon-system-buttons button {
+		padding: 0px;
+		background-color: var(--background-color);
+		color: var(--primary-color);
+		cursor: pointer;
+		font-weight: bold;
+	}
+
+	.weapon-system-buttons button.is-active {
+		background-color: var(--primary-color);
+		color: var(--black-color);
 	}
 }

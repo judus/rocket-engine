@@ -77,6 +77,10 @@ export default class Vector3D {
         return Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
     }
 
+    length() {
+        return this.magnitude();
+    }
+
     normalize() {
         const magnitude = this.magnitude();
         if(magnitude === 0) {

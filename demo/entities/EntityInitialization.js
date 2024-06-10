@@ -104,19 +104,19 @@ export default class EntityInitialization {
             randomFaction.addStation(station);
             this.entityManager.addEntity(station);
 
-            for(let j = 0; j < 1; j++) {
-                const shipX = this.seededRandom.between(stationX - 1000, stationX + 1000);
-                const shipY = this.seededRandom.between(stationY - 1000, stationY + 1000);
-                const shipKey = this.seededRandom.from(Object.keys(EntityDefinitions.definitions.starships));
-                const shipDefinition = EntityDefinitions.definitions.starships[shipKey];
-                const shipId = `ship-${i}-${j}`;
-
-                const ship = this.entityFactory.createEntity('starships', shipKey, shipX, shipY, shipId);
-                ship.isStatic = true;
-                randomFaction.addShip(ship);
-                station.addShip(ship);
-                this.entityManager.addEntity(ship);
-            }
+            // for(let j = 0; j < 1; j++) {
+            //     const shipX = this.seededRandom.between(stationX - 1000, stationX + 1000);
+            //     const shipY = this.seededRandom.between(stationY - 1000, stationY + 1000);
+            //     const shipKey = this.seededRandom.from(Object.keys(EntityDefinitions.definitions.starships));
+            //     const shipDefinition = EntityDefinitions.definitions.starships[shipKey];
+            //     const shipId = `ship-${i}-${j}`;
+            //
+            //     const ship = this.entityFactory.createEntity('starships', shipKey, shipX, shipY, shipId);
+            //     ship.isStatic = true;
+            //     randomFaction.addShip(ship);
+            //     station.addShip(ship);
+            //     this.entityManager.addEntity(ship);
+            // }
         }
         for(let i = 0; i < 500; i++) {
             const asteroidX = this.seededRandom.between(-50000, 50000);

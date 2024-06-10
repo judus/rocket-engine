@@ -15,7 +15,7 @@ export default class LaserWeapon extends Weapon {
 
         super(engine, config, ownerId, id);
 
-        this.spriteSheet = this.engine.spriteSheetManager().getSpriteSheet('gunship-fighter-2-weapontype-1');
+        this.spriteSheet = this.engine.spriteSheetManager().getSpriteSheet('gunship-fighter-3-weapontype-3');
         this.addComponent('sprite', new SpriteComponent(this.spriteSheet, 0), 1 / 60);
     }
 

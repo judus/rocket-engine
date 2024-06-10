@@ -4,11 +4,13 @@ import Projectile from "../../engine/src/entities/physics/Projectile.js";
 import Faction from "./Faction.js";
 import Station from "../../engine/src/entities/physics/Station.js";
 import Asteroid from "../../engine/src/entities/physics/Asteroid.js";
+import KineticWeapon from "../../engine/src/entities/physics/KineticWeapon.js";
 
 export default class EntityClasses {
     static classMap = {
         asteroid: Asteroid,
         faction: Faction,
+        kinetic: KineticWeapon,
         laser: LaserWeapon,
         starship: StarShip,
         station: Station,
