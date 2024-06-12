@@ -70,9 +70,9 @@ export default class CameraECS {
     handleMouseWheelScroll(event) {
         const zoomComponent = this.getComponent(ZoomComponent);
         if(zoomComponent) {
-            const zoomChange = event.deltaY < 0 ? 0.1 : -0.1;
+            const zoomChange = event.deltaY > 0 ? -0.1 : 0.1; // Invert zoom behavior
             const newZoom = zoomComponent.targetZoom + zoomChange;
-            zoomComponent.setZoom(Math.max(1, Math.min(newZoom, 5)));
+            zoomComponent.setZoom(Math.max(0.1, Math.min(newZoom, 5))); // Allow zooming out further
         }
     }
 

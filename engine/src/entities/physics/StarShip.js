@@ -30,6 +30,7 @@ import CollisionDataComponent from "./CollisionDataComponent.js";
 import EntityHighlightRenderComponent from "../../../../demo/components/EntityHighlightRenderComponent.js";
 import HealthComponent from "../../components/HealthComponent.js";
 import TelemetryComponent from "./TelemetryComponent.js";
+import SpriteQueueComponent from "./SpriteQueueComponent.js";
 
 
 export default class StarShip extends Entity2D {
@@ -78,66 +79,71 @@ export default class StarShip extends Entity2D {
 
 
 
-        const mountProfiles = new MountProfile([
-            {
-                id: 'mount1',
-                type: 'weapon',
-                typeCompatibility: ['laser', 'kinetic'],
-                position: {x: 20, y: -25}
-            },
-            {
-                id: 'mount2',
-                type: 'weapon',
-                typeCompatibility: ['laser', 'kinetic'],
-                position: {x: 20, y: 25}
-            },
-            {
-                id: 'mount3',
-                type: 'weapon',
-                typeCompatibility: ['laser', 'kinetic'],
-                position: {x: 16, y: -35}
-            },
-            {
-                id: 'mount4',
-                type: 'weapon',
-                typeCompatibility: ['laser', 'kinetic'],
-                position: {x: 16, y: 35}
-            },
-            {
-                id: 'mount5',
-                type: 'weapon',
-                typeCompatibility: ['laser', 'kinetic'],
-                position: {x: 29, y: -68}
-            },
-            {
-                id: 'mount6',
-                type: 'weapon',
-                typeCompatibility: ['laser', 'kinetic'],
-                position: {x: 29, y: 66}
-            },
-            {
-                id: 'mount7',
-                type: 'weapon',
-                typeCompatibility: ['laser', 'kinetic'],
-                position: {x: 29, y: -78}
-            },
-            {
-                id: 'mount8',
-                type: 'weapon',
-                typeCompatibility: ['laser', 'kinetic'],
-                position: {x: 29, y: 76}
-            }
-        ]);
+        // const mountProfiles = new MountProfile([
+        //     {
+        //         id: 'mount1',
+        //         type: 'weapon',
+        //         typeCompatibility: ['laser', 'kinetic'],
+        //         position: {x: 20, y: -25}
+        //     },
+        //     {
+        //         id: 'mount2',
+        //         type: 'weapon',
+        //         typeCompatibility: ['laser', 'kinetic'],
+        //         position: {x: 20, y: 25}
+        //     },
+        //     {
+        //         id: 'mount3',
+        //         type: 'weapon',
+        //         typeCompatibility: ['laser', 'kinetic'],
+        //         position: {x: 16, y: -35}
+        //     },
+        //     {
+        //         id: 'mount4',
+        //         type: 'weapon',
+        //         typeCompatibility: ['laser', 'kinetic'],
+        //         position: {x: 16, y: 35}
+        //     },
+        //     {
+        //         id: 'mount5',
+        //         type: 'weapon',
+        //         typeCompatibility: ['laser', 'kinetic'],
+        //         position: {x: 29, y: -68}
+        //     },
+        //     {
+        //         id: 'mount6',
+        //         type: 'weapon',
+        //         typeCompatibility: ['laser', 'kinetic'],
+        //         position: {x: 29, y: 66}
+        //     },
+        //     {
+        //         id: 'mount7',
+        //         type: 'weapon',
+        //         typeCompatibility: ['laser', 'kinetic'],
+        //         position: {x: 29, y: -78}
+        //     },
+        //     {
+        //         id: 'mount8',
+        //         type: 'weapon',
+        //         typeCompatibility: ['laser', 'kinetic'],
+        //         position: {x: 29, y: 76}
+        //     }
+        // ]);
+        this.mounts = config.mounts || [];
 
+        console.log(this.mounts);
         // Add common components
         this.addComponent('physics', new PhysicsComponent(), 1 / 60, 7);
-        this.addComponent('mounts', new EntityMountsComponent(mountProfiles), 1 / 60, 8);
+        this.addComponent('mounts', new EntityMountsComponent(new MountProfile(this.mounts)), 1 / 60, 8);
         this.addComponent('weaponSystem', new WeaponSystemComponent(), 1 / 60, 9);
         this.addComponent('attack', new ShipAttackComponent(), 1 / 60, 10);
         this.addComponent('collisionData', new CollisionDataComponent(), 1 / 30, 1);
         this.addComponent('collision', new CollisionComponent(new DefaultCollisionResponse(this.particleSystem), false), 1 / 30, 1);
-        this.spriteSheet = this.engine.spriteSheetManager().getSpriteSheet(this.spriteSheet.name);
-        this.addComponent('sprite', new SpriteComponent(this.spriteSheet, 0), 1 / 60, 12);
+
+        //this.spriteSheet = this.engine.spriteSheetManager().getSpriteSheet(this.spriteSheet.name);
+        //this.addComponent('sprite', new SpriteComponent(this.spriteSheet, 0), 1 / 60, 12);
+
+        this.addComponent('spriteQueue', new SpriteQueueComponent(this.sprites), 1/ 60, 12);
 
         this.addComponent('health', new HealthComponent(100));
         this.addComponent('highlight', new EntityHighlightRenderComponent(), 1 / 60, 12);
@@ -147,7 +153,7 @@ export default class StarShip extends Entity2D {
 
         this.hasComponent('mounts', (mounts) => {
             config.mounts.forEach((mount, index) => {
-                const weapon = this.entityFactory.createEntity('weapons', mount.defaultWeapon);
+                const weapon = this.entityFactory.createEntity('weapons', mount.defaultMount);
                 weapon.ownerId = this.id;
                 mounts.attachEntity(weapon, `mount${index + 1}`);
             });
@@ -165,6 +171,7 @@ export default class StarShip extends Entity2D {
 
         this.rotation = -Math.PI / 2;
 
+        console.log(this);
     }
 
     takeControl() {

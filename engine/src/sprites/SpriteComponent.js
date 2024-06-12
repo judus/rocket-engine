@@ -22,37 +22,36 @@ export default class SpriteComponent extends BaseComponent {
 
     renderSprite(deltaTime, context, entity, camera) {
         const spriteSheet = this.spriteSheet;
-        if(spriteSheet && spriteSheet.isLoaded) {
+        if(spriteSheet && spriteSheet.isLoaded()) {
+            const zoomLevel = camera.zoomLevel;
 
             const frame = this.getFrame();
-            const zoomLevel = camera.zoomLevel;
+            if(!frame) {
+                console.error(`Frame at index ${this.frameIndex} is undefined`);
+                return;
+            }
+
             const cameraPos = camera.pos;
 
-            // Calculate draw position
             const drawX = (entity.pos.x - cameraPos.x) * zoomLevel;
             const drawY = (entity.pos.y - cameraPos.y) * zoomLevel;
 
-            const width = spriteSheet.frameWidth * zoomLevel;
-            const height = spriteSheet.frameHeight * zoomLevel;
+            const width = spriteSheet.getScaledFrameWidth(zoomLevel);
+            const height = spriteSheet.getScaledFrameHeight(zoomLevel);
 
-            // Save context state
             context.save();
-
-            // Translate to the entity's position
             context.translate(drawX, drawY);
-
-            // Rotate the context
             context.rotate(entity.rotation);
 
-            // Draw the sprite centered on the entity's position
             context.drawImage(
                 spriteSheet.imageBitmap,
                 frame.x, frame.y, spriteSheet.frameWidth, spriteSheet.frameHeight,
                 -width / 2, -height / 2, width, height
             );
 
-            // Restore context state
             context.restore();
+        } else {
+            console.error('Sprite sheet is not loaded or sprite sheet not defined.');
         }
     }
 

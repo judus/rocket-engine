@@ -12,10 +12,11 @@ export default class SpriteLayer extends BaseLayer {
     }
 
     render(scene, deltaTime, tickCount, totalTime) {
-
-
         this.clear();
         this.getEntities(scene).forEach(entity => {
+            entity.hasComponent('spriteQueue', (component) => {
+                component.render(deltaTime, this.context, entity, scene.camera);
+            });
             entity.hasComponent('sprite', (component) => {
                 component.render(deltaTime, this.context, entity, scene.camera);
             });

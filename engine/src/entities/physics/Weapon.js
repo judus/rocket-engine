@@ -1,6 +1,7 @@
 import Entity2D from "./Entity2D.js";
 import Vector3D from "../../utils/maths/Vector3D.js";
 import EntityFactory from "../../../../demo/entities/EntityFactory.js";
+import QueueableSpriteComponent from "./QueueableSpriteComponent.js";
 
 export default class Weapon extends Entity2D {
     constructor(engine, config, ownerId, id = null) {
@@ -16,6 +17,8 @@ export default class Weapon extends Entity2D {
         this.ownerId = ownerId;
         this.factory = new EntityFactory(engine);
         this.reactor = null;
+
+        this.addComponent('queueableSprite', new QueueableSpriteComponent(config.sprite, 0, config.sprite.renderOrder), 1 / 60);
     }
 
     activate() {

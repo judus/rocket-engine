@@ -388,7 +388,98 @@ export default class EntityDefinitions {
                     image: 'demo/assets/images/gunship-fighter-3.png',
                     width: 119,
                     height: 280,
-                    frames: 1
+                    frames: 1,
+                },
+                sprites: [
+                    {
+                        orientation: Math.PI / 2,
+                        name: 'gunship-fighter-3',
+                        image: 'demo/assets/images/gunship-fighter-3.png',
+                        width: 119,
+                        height: 280,
+                        frames: 1,
+                    }
+                ],
+                polygon: {
+                    orientation: Math.PI / 2,
+                    fillColor: '#1E90FF',
+                    vertices: [
+                        {x: 0, y: -12},
+                        {x: 12, y: 12},
+                        {x: 0, y: 6},
+                        {x: -12, y: 12},
+                    ],
+                },
+                mounts: [
+                    {
+                        id: 'mount1',
+                        type: 'weapon',
+                        position: {x: 20, y: -25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount2',
+                        type: 'weapon',
+                        position: {x: 20, y: 25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount3',
+                        type: 'weapon',
+                        position: {x: 16, y: -35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount4',
+                        type: 'weapon',
+                        position: {x: 16, y: 35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount5',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount6',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount7',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount8',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    }
+                ]
+            },
+            ships_ship_1: {
+                entityClass: 'starship',
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'ships_ship_1',
+                    image: 'demo/assets/images/ships/ship_1.png',
+                    width: 379,
+                    height: 546,
+                    frames: 1,
+                    scale: 0.5
                 },
                 polygon: {
                     orientation: Math.PI / 2,
@@ -459,6 +550,1591 @@ export default class EntityDefinitions {
                     }
                 ]
             },
+            ships_ship_2: {
+                entityClass: 'starship',
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'ships_ship_2',
+                    image: 'demo/assets/images/ships/ship_2.png',
+                    width: 486,
+                    height: 619,
+                    frames: 1,
+                    scale: 0.5
+                },
+                polygon: {
+                    orientation: Math.PI / 2,
+                    fillColor: '#1E90FF',
+                    vertices: [
+                        {x: 0, y: -12},
+                        {x: 12, y: 12},
+                        {x: 0, y: 6},
+                        {x: -12, y: 12},
+                    ],
+                },
+                mounts: [
+                    {
+                        id: 'mount1',
+                        type: 'weapon',
+                        position: {x: 20, y: -25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount2',
+                        type: 'weapon',
+                        position: {x: 20, y: 25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount3',
+                        type: 'weapon',
+                        position: {x: 16, y: -35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount4',
+                        type: 'weapon',
+                        position: {x: 16, y: 35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount5',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount6',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount7',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount8',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    }
+                ]
+            },
+            ships_ship_3: {
+                entityClass: 'starship',
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'ships_ship_3',
+                    image: 'demo/assets/images/ships/ship_3.png',
+                    width: 496,
+                    height: 554,
+                    frames: 1,
+                    scale: 0.5
+                },
+                sprites: [
+                    {
+                        renderOrder: 10,
+                        orientation: Math.PI / 2,
+                        name: 'ships_ship_3',
+                        image: 'demo/assets/images/ships/ship_3.png',
+                        width: 496,
+                        height: 554,
+                        frames: 1,
+                        scale: 0.5
+                    }
+                ],
+                polygon: {
+                    orientation: Math.PI / 2,
+                    fillColor: '#1E90FF',
+                    vertices: [
+                        {x: 0, y: -12},
+                        {x: 12, y: 12},
+                        {x: 0, y: 6},
+                        {x: -12, y: 12},
+                    ],
+                },
+                mounts: [
+                    {
+                        id: 'mount1',
+                        type: 'weapon',
+                        position: {x: 20, y: -25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount2',
+                        type: 'weapon',
+                        position: {x: 20, y: 25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount3',
+                        type: 'weapon',
+                        position: {x: 16, y: -35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount4',
+                        type: 'weapon',
+                        position: {x: 16, y: 35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount5',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount6',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount7',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount8',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    }
+                ]
+            },
+            ships_ship_4: {
+                entityClass: 'starship',
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'ships_ship_4',
+                    image: 'demo/assets/images/ships/ship_4.png',
+                    width: 469,
+                    height: 677,
+                    frames: 1,
+                    scale: 0.5
+                },
+                polygon: {
+                    orientation: Math.PI / 2,
+                    fillColor: '#1E90FF',
+                    vertices: [
+                        {x: 0, y: -12},
+                        {x: 12, y: 12},
+                        {x: 0, y: 6},
+                        {x: -12, y: 12},
+                    ],
+                },
+                mounts: [
+                    {
+                        id: 'mount1',
+                        type: 'weapon',
+                        position: {x: 20, y: -25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount2',
+                        type: 'weapon',
+                        position: {x: 20, y: 25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount3',
+                        type: 'weapon',
+                        position: {x: 16, y: -35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount4',
+                        type: 'weapon',
+                        position: {x: 16, y: 35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount5',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount6',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount7',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount8',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    }
+                ]
+            },
+            ships_ship_5: {
+                entityClass: 'starship',
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'ships_ship_5',
+                    image: 'demo/assets/images/ships/ship_5.png',
+                    width: 595,
+                    height: 884,
+                    frames: 1,
+                    scale: 0.5
+                },
+                polygon: {
+                    orientation: Math.PI / 2,
+                    fillColor: '#1E90FF',
+                    vertices: [
+                        {x: 0, y: -12},
+                        {x: 12, y: 12},
+                        {x: 0, y: 6},
+                        {x: -12, y: 12},
+                    ],
+                },
+                mounts: [
+                    {
+                        id: 'mount1',
+                        type: 'weapon',
+                        position: {x: 20, y: -25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount2',
+                        type: 'weapon',
+                        position: {x: 20, y: 25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount3',
+                        type: 'weapon',
+                        position: {x: 16, y: -35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount4',
+                        type: 'weapon',
+                        position: {x: 16, y: 35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount5',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount6',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount7',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount8',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    }
+                ]
+            },
+            ships_ship_6: {
+                entityClass: 'starship',
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'ships_ship_6',
+                    image: 'demo/assets/images/ships/ship_6.png',
+                    width: 528,
+                    height: 808,
+                    frames: 1,
+                    scale: 0.5
+                },
+                polygon: {
+                    orientation: Math.PI / 2,
+                    fillColor: '#1E90FF',
+                    vertices: [
+                        {x: 0, y: -12},
+                        {x: 12, y: 12},
+                        {x: 0, y: 6},
+                        {x: -12, y: 12},
+                    ],
+                },
+                mounts: [
+                    {
+                        id: 'mount1',
+                        type: 'weapon',
+                        position: {x: 20, y: -25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount2',
+                        type: 'weapon',
+                        position: {x: 20, y: 25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount3',
+                        type: 'weapon',
+                        position: {x: 16, y: -35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount4',
+                        type: 'weapon',
+                        position: {x: 16, y: 35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount5',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount6',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount7',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount8',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    }
+                ]
+            },
+            ships_ship_7: {
+                entityClass: 'starship',
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'ships_ship_7',
+                    image: 'demo/assets/images/ships/ship_7.png',
+                    width: 477,
+                    height: 925,
+                    frames: 1,
+                    scale: 0.5
+                },
+                polygon: {
+                    orientation: Math.PI / 2,
+                    fillColor: '#1E90FF',
+                    vertices: [
+                        {x: 0, y: -12},
+                        {x: 12, y: 12},
+                        {x: 0, y: 6},
+                        {x: -12, y: 12},
+                    ],
+                },
+                mounts: [
+                    {
+                        id: 'mount1',
+                        type: 'weapon',
+                        position: {x: 20, y: -25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount2',
+                        type: 'weapon',
+                        position: {x: 20, y: 25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount3',
+                        type: 'weapon',
+                        position: {x: 16, y: -35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount4',
+                        type: 'weapon',
+                        position: {x: 16, y: 35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount5',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount6',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount7',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount8',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    }
+                ]
+            },
+            ships_ship_8: {
+                entityClass: 'starship',
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'ships_ship_8',
+                    image: 'demo/assets/images/ships/ship_8.png',
+                    width: 528,
+                    height: 751,
+                    frames: 1,
+                    scale: 0.5
+                },
+                polygon: {
+                    orientation: Math.PI / 2,
+                    fillColor: '#1E90FF',
+                    vertices: [
+                        {x: 0, y: -12},
+                        {x: 12, y: 12},
+                        {x: 0, y: 6},
+                        {x: -12, y: 12},
+                    ],
+                },
+                mounts: [
+                    {
+                        id: 'mount1',
+                        type: 'weapon',
+                        position: {x: 20, y: -25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount2',
+                        type: 'weapon',
+                        position: {x: 20, y: 25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount3',
+                        type: 'weapon',
+                        position: {x: 16, y: -35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount4',
+                        type: 'weapon',
+                        position: {x: 16, y: 35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount5',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount6',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount7',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount8',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    }
+                ]
+            },
+            ships_ship_9: {
+                entityClass: 'starship',
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'ships_ship_9',
+                    image: 'demo/assets/images/ships/ship_9.png',
+                    width: 876,
+                    height: 1109,
+                    frames: 1,
+                    scale: 0.5
+                },
+                polygon: {
+                    orientation: Math.PI / 2,
+                    fillColor: '#1E90FF',
+                    vertices: [
+                        {x: 0, y: -12},
+                        {x: 12, y: 12},
+                        {x: 0, y: 6},
+                        {x: -12, y: 12},
+                    ],
+                },
+                mounts: [
+                    {
+                        id: 'mount1',
+                        type: 'weapon',
+                        position: {x: 20, y: -25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount2',
+                        type: 'weapon',
+                        position: {x: 20, y: 25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount3',
+                        type: 'weapon',
+                        position: {x: 16, y: -35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount4',
+                        type: 'weapon',
+                        position: {x: 16, y: 35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount5',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount6',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount7',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount8',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    }
+                ]
+            },
+            ships_ship_10: {
+                entityClass: 'starship',
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'ships_ship_10',
+                    image: 'demo/assets/images/ships/ship_10.png',
+                    width: 988,
+                    height: 1133,
+                    frames: 1,
+                    scale: 0.5
+                },
+                polygon: {
+                    orientation: Math.PI / 2,
+                    fillColor: '#1E90FF',
+                    vertices: [
+                        {x: 0, y: -12},
+                        {x: 12, y: 12},
+                        {x: 0, y: 6},
+                        {x: -12, y: 12},
+                    ],
+                },
+                mounts: [
+                    {
+                        id: 'mount1',
+                        type: 'weapon',
+                        position: {x: 20, y: -25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount2',
+                        type: 'weapon',
+                        position: {x: 20, y: 25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount3',
+                        type: 'weapon',
+                        position: {x: 16, y: -35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount4',
+                        type: 'weapon',
+                        position: {x: 16, y: 35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount5',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount6',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount7',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount8',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    }
+                ]
+            },
+            ships_ship_11: {
+                entityClass: 'starship',
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'ships_ship_11',
+                    image: 'demo/assets/images/ships/ship_11.png',
+                    width: 377,
+                    height: 348,
+                    frames: 1,
+                    scale: 0.5
+                },
+                polygon: {
+                    orientation: Math.PI / 2,
+                    fillColor: '#1E90FF',
+                    vertices: [
+                        {x: 0, y: -12},
+                        {x: 12, y: 12},
+                        {x: 0, y: 6},
+                        {x: -12, y: 12},
+                    ],
+                },
+                mounts: [
+                    {
+                        id: 'mount1',
+                        type: 'weapon',
+                        position: {x: 20, y: -25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount2',
+                        type: 'weapon',
+                        position: {x: 20, y: 25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount3',
+                        type: 'weapon',
+                        position: {x: 16, y: -35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount4',
+                        type: 'weapon',
+                        position: {x: 16, y: 35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount5',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount6',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount7',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount8',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    }
+                ]
+            },
+            ships_ship_12: {
+                entityClass: 'starship',
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'ships_ship_12',
+                    image: 'demo/assets/images/ships/ship_12.png',
+                    width: 342,
+                    height: 471,
+                    frames: 1,
+                    scale: 0.5
+                },
+                polygon: {
+                    orientation: Math.PI / 2,
+                    fillColor: '#1E90FF',
+                    vertices: [
+                        {x: 0, y: -12},
+                        {x: 12, y: 12},
+                        {x: 0, y: 6},
+                        {x: -12, y: 12},
+                    ],
+                },
+                mounts: [
+                    {
+                        id: 'mount1',
+                        type: 'weapon',
+                        position: {x: 20, y: -25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount2',
+                        type: 'weapon',
+                        position: {x: 20, y: 25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount3',
+                        type: 'weapon',
+                        position: {x: 16, y: -35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount4',
+                        type: 'weapon',
+                        position: {x: 16, y: 35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount5',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount6',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount7',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount8',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    }
+                ]
+            },
+            ships_ship_13: {
+                entityClass: 'starship',
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'ships_ship_13',
+                    image: 'demo/assets/images/ships/ship_13.png',
+                    width: 368,
+                    height: 558,
+                    frames: 1,
+                    scale: 0.5
+                },
+                polygon: {
+                    orientation: Math.PI / 2,
+                    fillColor: '#1E90FF',
+                    vertices: [
+                        {x: 0, y: -12},
+                        {x: 12, y: 12},
+                        {x: 0, y: 6},
+                        {x: -12, y: 12},
+                    ],
+                },
+                mounts: [
+                    {
+                        id: 'mount1',
+                        type: 'weapon',
+                        position: {x: 20, y: -25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount2',
+                        type: 'weapon',
+                        position: {x: 20, y: 25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount3',
+                        type: 'weapon',
+                        position: {x: 16, y: -35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount4',
+                        type: 'weapon',
+                        position: {x: 16, y: 35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount5',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount6',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount7',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount8',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    }
+                ]
+            },
+            ships_ship_14: {
+                entityClass: 'starship',
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'ships_ship_14',
+                    image: 'demo/assets/images/ships/ship_14.png',
+                    width: 354,
+                    height: 387,
+                    frames: 1,
+                    scale: 0.5
+                },
+                polygon: {
+                    orientation: Math.PI / 2,
+                    fillColor: '#1E90FF',
+                    vertices: [
+                        {x: 0, y: -12},
+                        {x: 12, y: 12},
+                        {x: 0, y: 6},
+                        {x: -12, y: 12},
+                    ],
+                },
+                mounts: [
+                    {
+                        id: 'mount1',
+                        type: 'weapon',
+                        position: {x: 20, y: -25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount2',
+                        type: 'weapon',
+                        position: {x: 20, y: 25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount3',
+                        type: 'weapon',
+                        position: {x: 16, y: -35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount4',
+                        type: 'weapon',
+                        position: {x: 16, y: 35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount5',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount6',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount7',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount8',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    }
+                ]
+            },
+            ships_ship_15: {
+                entityClass: 'starship',
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'ships_ship_15',
+                    image: 'demo/assets/images/ships/ship_15.png',
+                    width: 765,
+                    height: 1174,
+                    frames: 1,
+                    scale: 0.5
+                },
+                polygon: {
+                    orientation: Math.PI / 2,
+                    fillColor: '#1E90FF',
+                    vertices: [
+                        {x: 0, y: -12},
+                        {x: 12, y: 12},
+                        {x: 0, y: 6},
+                        {x: -12, y: 12},
+                    ],
+                },
+                mounts: [
+                    {
+                        id: 'mount1',
+                        type: 'weapon',
+                        position: {x: 20, y: -25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount2',
+                        type: 'weapon',
+                        position: {x: 20, y: 25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount3',
+                        type: 'weapon',
+                        position: {x: 16, y: -35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount4',
+                        type: 'weapon',
+                        position: {x: 16, y: 35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount5',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount6',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount7',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount8',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    }
+                ]
+            },
+            ships_ship_16: {
+                entityClass: 'starship',
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'ships_ship_16',
+                    image: 'demo/assets/images/ships/ship_16.png',
+                    width: 399,
+                    height: 459,
+                    frames: 1,
+                    scale: 0.5
+                },
+                polygon: {
+                    orientation: Math.PI / 2,
+                    fillColor: '#1E90FF',
+                    vertices: [
+                        {x: 0, y: -12},
+                        {x: 12, y: 12},
+                        {x: 0, y: 6},
+                        {x: -12, y: 12},
+                    ],
+                },
+                mounts: [
+                    {
+                        id: 'mount1',
+                        type: 'weapon',
+                        position: {x: 20, y: -25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount2',
+                        type: 'weapon',
+                        position: {x: 20, y: 25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount3',
+                        type: 'weapon',
+                        position: {x: 16, y: -35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount4',
+                        type: 'weapon',
+                        position: {x: 16, y: 35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount5',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount6',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount7',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount8',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    }
+                ]
+            },
+            ships_ship_17: {
+                entityClass: 'starship',
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'ships_ship_17',
+                    image: 'demo/assets/images/ships/ship_17.png',
+                    width: 331,
+                    height: 383,
+                    frames: 1,
+                    scale: 0.5
+                },
+                polygon: {
+                    orientation: Math.PI / 2,
+                    fillColor: '#1E90FF',
+                    vertices: [
+                        {x: 0, y: -12},
+                        {x: 12, y: 12},
+                        {x: 0, y: 6},
+                        {x: -12, y: 12},
+                    ],
+                },
+                mounts: [
+                    {
+                        id: 'mount1',
+                        type: 'weapon',
+                        position: {x: 20, y: -25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount2',
+                        type: 'weapon',
+                        position: {x: 20, y: 25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount3',
+                        type: 'weapon',
+                        position: {x: 16, y: -35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount4',
+                        type: 'weapon',
+                        position: {x: 16, y: 35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount5',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount6',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount7',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount8',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    }
+                ]
+            },
+            ships_ship_18: {
+                entityClass: 'starship',
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'ships_ship_18',
+                    image: 'demo/assets/images/ships/ship_18.png',
+                    width: 379,
+                    height: 517,
+                    frames: 1,
+                    scale: 0.5
+                },
+                polygon: {
+                    orientation: Math.PI / 2,
+                    fillColor: '#1E90FF',
+                    vertices: [
+                        {x: 0, y: -12},
+                        {x: 12, y: 12},
+                        {x: 0, y: 6},
+                        {x: -12, y: 12},
+                    ],
+                },
+                mounts: [
+                    {
+                        id: 'mount1',
+                        type: 'weapon',
+                        position: {x: 20, y: -25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount2',
+                        type: 'weapon',
+                        position: {x: 20, y: 25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount3',
+                        type: 'weapon',
+                        position: {x: 16, y: -35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount4',
+                        type: 'weapon',
+                        position: {x: 16, y: 35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount5',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount6',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount7',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount8',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    }
+                ]
+            },
+            ships_ship_19: {
+                entityClass: 'starship',
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'ships_ship_19',
+                    image: 'demo/assets/images/ships/ship_19.png',
+                    width: 382,
+                    height: 450,
+                    frames: 1,
+                    scale: 0.5
+                },
+                polygon: {
+                    orientation: Math.PI / 2,
+                    fillColor: '#1E90FF',
+                    vertices: [
+                        {x: 0, y: -12},
+                        {x: 12, y: 12},
+                        {x: 0, y: 6},
+                        {x: -12, y: 12},
+                    ],
+                },
+                mounts: [
+                    {
+                        id: 'mount1',
+                        type: 'weapon',
+                        position: {x: 20, y: -25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount2',
+                        type: 'weapon',
+                        position: {x: 20, y: 25},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount3',
+                        type: 'weapon',
+                        position: {x: 16, y: -35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount4',
+                        type: 'weapon',
+                        position: {x: 16, y: 35},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'laser'
+                    },
+                    {
+                        id: 'mount5',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount6',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount7',
+                        type: 'weapon',
+                        position: {x: 16, y: -55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    },
+                    {
+                        id: 'mount8',
+                        type: 'weapon',
+                        position: {x: 16, y: 55},
+                        compatibility: ['laser', 'kinetic'],
+                        defaultWeapon: 'kinetic'
+                    }
+                ]
+            },
+            ships_ship_20: {
+                entityClass: 'starship',
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                sprite: {
+                    orientation: Math.PI / 2,
+                    renderOrder: 50,
+                    name: 'ships_ship_20',
+                    image: 'demo/assets/images/ships/ship_20-base.png',
+                    width: 377,
+                    height: 348,
+                    frames: 1,
+                    scale: 0.5
+                },
+                polygon: {
+                    orientation: Math.PI / 2,
+                    fillColor: '#1E90FF',
+                    vertices: [
+                        {x: 0, y: -12},
+                        {x: 12, y: 12},
+                        {x: 0, y: 6},
+                        {x: -12, y: 12},
+                    ],
+                },
+                mounts: [
+                    {
+                        id: 'mount1',
+                        type: 'weapon',
+                        position: {x: -38, y: -68},
+                        renderOrder: 80,
+                        compatibility: ['laser', 'kinetic'],
+                        defaultMount: 'twin_blaster_1_green'
+                    },
+                    {
+                        id: 'mount2',
+                        type: 'weapon',
+                        position: {x: -38, y: 68},
+                        renderOrder: 80,
+                        compatibility: ['laser', 'kinetic'],
+                        defaultMount: 'twin_blaster_1_green'
+                    },
+                    {
+                        id: 'mount3',
+                        type: 'weapon',
+                        position: {x: 10, y: -30},
+                        renderOrder: 40,
+                        compatibility: ['laser', 'kinetic'],
+                        defaultMount: 'gattling_left_1_green'
+                    },
+                    {
+                        id: 'mount4',
+                        type: 'weapon',
+                        position: {x: 10, y: 30},
+                        renderOrder: 40,
+                        compatibility: ['laser', 'kinetic'],
+                        defaultMount: 'gattling_right_1_green'
+                    },
+                    {
+                        id: 'mount5',
+                        type: 'weapon',
+                        position: {x: -38, y: -51},
+                        renderOrder: 40,
+                        compatibility: ['laser', 'kinetic'],
+                        defaultMount: 'missile_1_green'
+                    },
+                    {
+                        id: 'mount6',
+                        type: 'weapon',
+                        position: {x: -38, y: 51},
+                        renderOrder: 40,
+                        compatibility: ['laser', 'kinetic'],
+                        defaultMount: 'missile_1_green'
+                    },
+                    {
+                        id: 'mount7',
+                        type: 'weapon',
+                        position: {x: -34, y: -0},
+                        renderOrder: 80,
+                        compatibility: ['laser', 'kinetic'],
+                        defaultMount: 'twin_cannon_1_green'
+                    },
+                    {
+                        id: 'mount8',
+                        type: 'weapon',
+                        position: {x: -14, y: -20},
+                        renderOrder: 30,
+                        compatibility: ['laser', 'kinetic'],
+                        defaultMount: 'intake_left_1_green'
+                    },
+                    {
+                        id: 'mount9',
+                        type: 'weapon',
+                        position: {x: -14, y: 20},
+                        renderOrder: 30,
+                        compatibility: ['laser', 'kinetic'],
+                        defaultMount: 'intake_right_1_green'
+                    },
+                    {
+                        id: 'mount10',
+                        type: 'weapon',
+                        position: {x: -47, y: -28},
+                        renderOrder: 30,
+                        compatibility: ['laser', 'kinetic'],
+                        defaultMount: 'thruster_1_green'
+                    },
+                    {
+                        id: 'mount11',
+                        type: 'weapon',
+                        position: {x: -47, y: 28},
+                        renderOrder: 30,
+                        compatibility: ['laser', 'kinetic'],
+                        defaultMount: 'thruster_1_green'
+                    }
+
+                ]
+            },
         },
         weapons: {
             laser: {
@@ -495,6 +2171,196 @@ export default class EntityDefinitions {
                     width: 24,
                     height: 12,
                     frames: 1
+                },
+            },
+            laser_blaster_left_1_green: {
+                entityClass: 'laser',
+                type: 'laser',
+                damage: 10,
+                energyConsumption: 3000,
+                rateOfFire: 200, // ms
+                width: 131,
+                height: 30,
+                pos: {x: 0, y: 0, z: 0},
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'laser_blaster_left_1_green',
+                    image: 'demo/assets/images/weapons/laser-blaster-left-1-green.png',
+                    width: 131,
+                    height: 30,
+                    frames: 1,
+                    scale: 0.5
+                },
+            },
+            laser_blaster_right_1_green: {
+                entityClass: 'laser',
+                type: 'laser',
+                damage: 10,
+                energyConsumption: 3000,
+                rateOfFire: 200, // ms
+                width: 131,
+                height: 30,
+                pos: {x: 0, y: 0, z: 0},
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'laser_blaster_right_1_green',
+                    image: 'demo/assets/images/weapons/laser-blaster-right-1-green.png',
+                    width: 131,
+                    height: 30,
+                    frames: 1,
+                    scale: 0.5
+                },
+            },
+            gattling_left_1_green: {
+                entityClass: 'kinetic',
+                type: 'kinetic',
+                damage: 10,
+                energyConsumption: 3000,
+                rateOfFire: 200, // ms
+                width: 135,
+                height: 67,
+                pos: {x: 0, y: 0, z: 0},
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'gattling_left_1_green',
+                    image: 'demo/assets/images/weapons/gattling-left-1-green.png',
+                    width: 135,
+                    height: 67,
+                    frames: 1,
+                    scale: 0.5
+                },
+            },
+            gattling_right_1_green: {
+                entityClass: 'kinetic',
+                type: 'kinetic',
+                damage: 10,
+                energyConsumption: 3000,
+                rateOfFire: 200, // ms
+                width: 135,
+                height: 67,
+                pos: {x: 0, y: 0, z: 0},
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'gattling_right_1_green',
+                    image: 'demo/assets/images/weapons/gattling-right-1-green.png',
+                    width: 135,
+                    height: 67,
+                    frames: 1,
+                    scale: 0.5
+                },
+            },
+            twin_blaster_1_green: {
+                entityClass: 'laser',
+                type: 'laser',
+                damage: 10,
+                energyConsumption: 3000,
+                rateOfFire: 200, // ms
+                width: 131,
+                height: 63,
+                pos: {x: 0, y: 0, z: 0},
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'twin_blaster_1_green',
+                    image: 'demo/assets/images/weapons/twin-blaster-1-green.png',
+                    width: 131,
+                    height: 63,
+                    frames: 1,
+                    scale: 0.5
+                },
+            },
+            twin_cannon_1_green: {
+                entityClass: 'laser',
+                type: 'laser',
+                damage: 10,
+                energyConsumption: 3000,
+                rateOfFire: 200, // ms
+                width: 202,
+                height: 104,
+                pos: {x: 0, y: 0, z: 0},
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'twin_cannon_1_green',
+                    image: 'demo/assets/images/weapons/twin-cannon-1-green.png',
+                    width: 202,
+                    height: 104,
+                    frames: 1,
+                    scale: 0.5
+                },
+            },
+            intake_left_1_green: {
+                entityClass: 'laser',
+                type: 'laser',
+                damage: 10,
+                energyConsumption: 3000,
+                rateOfFire: 200, // ms
+                width: 202,
+                height: 104,
+                pos: {x: 0, y: 0, z: 0},
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'intake_left_1_green',
+                    image: 'demo/assets/images/engines/intake-left-1-green.png',
+                    width: 202,
+                    height: 104,
+                    frames: 1,
+                    scale: 0.5
+                },
+            },
+            intake_right_1_green: {
+                entityClass: 'laser',
+                type: 'laser',
+                damage: 10,
+                energyConsumption: 3000,
+                rateOfFire: 200, // ms
+                width: 212,
+                height: 100,
+                pos: {x: 0, y: 0, z: 0},
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'intake_right_1_green',
+                    image: 'demo/assets/images/engines/intake-right-1-green.png',
+                    width: 212,
+                    height: 100,
+                    frames: 1,
+                    scale: 0.5
+                },
+            },
+            thruster_1_green: {
+                entityClass: 'laser',
+                type: 'laser',
+                damage: 10,
+                energyConsumption: 3000,
+                rateOfFire: 200, // ms
+                width: 169,
+                height: 84,
+                pos: {x: 0, y: 0, z: 0},
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'thruster_1_green',
+                    image: 'demo/assets/images/engines/thruster-1-green.png',
+                    width: 169,
+                    height: 84,
+                    frames: 1,
+                    scale: 0.5
+                },
+            },
+            missile_1_green: {
+                entityClass: 'laser',
+                type: 'laser',
+                damage: 10,
+                energyConsumption: 3000,
+                rateOfFire: 200, // ms
+                width: 154,
+                height: 39,
+                pos: {x: 0, y: 0, z: 0},
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'missile_1_green',
+                    image: 'demo/assets/images/weapons/missile-1-green.png',
+                    width: 154,
+                    height: 39,
+                    frames: 1,
+                    scale: 0.5
                 },
             },
         },

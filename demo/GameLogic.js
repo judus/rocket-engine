@@ -2,7 +2,8 @@ import UnifiedCollisionSystem from "../engine/src/physics/collisions/UnifiedColl
 import SceneDirector from "../engine/src/scenes/SceneDirector.js";
 import CollisionSystem from "../engine/src/physics/collisions/CollisionSystem.js";
 
-export default class GameLogic {
+export default class
+GameLogic {
     constructor(engine) {
         this.engine = engine;
         this.dataStore = this.engine.dataStoreManager();

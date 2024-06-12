@@ -3,24 +3,27 @@ import PolygonTracer from "./PolygonTracer.js";
 
 export default class CollisionShapeGenerator {
     static async generateCollisionData(spriteSheet, detectionLevel) {
-        const {imageBitmap, frameWidth, frameHeight} = spriteSheet;
+        const {imageBitmap, frameWidth, frameHeight, initialScale} = spriteSheet;
+        const scaledFrameWidth = frameWidth * initialScale;
+        const scaledFrameHeight = frameHeight * initialScale;
+
         const collisionData = {
-            boundingBox: {width: frameWidth, height: frameHeight},
+            boundingBox: {width: scaledFrameWidth, height: scaledFrameHeight},
             subBoundingBoxes: [],
             polygon: [],
             framePolygons: []
         };
 
         // Always generate bounding box data
-        collisionData.boundingBox = {width: frameWidth, height: frameHeight};
+        collisionData.boundingBox = {width: scaledFrameWidth, height: scaledFrameHeight};
 
         if(detectionLevel >= DetectionTypes.SUB_BOXES) {
-            collisionData.subBoundingBoxes = await this.generateCollisionBoxes(imageBitmap, frameWidth, frameHeight);
+            collisionData.subBoundingBoxes = await this.generateCollisionBoxes(imageBitmap, scaledFrameWidth, scaledFrameHeight);
         }
 
         if(detectionLevel >= DetectionTypes.POLYGON) {
             const polygon = await PolygonTracer.getVerticesFromImageBitmap(imageBitmap, 2);
-            collisionData.polygon = this.centerFramePolygon(polygon, frameWidth, frameHeight);
+            collisionData.polygon = this.centerFramePolygon(polygon, scaledFrameWidth, scaledFrameHeight);
         }
 
         if(detectionLevel >= DetectionTypes.FRAME_POLYGON) {
@@ -28,16 +31,16 @@ export default class CollisionShapeGenerator {
                 const frame = spriteSheet.getFrame(i);
                 const frameImageBitmap = await createImageBitmap(imageBitmap, frame.x, frame.y, frameWidth, frameHeight);
                 const framePolygon = await PolygonTracer.getVerticesFromImageBitmap(frameImageBitmap, 2);
-                collisionData.framePolygons.push(this.centerFramePolygon(framePolygon, frameWidth, frameHeight));
+                collisionData.framePolygons.push(this.centerFramePolygon(framePolygon, scaledFrameWidth, scaledFrameHeight));
             }
         }
 
         return collisionData;
     }
 
-    static generateDefaultCollisionData(detectionLevel) {
-        const frameWidth = 50; // Default width
-        const frameHeight = 50; // Default height
+    static generateDefaultCollisionData(detectionLevel, initialScale = 1) {
+        const frameWidth = 50 * initialScale; // Default width
+        const frameHeight = 50 * initialScale; // Default height
         const collisionData = {
             boundingBox: {width: frameWidth, height: frameHeight},
             subBoundingBoxes: [],

@@ -20,10 +20,10 @@ export default class EntityMountsComponent extends BaseComponent {
             }
             this.mounts[mount.type].push({
                 id: mount.id || StringHelpers.generateUUID(),
-                typeCompatibility: mount.typeCompatibility,
+                compatibility: mount.compatibility,
                 position: new Vector3D(mount.position.x, mount.position.y, mount.position.z),
                 currentEntity: null,
-                metaData: mount.metaData || {}
+                renderOrder: mount.renderOrder || 50
             });
         });
     }
@@ -32,14 +32,27 @@ export default class EntityMountsComponent extends BaseComponent {
         let attached = false;
         Object.values(this.mounts).forEach(mountArray => {
             mountArray.forEach(mount => {
-                if(mount.id === mountId && mount.typeCompatibility.includes(entity.type)) {
-                    mount.currentEntity = entity;
+                if(mount.id === mountId && mount.compatibility.includes(entity.type)) {
+                    entity.pos = mount.position.clone();
+                    entity.renderOrder = mount.renderOrder || 100;
+
                     this.entity.addChild(entity);
-                    entity.pos = mount.position.clone(); // Set entity position to mount position
+                    mount.currentEntity = entity;
                     attached = true;
+
+                    entity.hasComponent('queueableSprite', (component) => {
+                        component.renderOrder = mount.renderOrder;
+                    });
+
                 }
             });
         });
+
+        // Update the render queue of the parent entity
+        this.entity.hasComponent('spriteQueue', (spriteQueue) => {
+            spriteQueue.updateRenderQueue();
+        });
+
         if(!attached) {
             console.log(this);
             throw new Error('Mount ID not found or entity type not compatible with this mount.');
@@ -54,6 +67,11 @@ export default class EntityMountsComponent extends BaseComponent {
                     this.entity.removeChild(mount.currentEntity);
                     mount.currentEntity = null;
                     detached = true;
+
+                    // Update the render queue of the parent entity
+                    this.entity.hasComponent('spriteQueue', (spriteQueue) => {
+                        spriteQueue.updateRenderQueue();
+                    });
                 }
             });
         });
@@ -84,8 +102,8 @@ export default class EntityMountsComponent extends BaseComponent {
                     mount.currentEntity.rotation = entityRotation;
 
                     // Logging for debugging
-                    //console.log(`Entity Position: ${entityPosition}, Rotation: ${entityRotation}`);
-                    //console.log(`Mount ID: ${mount.id}, New Position: ${mount.currentEntity.pos}, Rotation: ${mount.currentEntity.rotation}`);
+                    // console.log(`Entity Position: ${entityPosition}, Rotation: ${entityRotation}`);
+                    // console.log(`Mount ID: ${mount.id}, New Position: ${mount.currentEntity.pos}, Rotation: ${mount.currentEntity.rotation}`);
                 }
             });
         });

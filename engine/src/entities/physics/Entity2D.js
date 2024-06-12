@@ -39,11 +39,14 @@ export default class Entity2D {
         this.renderTaskScheduler = engine.create(EngineParts.TASK_SCHEDULER);
         this.eventBus = engine.service(EngineParts.EVENT_BUS);
         this.particleSystem = engine.particleSystem();
-
         this.entityFactory = new EntityFactory(engine);
         this.components = {};
         this.behavior = config.behavior || null;
+
+        // SpriteSheet
         this.spriteSheet = config.sprite || null;
+        this.spriteSheetScale = config.sprite?.scale || 1;
+        this.sprites = config.sprites || [config.sprite] || [];
 
         // Collision
         this.collisionDetection = config.collisionDetection || null; // number from 1-4
@@ -64,7 +67,7 @@ export default class Entity2D {
         this.spatialHash = null;
 
         // Add this entity to the hash grid
-12        // this.entityManager.addEntity(this);
+        // this.entityManager.addEntity(this);
         // console.log('State of store', this.engine.dataStoreManager().getStore('entities'));
     }
 
