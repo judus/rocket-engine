@@ -7,6 +7,7 @@ export default class SpriteComponent extends BaseComponent {
         this.spriteSheet = null;
         this.frameIndex = frameIndex;
         this.renderOrder = renderOrder;
+        this.compile = spriteDefinition.static || true;
     }
 
     onAdd(entity) {

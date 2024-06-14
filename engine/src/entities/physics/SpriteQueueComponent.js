@@ -23,7 +23,9 @@ export default class SpriteQueueComponent extends BaseComponent {
 
         // Add ship's sprites
         this.spriteDefinitions.forEach((spriteDefinition, index) => {
-            const spriteComponent = new SpriteComponent(spriteDefinition, 0, spriteDefinition.renderOrder);
+            const spriteComponent = new SpriteComponent(
+                spriteDefinition, 0, spriteDefinition.renderOrder, spriteDefinition.compile
+            );
             spriteComponent.onAdd(this.entity);
             this.renderQueue.push({spriteComponent, renderOrder: spriteDefinition.renderOrder});
 
@@ -68,8 +70,10 @@ export default class SpriteQueueComponent extends BaseComponent {
         console.log(`Compiling sprites to offscreen canvas of dimensions: width=${width}, height=${height}`);
 
         this.renderQueue.forEach(({spriteComponent}) => {
-            console.log(`Rendering sprite component with render order: ${spriteComponent.renderOrder}`);
-            this.renderToContext(spriteComponent, context, offsetX, offsetY);
+            if(spriteComponent.compile) {
+                console.log(`Rendering sprite component with render order: ${spriteComponent.renderOrder}`);
+                this.renderToContext(spriteComponent, context, offsetX, offsetY);
+            }
         });
 
         try {
@@ -88,24 +92,26 @@ export default class SpriteQueueComponent extends BaseComponent {
         let maxY = -Infinity;
 
         this.renderQueue.forEach(({spriteComponent}) => {
-            const spriteSheet = spriteComponent.spriteSheet;
-            if(spriteSheet && spriteSheet.isLoaded()) {
-                const frameWidth = spriteSheet.frameWidth;
-                const frameHeight = spriteSheet.frameHeight;
+            if(spriteComponent.compile) {
+                const spriteSheet = spriteComponent.spriteSheet;
+                if(spriteSheet && spriteSheet.isLoaded()) {
+                    const frameWidth = spriteSheet.frameWidth;
+                    const frameHeight = spriteSheet.frameHeight;
 
-                const entityPos = spriteComponent.entity.pos;
-                const halfWidth = frameWidth / 2;
-                const halfHeight = frameHeight / 2;
+                    const entityPos = spriteComponent.entity.pos;
+                    const halfWidth = frameWidth / 2;
+                    const halfHeight = frameHeight / 2;
 
-                const left = entityPos.x / this.scale - halfWidth;
-                const right = entityPos.x / this.scale + halfWidth;
-                const top = entityPos.y / this.scale - halfHeight;
-                const bottom = entityPos.y / this.scale + halfHeight;
+                    const left = entityPos.x / this.scale - halfWidth;
+                    const right = entityPos.x / this.scale + halfWidth;
+                    const top = entityPos.y / this.scale - halfHeight;
+                    const bottom = entityPos.y / this.scale + halfHeight;
 
-                if(left < minX) minX = left;
-                if(right > maxX) maxX = right;
-                if(top < minY) minY = top;
-                if(bottom > maxY) maxY = bottom;
+                    if(left < minX) minX = left;
+                    if(right > maxX) maxX = right;
+                    if(top < minY) minY = top;
+                    if(bottom > maxY) maxY = bottom;
+                }
             }
         });
 
@@ -162,11 +168,14 @@ export default class SpriteQueueComponent extends BaseComponent {
     render(deltaTime, context, entity, camera) {
         if(this.compiledSprite) {
             this.renderCompiledSprite(context, entity, camera);
-        } else {
-            this.renderQueue.forEach(({spriteComponent}) => {
-                spriteComponent.render(deltaTime, context, spriteComponent.entity, camera);
-            });
         }
+
+        // Render non-compiled sprites
+        this.renderQueue.forEach(({spriteComponent}) => {
+            if(!spriteComponent.compile) {
+                spriteComponent.render(deltaTime, context, spriteComponent.entity, camera);
+            }
+        });
     }
 
     renderCompiledSprite(context, entity, camera) {
