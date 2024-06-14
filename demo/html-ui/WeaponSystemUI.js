@@ -76,7 +76,7 @@ export default class WeaponSystemUI extends UIComponent {
 
         this.gridElement.appendChild(mountRow);
 
-        ['1', '2', '3', '4'].forEach(groupKey => {
+        ['1', '2', '3', '4', '5', '6'].forEach(groupKey => {
             this.buttonContainer.appendChild(this.createButton(groupKey));
         });
     }

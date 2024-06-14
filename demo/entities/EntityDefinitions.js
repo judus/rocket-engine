@@ -2031,7 +2031,8 @@ export default class EntityDefinitions {
                     width: 377,
                     height: 348,
                     frames: 1,
-                    scale: 0.5
+                    scale: 0.5,
+                    static: true
                 },
                 polygon: {
                     orientation: Math.PI / 2,
@@ -2136,7 +2137,7 @@ export default class EntityDefinitions {
                 ]
             },
         },
-        weapons: {
+        weapon: {
             laser: {
                 entityClass: 'laser',
                 type: 'laser',
@@ -2152,7 +2153,9 @@ export default class EntityDefinitions {
                     image: 'demo/assets/images/gunship-fighter-3-weapontype-3.png',
                     width: 46,
                     height: 12,
-                    frames: 1
+                    frames: 1,
+                    scale: 0.5,
+                    static: true
                 },
             },
             kinetic: {
@@ -2170,7 +2173,9 @@ export default class EntityDefinitions {
                     image: 'demo/assets/images/gunship-fighter-3-weapontype-2.png',
                     width: 24,
                     height: 12,
-                    frames: 1
+                    frames: 1,
+                    scale: 0.5,
+                    static: true
                 },
             },
             laser_blaster_left_1_green: {
@@ -2189,7 +2194,8 @@ export default class EntityDefinitions {
                     width: 131,
                     height: 30,
                     frames: 1,
-                    scale: 0.5
+                    scale: 0.5,
+                    static: true
                 },
             },
             laser_blaster_right_1_green: {
@@ -2208,12 +2214,15 @@ export default class EntityDefinitions {
                     width: 131,
                     height: 30,
                     frames: 1,
-                    scale: 0.5
+                    scale: 0.5,
+                    static: true
                 },
             },
             gattling_left_1_green: {
                 entityClass: 'kinetic',
                 type: 'kinetic',
+                ammunition: 'bullet_standard',
+                speedMultiplier: 2,
                 damage: 10,
                 energyConsumption: 3000,
                 rateOfFire: 200, // ms
@@ -2227,12 +2236,15 @@ export default class EntityDefinitions {
                     width: 135,
                     height: 67,
                     frames: 1,
-                    scale: 0.5
+                    scale: 0.5,
+                    static: true
                 },
             },
             gattling_right_1_green: {
                 entityClass: 'kinetic',
                 type: 'kinetic',
+                ammunition: 'bullet_standard',
+                speedMultiplier: 2,
                 damage: 10,
                 energyConsumption: 3000,
                 rateOfFire: 200, // ms
@@ -2252,12 +2264,18 @@ export default class EntityDefinitions {
             twin_blaster_1_green: {
                 entityClass: 'laser',
                 type: 'laser',
+                ammunition: 'laser_standard',
+                speedMultiplier: 2,
                 damage: 10,
                 energyConsumption: 3000,
-                rateOfFire: 200, // ms
+                rateOfFire: 500, // ms
                 width: 131,
                 height: 63,
-                pos: {x: 0, y: 0, z: 0},
+                muzzles: [
+                    {x: 66, y: -9},
+                    {x: 66, y: 9}
+                ],
+                mountPos: {x: 0, y: 0, z: 0},
                 sprite: {
                     orientation: Math.PI / 2,
                     name: 'twin_blaster_1_green',
@@ -2265,18 +2283,25 @@ export default class EntityDefinitions {
                     width: 131,
                     height: 63,
                     frames: 1,
-                    scale: 0.5
+                    scale: 0.5,
+                    static: true
                 },
             },
             twin_cannon_1_green: {
                 entityClass: 'laser',
                 type: 'laser',
+                ammunition: 'bullet_standard',
+                speedMultiplier: 2,
                 damage: 10,
                 energyConsumption: 3000,
                 rateOfFire: 200, // ms
                 width: 202,
                 height: 104,
                 pos: {x: 0, y: 0, z: 0},
+                muzzles: [
+                    {x: 60, y: -13},
+                    {x: 60, y: 14}
+                ],
                 sprite: {
                     orientation: Math.PI / 2,
                     name: 'twin_cannon_1_green',
@@ -2284,7 +2309,29 @@ export default class EntityDefinitions {
                     width: 202,
                     height: 104,
                     frames: 1,
-                    scale: 0.5
+                    scale: 0.5,
+                    static: true                },
+            },
+            missile_1_green: {
+                entityClass: 'laser',
+                type: 'laser',
+                ammunition: 'bullet_standard',
+                speedMultiplier: 2,
+                damage: 10,
+                energyConsumption: 3000,
+                rateOfFire: 200, // ms
+                width: 154,
+                height: 39,
+                pos: {x: 0, y: 0, z: 0},
+                sprite: {
+                    orientation: Math.PI / 2,
+                    name: 'missile_1_green',
+                    image: 'demo/assets/images/weapons/missile-1-green.png',
+                    width: 154,
+                    height: 39,
+                    frames: 1,
+                    scale: 0.5,
+                    static: true
                 },
             },
             intake_left_1_green: {
@@ -2303,7 +2350,8 @@ export default class EntityDefinitions {
                     width: 202,
                     height: 104,
                     frames: 1,
-                    scale: 0.5
+                    scale: 0.5,
+                    static: true
                 },
             },
             intake_right_1_green: {
@@ -2322,7 +2370,8 @@ export default class EntityDefinitions {
                     width: 212,
                     height: 100,
                     frames: 1,
-                    scale: 0.5
+                    scale: 0.5,
+                    static: true
                 },
             },
             thruster_1_green: {
@@ -2344,31 +2393,12 @@ export default class EntityDefinitions {
                     scale: 0.5
                 },
             },
-            missile_1_green: {
-                entityClass: 'laser',
-                type: 'laser',
-                damage: 10,
-                energyConsumption: 3000,
-                rateOfFire: 200, // ms
-                width: 154,
-                height: 39,
-                pos: {x: 0, y: 0, z: 0},
-                sprite: {
-                    orientation: Math.PI / 2,
-                    name: 'missile_1_green',
-                    image: 'demo/assets/images/weapons/missile-1-green.png',
-                    width: 154,
-                    height: 39,
-                    frames: 1,
-                    scale: 0.5
-                },
-            },
         },
         projectiles: {
             bullet_standard: {
                 entityClass: 'projectile',
                 damage: 5,
-                speed: 300,
+                speed: 100,
                 lifetime: 2,
                 width: 2,
                 height: 2,
@@ -2383,11 +2413,21 @@ export default class EntityDefinitions {
                         {x: -1, y: 5},
                     ],
                 },
+                sprite: {
+                    orientation: 0,
+                    name: 'lzrfxMixed071',
+                    image: 'demo/assets/images/projectiles/lzrfxMixed071.png',
+                    width: 29,
+                    height: 24,
+                    frames: 1,
+                    scale: 0.5,
+                    static: true
+                },
             },
             laser_standard: {
                 entityClass: 'projectile',
                 damage: 10,
-                speed: 500,
+                speed: 100,
                 lifetime: 2,
                 width: 2,
                 height: 10,
@@ -2401,6 +2441,15 @@ export default class EntityDefinitions {
                         {x: 1, y: 5},
                         {x: -1, y: 5},
                     ],
+                },
+                sprite: {
+                    orientation: 0,
+                    name: 'lzrfx018',
+                    image: 'demo/assets/images/projectiles/lzrfx018.png',
+                    width: 29,
+                    height: 24,
+                    frames: 1,
+                    scale: 1
                 },
             },
         },

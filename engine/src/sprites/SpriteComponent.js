@@ -1,10 +1,17 @@
 import BaseComponent from "../abstracts/BaseComponent.js";
 
 export default class SpriteComponent extends BaseComponent {
-    constructor(spriteSheet, frameIndex = 0) {
+    constructor(spriteDefinition, frameIndex = 0, renderOrder = 0) {
         super();
-        this.spriteSheet = spriteSheet;
+        this.spriteDefinition = spriteDefinition;
+        this.spriteSheet = null;
         this.frameIndex = frameIndex;
+        this.renderOrder = renderOrder;
+    }
+
+    onAdd(entity) {
+        super.onAdd(entity);
+        this.spriteSheet = entity.engine.spriteSheetManager().getSpriteSheet(this.spriteDefinition.name);
     }
 
     setFrame(index) {
@@ -16,11 +23,6 @@ export default class SpriteComponent extends BaseComponent {
     }
 
     render(deltaTime, context, entity, camera) {
-        this.renderSprite(deltaTime, context, entity, camera);
-        this.renderChildren(deltaTime, context, entity, camera);
-    }
-
-    renderSprite(deltaTime, context, entity, camera) {
         const spriteSheet = this.spriteSheet;
         if(spriteSheet && spriteSheet.isLoaded()) {
             const zoomLevel = camera.zoomLevel;
@@ -53,13 +55,5 @@ export default class SpriteComponent extends BaseComponent {
         } else {
             console.error('Sprite sheet is not loaded or sprite sheet not defined.');
         }
-    }
-
-    renderChildren(deltaTime, context, entity, camera) {
-        entity.children.forEach(child => {
-            child.hasComponent('sprite', (component) => {
-                component.render(deltaTime, context, child, camera);
-            });
-        });
     }
 }

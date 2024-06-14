@@ -89,7 +89,7 @@ export default class EntityInitialization {
     createEntities() {
 
         // Predefined entities
-        const player = this.entityFactory.createEntity('starships', 'ships_ship_20', 100, 100, 'player');
+        const player = this.entityFactory.createEntity('starships', 'ships_ship_20', 0, 0, 'player');
         this.entityManager.addEntity(player);
         //
         // const ship_1 = this.entityFactory.createEntity('starships', 'ships_ship_1', -500, 0, 'ship_1');

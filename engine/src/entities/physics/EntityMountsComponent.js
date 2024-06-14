@@ -40,10 +40,9 @@ export default class EntityMountsComponent extends BaseComponent {
                     mount.currentEntity = entity;
                     attached = true;
 
-                    entity.hasComponent('queueableSprite', (component) => {
+                    entity.hasComponent('sprite', (component) => {
                         component.renderOrder = mount.renderOrder;
                     });
-
                 }
             });
         });
@@ -67,14 +66,15 @@ export default class EntityMountsComponent extends BaseComponent {
                     this.entity.removeChild(mount.currentEntity);
                     mount.currentEntity = null;
                     detached = true;
-
-                    // Update the render queue of the parent entity
-                    this.entity.hasComponent('spriteQueue', (spriteQueue) => {
-                        spriteQueue.updateRenderQueue();
-                    });
                 }
             });
         });
+
+        // Update the render queue of the parent entity
+        this.entity.hasComponent('spriteQueue', (spriteQueue) => {
+            spriteQueue.updateRenderQueue();
+        });
+
         if(!detached) {
             throw new Error('Mount ID not found or no entity is currently attached.');
         }

@@ -7,6 +7,7 @@ import ParticleGrid from "../../engine/src/datastores/ParticleGrid.js";
 import ParticleSystem from "../../engine/src/particles/ParticleSystem.js";
 import EntityDefinitions from "./EntityDefinitions.js";
 import EntityClasses from "./EntityClasses.js";
+import Vector3D from "../../engine/src/utils/maths/Vector3D.js";
 
 export default class EntityFactory {
     constructor(engine) {
@@ -33,13 +34,13 @@ export default class EntityFactory {
         return entity;
     }
 
-    createProjectile(name, initialPosition, orientation, velocity, ownerId) {
+    createProjectile(name, initialPosition, orientation, speedMultiplier, ownerId) {
         const definition = EntityDefinitions.get('projectiles', name);
         const entityClass = EntityClasses.getClass(definition.entityClass);
         const config = {
             ...definition,
             pos: initialPosition,
-            velocity: velocity,
+            velocity: new Vector3D(Math.cos(orientation), Math.sin(orientation)).multiply(definition.speed * speedMultiplier),
         };
         const projectile = new entityClass(this.engine, config);
         projectile.ownerId = ownerId;

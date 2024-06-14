@@ -68,6 +68,12 @@ export default class MyInputBindings extends InputBindings {
             '4': {
                 down: () => this.eventBus.emit('key', 4),
             },
+            '5': {
+                down: () => this.eventBus.emit('key', 5),
+            },
+            '6': {
+                down: () => this.eventBus.emit('key', 6),
+            },
         };
     }
 }

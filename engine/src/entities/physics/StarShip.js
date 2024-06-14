@@ -131,7 +131,6 @@ export default class StarShip extends Entity2D {
         // ]);
         this.mounts = config.mounts || [];
 
-        console.log(this.mounts);
         // Add common components
         this.addComponent('physics', new PhysicsComponent(), 1 / 60, 7);
         this.addComponent('mounts', new EntityMountsComponent(new MountProfile(this.mounts)), 1 / 60, 8);
@@ -153,23 +152,27 @@ export default class StarShip extends Entity2D {
 
         this.hasComponent('mounts', (mounts) => {
             config.mounts.forEach((mount, index) => {
-                const weapon = this.entityFactory.createEntity('weapons', mount.defaultMount);
-                weapon.ownerId = this.id;
-                mounts.attachEntity(weapon, `mount${index + 1}`);
+                const entity = this.entityFactory.createEntity(mount.type, mount.defaultMount);
+                entity.ownerId = this.id;
+                mounts.attachEntity(entity, `mount${index + 1}`);
             });
         });
 
         this.hasComponent('weaponSystem', (weaponSystemComponent) => {
             weaponSystemComponent.createWeaponGroup('1', [0, 1]);
-            weaponSystemComponent.createWeaponGroup('2', [0, 1, 2, 3]);
-            weaponSystemComponent.createWeaponGroup('3', [4, 5, 6, 7]);
-            weaponSystemComponent.createWeaponGroup('4', [0, 1, 2, 3, 4, 5, 6, 7]);
+            weaponSystemComponent.createWeaponGroup('2', [2, 3]);
+            weaponSystemComponent.createWeaponGroup('3', [4, 5]);
+            weaponSystemComponent.createWeaponGroup('4', [6]);
+            weaponSystemComponent.createWeaponGroup('5', [0, 1, 2, 3, 6]);
+            weaponSystemComponent.createWeaponGroup('6', [6]);
             weaponSystemComponent.switchGroup(1);
         });
 
         this.addComponent('engineController', new ControllerComponent(engine.eventBus()), 1 / 60, 5);
 
         this.rotation = -Math.PI / 2;
+
+
 
         console.log(this);
     }

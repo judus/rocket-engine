@@ -337,8 +337,8 @@ canvas {
 	}
 
 	.weapon-system-buttons {
-		display: grid;
-		grid-template-columns: repeat(4, 1fr);
+		display: flex;
+		flex: 1 1;
 		gap: 5px;
 	}
 

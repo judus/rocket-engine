@@ -5,6 +5,7 @@ import CollisionDataComponent from "./CollisionDataComponent.js";
 import CollisionComponent from "../../components/collisions/CollisionComponent.js";
 import RenderComponent from "../../components/RenderComponent.js";
 import DetectionTypes from "../../physics/collisions/DetectionTypes.js";
+import SpriteComponent from "../../sprites/SpriteComponent.js";
 
 export default class Projectile extends Entity2D {
     constructor(engine, config, id = null) {
@@ -41,6 +42,7 @@ export default class Projectile extends Entity2D {
         this.addComponent('physics', new PhysicsComponent(), 1 / 60, 1);
         this.addComponent('collisionData', new CollisionDataComponent(), 1 / 60, 2);
         this.addComponent('collision', new CollisionComponent(null, false), 1 / 60, 3); // No default collision response
+        this.addComponent('sprite', new SpriteComponent(this.spriteSheet, 0), 1 / 60, 4);
         this.addComponent('render', new RenderComponent((deltaTime, context, camera) => {
             this.renderPolygon(context, camera);
         }), 1 / 60, 4);
