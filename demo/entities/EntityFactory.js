@@ -34,19 +34,24 @@ export default class EntityFactory {
         return entity;
     }
 
-    createProjectile(name, initialPosition, orientation, speedMultiplier, ownerId) {
+    createProjectile(name, initialPosition, orientation, speedMultiplier, ownerId, parentEntity, muzzle) {
         const definition = EntityDefinitions.get('projectiles', name);
         const entityClass = EntityClasses.getClass(definition.entityClass);
+        const projectileVelocity = new Vector3D(Math.cos(orientation), Math.sin(orientation)).multiply(definition.speed * speedMultiplier).add(parentEntity.velocity.clone());
         const config = {
             ...definition,
             pos: initialPosition,
-            velocity: new Vector3D(Math.cos(orientation), Math.sin(orientation)).multiply(definition.speed * speedMultiplier),
+            velocity: projectileVelocity,
+            orientation: orientation,
+            parentEntity: parentEntity,
+            muzzle: muzzle
         };
         const projectile = new entityClass(this.engine, config);
         projectile.ownerId = ownerId;
         projectile.rotation = orientation;
         return projectile;
     }
+
 
 }
 

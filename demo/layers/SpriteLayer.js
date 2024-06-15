@@ -20,6 +20,9 @@ export default class SpriteLayer extends BaseLayer {
             entity.hasComponent('sprite', (component) => {
                 component.render(deltaTime, this.context, entity, scene.camera);
             });
+            entity.hasComponent('muzzleEffect', (component) => {
+                component.render(deltaTime, this.context, entity, scene.camera);
+            });
         });
     }
 }

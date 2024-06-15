@@ -4,15 +4,15 @@ import PhysicsComponent from "./PhysicsComponent.js";
 import CollisionDataComponent from "./CollisionDataComponent.js";
 import CollisionComponent from "../../components/collisions/CollisionComponent.js";
 import RenderComponent from "../../components/RenderComponent.js";
-import DetectionTypes from "../../physics/collisions/DetectionTypes.js";
 import SpriteComponent from "../../sprites/SpriteComponent.js";
+import MuzzleEffectComponent from "./MuzzleEffectComponent.js";
 
 export default class Projectile extends Entity2D {
     constructor(engine, config, id = null) {
         config = {
             ...config,
-            pos: config.pos || new Vector3D(0, 0, 0),
-            velocity: config.velocity || new Vector3D(0, 0, 0),
+            pos: config.pos instanceof Vector3D ? config.pos.clone() : new Vector3D(0, 0, 0),
+            velocity: config.velocity instanceof Vector3D ? config.velocity.clone() : new Vector3D(0, 0, 0),
             mass: 1,
             momentOfInertia: 1,
             accelerationModifier: 1,
@@ -25,7 +25,7 @@ export default class Projectile extends Entity2D {
 
         super(engine, config, id);
         this.damage = config.damage;
-        this.velocity = config.velocity;
+        this.velocity = config.velocity.clone(); // Clone to ensure we have a copy
         this.lifetime = config.lifetime;
         this.age = 0;
 
@@ -44,10 +44,19 @@ export default class Projectile extends Entity2D {
         this.addComponent('collision', new CollisionComponent(null, false), 1 / 60, 3); // No default collision response
         this.addComponent('sprite', new SpriteComponent(this.spriteSheet, 0), 1 / 60, 4);
 
-        if (config.polygon) {
+        if(config.polygon) {
             this.addComponent('render', new RenderComponent((deltaTime, context, camera) => {
                 this.renderPolygon(context, camera);
             }), 1 / 60, 4);
+        }
+
+        // Add muzzle flash effect if defined
+        if(config.muzzleEffect) {
+            this.muzzleEffect = new MuzzleEffectComponent(config.muzzleEffect, config.muzzle || new Vector3D(0, 0, 0), this.rotation, config.parentEntity);
+            this.addComponent('muzzleEffect', this.muzzleEffect, 1 / 60);
+            this.muzzleEffect.play();
+        } else {
+            this.muzzleEffect = null;
         }
     }
 
@@ -70,6 +79,11 @@ export default class Projectile extends Entity2D {
         this.age += deltaTime;
         if(this.age > this.lifetime) {
             this.destroy();
+        }
+
+        // Update muzzle flash if it exists
+        if(this.muzzleEffect) {
+            this.muzzleEffect.update(deltaTime);
         }
     }
 

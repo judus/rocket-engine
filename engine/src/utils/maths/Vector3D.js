@@ -38,7 +38,10 @@ export default class Vector3D {
     }
 
     add(vector) {
-        return new Vector3D(this.x + vector.x, this.y + vector.y, this.z + vector.z);
+        this.x += vector.x;
+        this.y += vector.y;
+        this.z += vector.z;
+        return this; // Ensure it returns this for chaining
     }
 
     subtract(vector) {

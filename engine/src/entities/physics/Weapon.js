@@ -50,8 +50,8 @@ export default class Weapon extends Entity2D {
 
             // Fire projectiles from each muzzle or center position if no muzzles are defined
             if(this.muzzles.length > 0) {
-                this.muzzles.forEach(muzzle => {
-                    this.createAndFireProjectile(muzzle);
+                this.muzzles.forEach((muzzle, index) => {
+                    this.createAndFireProjectile(muzzle, index);
                 });
             } else {
                 this.createAndFireProjectile();
@@ -59,11 +59,11 @@ export default class Weapon extends Entity2D {
         }
     }
 
-    createAndFireProjectile(muzzle = null) {
+    createAndFireProjectile(muzzle = null, index = 0) {
         const initialPosition = this.getProjectileInitialPosition(muzzle);
         const orientation = this.getProjectileOrientation();
 
-        const projectile = this.factory.createProjectile(this.ammunition, initialPosition, orientation, this.speedMultiplier, this.ownerId);
+        const projectile = this.factory.createProjectile(this.ammunition, initialPosition, orientation, this.speedMultiplier, this.ownerId, this, muzzle);
         this.entityManager.addEntity(projectile);
     }
 

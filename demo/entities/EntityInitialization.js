@@ -38,6 +38,11 @@ export default class EntityInitialization {
                     console.log(`Loading sprite sheet: ${name}`);
                     promises.push(spriteSheetManager.loadSpriteSheet(name, image, width, height, orientation, scale));
                 }
+                if(definition.muzzleEffect) {
+                    const {name, image, width, height, orientation, scale} = definition.muzzleEffect;
+                    console.log(`Loading sprite sheet: ${name}`);
+                    promises.push(spriteSheetManager.loadSpriteSheet(name, image, width, height, orientation, scale));
+                }
                 if (definition.sprites?.length) {
                     definition.sprites.forEach(sprite => {
                         const {name, image, width, height, orientation, scale} = sprite;

@@ -23,7 +23,7 @@ export default class WorldScene1 extends BaseScene {
         //this.addLayer('backgroundLayer', BackgroundLayer);
         this.addLayer('ParallaxBackground', ParallaxBackground);
         this.addLayer('ParallaxBackground2', ParallaxBackground2);
-        this.addLayer('axisBackground', AxisBackground);
+        //this.addLayer('axisBackground', AxisBackground);
         this.addLayer('highlight', HighlightBackground);
         this.addLayer('spriteLayer', SpriteLayer); // Add the new sprite layer
         this.addLayer('foregroundLayer', PolygonLayer);

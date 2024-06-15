@@ -67,11 +67,9 @@ export default class SpriteQueueComponent extends BaseComponent {
         const offscreenCanvas = new OffscreenCanvas(width, height);
         const context = offscreenCanvas.getContext('2d');
 
-        console.log(`Compiling sprites to offscreen canvas of dimensions: width=${width}, height=${height}`);
 
         this.renderQueue.forEach(({spriteComponent}) => {
             if(spriteComponent.compile) {
-                console.log(`Rendering sprite component with render order: ${spriteComponent.renderOrder}`);
                 this.renderToContext(spriteComponent, context, offsetX, offsetY);
             }
         });
@@ -119,8 +117,6 @@ export default class SpriteQueueComponent extends BaseComponent {
         const width = Math.ceil(maxX - minX);
         const height = Math.ceil(maxY - minY);
 
-        console.log(`Calculated sprite dimensions: width=${width}, height=${height}`);
-
         // Calculate offset to center the sprites
         const offsetX = -minX;
         const offsetY = -minY;
@@ -149,8 +145,6 @@ export default class SpriteQueueComponent extends BaseComponent {
             context.save();
             context.translate(drawX, drawY);
             context.rotate(spriteComponent.entity.rotation);
-
-            console.log(`Drawing sprite at position: (${drawX}, ${drawY}), scale: 1`);
 
             context.drawImage(
                 spriteSheet.imageBitmap,

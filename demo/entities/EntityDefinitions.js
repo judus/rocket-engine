@@ -2142,7 +2142,7 @@ export default class EntityDefinitions {
                 entityClass: 'laser',
                 type: 'laser',
                 damage: 10,
-                energyConsumption: 3000,
+                energyConsumption: 300000,
                 rateOfFire: 200, // ms
                 width: 12,
                 height: 60,
@@ -2162,7 +2162,7 @@ export default class EntityDefinitions {
                 entityClass: 'kinetic',
                 type: 'kinetic',
                 damage: 10,
-                energyConsumption: 3000,
+                energyConsumption: 100000,
                 rateOfFire: 200, // ms
                 width: 24,
                 height: 12,
@@ -2182,7 +2182,7 @@ export default class EntityDefinitions {
                 entityClass: 'laser',
                 type: 'laser',
                 damage: 10,
-                energyConsumption: 3000,
+                energyConsumption: 100000,
                 rateOfFire: 200, // ms
                 width: 131,
                 height: 30,
@@ -2202,7 +2202,7 @@ export default class EntityDefinitions {
                 entityClass: 'laser',
                 type: 'laser',
                 damage: 10,
-                energyConsumption: 3000,
+                energyConsumption: 100000,
                 rateOfFire: 200, // ms
                 width: 131,
                 height: 30,
@@ -2222,13 +2222,16 @@ export default class EntityDefinitions {
                 entityClass: 'kinetic',
                 type: 'kinetic',
                 ammunition: 'bullet_standard',
-                speedMultiplier: 2,
-                damage: 10,
-                energyConsumption: 3000,
-                rateOfFire: 200, // ms
+                speedMultiplier: 1,
+                damage: 20,
+                energyConsumption: 50000,
+                rateOfFire: 100, // ms
                 width: 135,
                 height: 67,
                 pos: {x: 0, y: 0, z: 0},
+                muzzles: [
+                    {x: 45, y: 0},
+                ],
                 sprite: {
                     orientation: Math.PI / 2,
                     name: 'gattling_left_1_green',
@@ -2244,13 +2247,16 @@ export default class EntityDefinitions {
                 entityClass: 'kinetic',
                 type: 'kinetic',
                 ammunition: 'bullet_standard',
-                speedMultiplier: 2,
-                damage: 10,
-                energyConsumption: 3000,
-                rateOfFire: 200, // ms
+                speedMultiplier: 1,
+                damage: 20,
+                energyConsumption: 50000,
+                rateOfFire: 100, // ms
                 width: 135,
                 height: 67,
                 pos: {x: 0, y: 0, z: 0},
+                muzzles: [
+                    {x: 45, y: 0},
+                ],
                 sprite: {
                     orientation: Math.PI / 2,
                     name: 'gattling_right_1_green',
@@ -2267,13 +2273,13 @@ export default class EntityDefinitions {
                 ammunition: 'laser_standard',
                 speedMultiplier: 2,
                 damage: 10,
-                energyConsumption: 3000,
+                energyConsumption: 200000,
                 rateOfFire: 500, // ms
                 width: 131,
                 height: 63,
                 muzzles: [
-                    {x: 66, y: -9},
-                    {x: 66, y: 9}
+                    {x: 45, y: -9},
+                    {x: 45, y: 9}
                 ],
                 mountPos: {x: 0, y: 0, z: 0},
                 sprite: {
@@ -2288,13 +2294,13 @@ export default class EntityDefinitions {
                 },
             },
             twin_cannon_1_green: {
-                entityClass: 'laser',
-                type: 'laser',
-                ammunition: 'bullet_standard',
-                speedMultiplier: 2,
+                entityClass: 'kinetic',
+                type: 'kinetic',
+                ammunition: 'cannon_standard',
+                speedMultiplier: 4,
                 damage: 10,
-                energyConsumption: 3000,
-                rateOfFire: 200, // ms
+                energyConsumption: 2000000,
+                rateOfFire: 1000, // ms
                 width: 202,
                 height: 104,
                 pos: {x: 0, y: 0, z: 0},
@@ -2415,6 +2421,44 @@ export default class EntityDefinitions {
                     scale: 0.5,
                     static: true
                 },
+                muzzleEffect: {
+                    orientation: 0,
+                    name: 'muzzle-effect-1',
+                    image: 'demo/assets/images/weapons/muzzle-effect-1.png',
+                    width: 97.4,
+                    height: 89,
+                    frames: 5,
+                    scale: 0.3,
+                    static: true
+                },
+            },
+            cannon_standard: {
+                entityClass: 'projectile',
+                damage: 5,
+                speed: 100,
+                lifetime: 2,
+                width: 2,
+                height: 2,
+                pos: {x: 0, y: 0, z: 0},
+                collisionDetection: DetectionTypes.SUB_BOXES,
+                sprite: {
+                    orientation: 0,
+                    name: 'lzrfxMixed071',
+                    image: 'demo/assets/images/projectiles/lzrfxMixed071.png',
+                    width: 29,
+                    height: 24,
+                    frames: 1,
+                    scale: 0.5,
+                },
+                muzzleEffect: {
+                    orientation: 0,
+                    name: 'muzzle-effect-2',
+                    image: 'demo/assets/images/weapons/muzzle-effect-2.png',
+                    width: 128,
+                    height: 183,
+                    frames: 5,
+                    scale: 0.5,
+                },
             },
             laser_standard: {
                 entityClass: 'projectile',
@@ -2434,6 +2478,15 @@ export default class EntityDefinitions {
                     height: 24,
                     frames: 1,
                     scale: 1
+                },
+                muzzleEffect: {
+                    orientation: 0,
+                    name: 'muzzle-effect-3-blue',
+                    image: 'demo/assets/images/weapons/muzzle-effect-3-blue.png',
+                    width: 129,
+                    height: 180,
+                    frames: 4,
+                    scale: 0.125,
                 },
             },
         },
