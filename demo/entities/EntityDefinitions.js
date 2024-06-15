@@ -2404,15 +2404,7 @@ export default class EntityDefinitions {
                 height: 2,
                 pos: {x: 0, y: 0, z: 0},
                 collisionDetection: DetectionTypes.SUB_BOXES,
-                polygon: {
-                    orientation: Math.PI / 2,
-                    fillColor: 'yellow',
-                    vertices: [
-                        {x: 0, y: -5},
-                        {x: 1, y: 5},
-                        {x: -1, y: 5},
-                    ],
-                },
+
                 sprite: {
                     orientation: 0,
                     name: 'lzrfxMixed071',
@@ -2433,15 +2425,7 @@ export default class EntityDefinitions {
                 height: 10,
                 pos: {x: 0, y: 0, z: 0},
                 collisionDetection: DetectionTypes.SUB_BOXES,
-                polygon: {
-                    orientation: Math.PI / 2,
-                    fillColor: 'red',
-                    vertices: [
-                        {x: 0, y: -5},
-                        {x: 1, y: 5},
-                        {x: -1, y: 5},
-                    ],
-                },
+
                 sprite: {
                     orientation: 0,
                     name: 'lzrfx018',
