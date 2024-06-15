@@ -24,7 +24,7 @@ export default class SpriteQueueComponent extends BaseComponent {
         // Add ship's sprites
         this.spriteDefinitions.forEach((spriteDefinition, index) => {
             const spriteComponent = new SpriteComponent(
-                spriteDefinition, 0, spriteDefinition.renderOrder, spriteDefinition.compile
+                spriteDefinition, 0, spriteDefinition.renderOrder
             );
             spriteComponent.onAdd(this.entity);
             this.renderQueue.push({spriteComponent, renderOrder: spriteDefinition.renderOrder});
@@ -190,8 +190,6 @@ export default class SpriteQueueComponent extends BaseComponent {
         context.translate(drawX, drawY);
         context.rotate(entity.rotation);
         context.scale(zoomLevel * this.scale, zoomLevel * this.scale);
-
-        console.log(`Rendering compiled sprite at: (${drawX}, ${drawY}), scale: ${zoomLevel * this.scale}`);
 
         context.drawImage(
             this.compiledSprite,
