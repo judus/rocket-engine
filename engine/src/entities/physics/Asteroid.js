@@ -71,7 +71,6 @@ export default class Asteroid extends Entity2D {
 
         //this.addComponent('render', new EntityVerticesComponent(false));
 
-        this.spriteSheet = this.engine.spriteSheetManager().getSpriteSheet(this.spriteSheet.name);
         this.addComponent('sprite', new SpriteComponent(this.spriteSheet, 0), 1 / 60, 12); // this renders the sprite of the entity
 
         this.addComponent('health', new HealthComponent(10000));

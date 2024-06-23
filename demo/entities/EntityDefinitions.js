@@ -58,7 +58,8 @@ export default class EntityDefinitions {
                     image: 'demo/assets/images/stations/001/st_01.png',
                     width: 524,
                     height: 512,
-                    frames: 1
+                    frames: 1,
+                    scale: 2,
                 },
                 polygon: {
                     orientation: 0,
@@ -83,7 +84,8 @@ export default class EntityDefinitions {
                     image: 'demo/assets/images/stations/001/st_02.png',
                     width: 980,
                     height: 980,
-                    frames: 1
+                    frames: 1,
+                    scale: 2,
                 },
                 polygon: {
                     orientation: 0,
@@ -110,7 +112,8 @@ export default class EntityDefinitions {
                     image: 'demo/assets/images/stations/001/st_03.png',
                     width: 524,
                     height: 984,
-                    frames: 1
+                    frames: 1,
+                    scale: 2,
                 },
                 polygon: {
                     orientation: 0,
@@ -133,7 +136,8 @@ export default class EntityDefinitions {
                     image: 'demo/assets/images/stations/001/st_04.png',
                     width: 481,
                     height: 480,
-                    frames: 1
+                    frames: 1,
+                    scale: 2,
                 },
                 polygon: {
                     orientation: 0,
@@ -156,7 +160,8 @@ export default class EntityDefinitions {
                     image: 'demo/assets/images/stations/001/st_05.png',
                     width: 482,
                     height: 480,
-                    frames: 1
+                    frames: 1,
+                    scale: 2,
                 },
                 polygon: {
                     orientation: 0,
@@ -179,7 +184,8 @@ export default class EntityDefinitions {
                     image: 'demo/assets/images/stations/002/st_01.png',
                     width: 482,
                     height: 770,
-                    frames: 1
+                    frames: 1,
+                    scale: 2,
                 },
                 polygon: {
                     orientation: 0,
@@ -202,7 +208,8 @@ export default class EntityDefinitions {
                     image: 'demo/assets/images/stations/002/st_02.png',
                     width: 548,
                     height: 548,
-                    frames: 1
+                    frames: 1,
+                    scale: 2,
                 },
                 polygon: {
                     orientation: 0,
@@ -225,7 +232,8 @@ export default class EntityDefinitions {
                     image: 'demo/assets/images/stations/002/st_03.png',
                     width: 447,
                     height: 324,
-                    frames: 1
+                    frames: 1,
+                    scale: 2,
                 },
                 polygon: {
                     orientation: 0,
@@ -248,7 +256,8 @@ export default class EntityDefinitions {
                     image: 'demo/assets/images/stations/002/st_04.png',
                     width: 780,
                     height: 984,
-                    frames: 1
+                    frames: 1,
+                    scale: 2,
                 },
                 polygon: {
                     orientation: 0,
@@ -271,7 +280,8 @@ export default class EntityDefinitions {
                     image: 'demo/assets/images/stations/002/st_05.png',
                     width: 386,
                     height: 580,
-                    frames: 1
+                    frames: 1,
+                    scale: 2,
                 },
                 polygon: {
                     orientation: 0,
@@ -2410,7 +2420,6 @@ export default class EntityDefinitions {
                 height: 2,
                 pos: {x: 0, y: 0, z: 0},
                 collisionDetection: DetectionTypes.SUB_BOXES,
-
                 sprite: {
                     orientation: 0,
                     name: 'lzrfxMixed071',
@@ -2521,7 +2530,8 @@ export default class EntityDefinitions {
                     image: `demo/assets/images/asteroids/${resolution}/AsteroidRender${String(i).padStart(2, '0')}_${resolution}.png`,
                     width: size,
                     height: size,
-                    frames: 1
+                    frames: 1,
+                    scale: 2
                 },
                 polygon: {
                     orientation: 0,

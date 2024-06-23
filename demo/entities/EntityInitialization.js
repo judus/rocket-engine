@@ -159,22 +159,22 @@ export default class EntityInitialization {
 
         const factionStore = this.dataStoreManager.getStore('global');
         for(let i = 0; i < 100; i++) {
-            // const stationX = this.seededRandom.between(-500000, 500000);
-            // const stationY = this.seededRandom.between(-500000, 500000);
-            // const stationKey = this.seededRandom.from(Object.keys(EntityDefinitions.definitions.stations));
-            // const stationDefinition = EntityDefinitions.definitions.stations[stationKey];
-            // const randomFactionKey = this.seededRandom.from(Object.keys(EntityDefinitions.definitions.factions));
-            // const randomFactionDefinition = EntityDefinitions.definitions.factions[randomFactionKey];
-            // const randomFaction = factionStore.get(randomFactionKey);
-            //
-            // if(!randomFaction) {
-            //     throw new Error(`Faction ${randomFactionDefinition.id} not found`);
-            // }
-            //
-            // const stationId = `station-${i}`;
-            // const station = this.entityFactory.createEntity('stations', stationKey, stationX, stationY, stationId);
-            // randomFaction.addStation(station);
-            // this.entityManager.addEntity(station);
+            const stationX = this.seededRandom.between(-100000, 100000);
+            const stationY = this.seededRandom.between(-100000, 100000);
+            const stationKey = this.seededRandom.from(Object.keys(EntityDefinitions.definitions.stations));
+            const stationDefinition = EntityDefinitions.definitions.stations[stationKey];
+            const randomFactionKey = this.seededRandom.from(Object.keys(EntityDefinitions.definitions.factions));
+            const randomFactionDefinition = EntityDefinitions.definitions.factions[randomFactionKey];
+            const randomFaction = factionStore.get(randomFactionKey);
+
+            if(!randomFaction) {
+                throw new Error(`Faction ${randomFactionDefinition.id} not found`);
+            }
+
+            const stationId = `station-${i}`;
+            const station = this.entityFactory.createEntity('stations', stationKey, stationX, stationY, stationId);
+            randomFaction.addStation(station);
+            this.entityManager.addEntity(station);
 
             // for(let j = 0; j < 1; j++) {
             //     const shipX = this.seededRandom.between(stationX - 1000, stationX + 1000);
@@ -191,17 +191,17 @@ export default class EntityInitialization {
             // }
         }
         for(let i = 0; i < 500; i++) {
-            // const asteroidX = this.seededRandom.between(-100000, 100000);
-            //
-            // const asteroidY = this.seededRandom.between(-100000, 100000);
-            // const asteroidKeys = Object.keys(EntityDefinitions.definitions.asteroids);
-            // const asteroidKey = this.seededRandom.from(asteroidKeys);
-            // const asteroidDefinition = EntityDefinitions.definitions.asteroids[asteroidKey];
-            // const asteroidId = `asteroid-${i}`;
-            // const scale = this.seededRandom.from([0.3, 0.4, 10, 15], [1000, 1000, 50, 10]);
-            //
-            // const asteroid = this.entityFactory.createEntity('asteroids', asteroidKey, asteroidX, asteroidY, asteroidId, scale);
-            // this.entityManager.addEntity(asteroid);
+            const asteroidX = this.seededRandom.between(-100000, 100000);
+
+            const asteroidY = this.seededRandom.between(-100000, 100000);
+            const asteroidKeys = Object.keys(EntityDefinitions.definitions.asteroids);
+            const asteroidKey = this.seededRandom.from(asteroidKeys);
+            const asteroidDefinition = EntityDefinitions.definitions.asteroids[asteroidKey];
+            const asteroidId = `asteroid-${i}`;
+            const scale = this.seededRandom.from([0.3, 0.4, 10, 15], [1000, 1000, 50, 10]);
+
+            const asteroid = this.entityFactory.createEntity('asteroids', asteroidKey, asteroidX, asteroidY, asteroidId, scale);
+            this.entityManager.addEntity(asteroid);
         }
 
         // const station = this.entityFactory.createEntity('stations', 'station_type_1', -600, -600, 'station-home');
