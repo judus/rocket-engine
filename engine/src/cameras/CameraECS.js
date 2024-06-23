@@ -32,6 +32,7 @@ export default class CameraECS {
     getComponent(componentClass) {
         return this.components[componentClass.name];
     }
+
     isMoving() {
         return this.vel.x !== 0 || this.vel.y !== 0 || this.moves;
     }
@@ -39,6 +40,7 @@ export default class CameraECS {
     setPos(x, y) {
         this.pos.x = Math.floor(x);
         this.pos.y = Math.floor(y);
+        this.eventBus.emit('cameraMoved', {pos: this.pos});  // Emit camera moved event
     }
 
     move(x, y) {
@@ -56,6 +58,7 @@ export default class CameraECS {
         );
 
         this.components.forEach(component => component.update(deltaTime));
+        this.eventBus.emit('cameraMoved', {pos: this.pos});
     }
 
     getArea() {

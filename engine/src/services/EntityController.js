@@ -60,14 +60,22 @@ export default class EntityController {
         this.currentEntity.setInput(this.movementDirections.x, this.movementDirections.y);
     }
 
-    switchControllerProfile() {
+// when "space" is pressed
+    switchDamper() {
         if(!this.currentEntity) return;
-        this.currentEntity.hasComponent("engineController", (engineController) => {
-            console.log('Switching controller profile...');
-            engineController.switchProfile();
+
+        console.log('switching damper...');
+
+        this.currentEntity.hasComponent("damper", (damper) => {
+            if(damper.userRequestedState) {
+                damper.disable();
+            } else {
+                damper.enable();
+            }
         });
     }
 
+// when "q" is pressed
     switchAutoOrientation() {
         if(!this.currentEntity) return;
         this.currentEntity.hasComponent("engineController", (engineController) => {

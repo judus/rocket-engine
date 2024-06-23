@@ -5,6 +5,8 @@ export default class DamperComponent extends ShipComponent {
         super(profiles, defaultProfile, priority);
         this.label = 'Inertia Dampers';
         this.userRequestedState = false;
+        this.controllerComponent = null; // Reference to the ControllerComponent
+        this.isUpdating = false; // Prevent re-entrant state updates
     }
 
     onAdd(entity) {
@@ -16,33 +18,42 @@ export default class DamperComponent extends ShipComponent {
         this.defaultAccelerationModifier = entity.accelerationModifier;
         this.defaultStaticFrictionCoefficient = entity.staticFrictionCoefficient;
 
+        // Find and store the reference to the ControllerComponent
+        this.controllerComponent = entity.getComponent('engineController');
+
         // Apply initial state
         this.applyCurrentMode();
     }
 
     activate() {
         this.isActive = true;
-        this.applyArcadeMode();
-        this.entity.eventBus.emit('component.damper.stateChange', this.isActive && this.userRequestedState);
-        //console.log(`${this.label} activated`);
+        this.applyCurrentMode();
+        this.notifyController();
     }
 
     deactivate() {
         this.isActive = false;
-        this.applyAdvancedMode();
-        this.entity.eventBus.emit('component.damper.stateChange', this.isActive && this.userRequestedState);
-        //console.log(`${this.label} deactivated`);
+        this.applyCurrentMode();
+        this.notifyController();
     }
 
     enable() {
         this.userRequestedState = true;
-        this.applyArcadeMode();
-        this.entity.eventBus.emit('component.damper.stateChange', this.isActive && this.userRequestedState);
+        this.applyCurrentMode();
+        this.notifyController();
     }
 
     disable() {
         this.userRequestedState = false;
-        this.applyAdvancedMode();
+        this.applyCurrentMode();
+        this.notifyController();
+    }
+
+    notifyController() {
+        if(this.controllerComponent && !this.isUpdating) {
+            this.controllerComponent.updateProfileBasedOnDamper(this.isActive && this.userRequestedState);
+        }
+        // Emit event for UI and audio
         this.entity.eventBus.emit('component.damper.stateChange', this.isActive && this.userRequestedState);
     }
 
@@ -65,10 +76,18 @@ export default class DamperComponent extends ShipComponent {
     }
 
     applyCurrentMode() {
+        this.isUpdating = true;
         if(this.isActive && this.userRequestedState) {
             this.applyArcadeMode();
+            if(this.controllerComponent) {
+                this.controllerComponent.setProfile('arcade');
+            }
         } else {
             this.applyAdvancedMode();
+            if(this.controllerComponent) {
+                this.controllerComponent.setProfile('advanced');
+            }
         }
+        this.isUpdating = false;
     }
 }

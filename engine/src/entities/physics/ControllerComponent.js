@@ -1,5 +1,5 @@
 import BaseComponent from '../../abstracts/BaseComponent.js';
-import Vector3D from "../../utils/maths/Vector3D.js";
+import Vector3D from '../../utils/maths/Vector3D.js';
 
 export default class ControllerComponent extends BaseComponent {
     constructor() {
@@ -9,12 +9,13 @@ export default class ControllerComponent extends BaseComponent {
         this.target = null;
         this.mousePosition = {x: 0, y: 0};
         this.currentInput = {ad: 0, ws: 0};
+        this.isUpdatingProfile = false; // Prevent re-entrant state updates
     }
 
     onAdd(entity) {
         super.onAdd(entity);
-        entity.eventBus.on('scopedMouseMove', (mouse) => {
-            this.mousePosition = {x: mouse.world.x, y: mouse.world.y};
+        entity.eventBus.on('mouseWorldPositionChanged', (worldPos) => {
+            this.mousePosition = {x: worldPos.x, y: worldPos.y};
         });
 
         // Apply initial damper state based on profile
@@ -51,8 +52,8 @@ export default class ControllerComponent extends BaseComponent {
         if(ws !== 0) {
             const directionMultiplier = ws > 0 ? -1 : 1; // Reversed: forward thrust with S, backward thrust with W
             const thrustDirection = new Vector3D(
-                Math.cos(this.entity.orientation) * directionMultiplier,
-                Math.sin(this.entity.orientation) * directionMultiplier,
+                Math.cos(this.entity.rotation) * directionMultiplier,
+                Math.sin(this.entity.rotation) * directionMultiplier,
                 0
             );
             const powerPercentage = Math.abs(ws); // Power percentage based on input magnitude (0 to 1)
@@ -83,46 +84,100 @@ export default class ControllerComponent extends BaseComponent {
             this.handleAutoOrientation();
         } else if(this.profile === 'advanced') {
             this.setAdvancedInput(ad, ws);
+            // Keep rotation in sync with orientation
             this.entity.rotation = this.entity.orientation;
         }
     }
 
     handleAutoOrientation() {
         if(this.autoOrient && this.profile === 'arcade') {
+            let targetDirection;
             if(this.target) {
-                const directionToTarget = this.target.pos.subtract(this.entity.pos).normalize();
-                this.entity.rotation = Math.atan2(directionToTarget.y, directionToTarget.x);
+                targetDirection = this.target.pos.subtract(this.entity.pos).normalize();
             } else {
-                const directionToMouse = new Vector3D(this.mousePosition.x, this.mousePosition.y).subtract(this.entity.pos).normalize();
-                this.entity.rotation = Math.atan2(directionToMouse.y, directionToMouse.x);
+                targetDirection = new Vector3D(this.mousePosition.x, this.mousePosition.y).subtract(this.entity.pos).normalize();
             }
-        } else if(this.entity.velocity.magnitude() > 0) {
-            // Auto orienting based on velocity
-            const direction = this.entity.velocity.normalize();
-            this.entity.rotation = Math.atan2(direction.y, direction.x);
+
+            let targetRotation = Math.atan2(targetDirection.y, targetDirection.x);
+
+            // Ensure smooth angle transition
+            const currentRotation = this.entity.rotation;
+            const deltaRotation = targetRotation - currentRotation;
+
+            // Adjust for the shortest path
+            if(deltaRotation > Math.PI) {
+                targetRotation -= 2 * Math.PI;
+            } else if(deltaRotation < -Math.PI) {
+                targetRotation += 2 * Math.PI;
+            }
+
+            this.entity.rotation += (targetRotation - currentRotation) * 0.5; // Adjust the interpolation factor as needed
         }
     }
 
+
     setProfile(profile) {
+        if(this.isUpdatingProfile) return;
+        this.isUpdatingProfile = true;
         this.profile = profile;
         this.applyProfile();
+        this.isUpdatingProfile = false;
     }
 
     applyProfile() {
         this.entity.hasComponent('damper', (component) => {
             if(this.profile === 'arcade') {
-                component.enable();
+                if(component.isActive && component.userRequestedState) {
+                    this.autoOrient = true;  // Enable auto-orientation in arcade mode
+                } else {
+                    this.profile = 'advanced'; // Revert to advanced if damper cannot be enabled
+                }
             } else {
-                component.disable();
+                this.autoOrient = false; // Disable auto-orientation in advanced mode
             }
         });
     }
 
     switchProfile() {
-        this.setProfile(this.profile === 'arcade' ? 'advanced' : 'arcade');
+        this.entity.hasComponent('damper', (component) => {
+            if(this.profile === 'arcade') {
+                this.setProfile('advanced');
+            } else {
+                if(component.userRequestedState) {
+                    this.setProfile('arcade');
+                }
+            }
+        });
     }
 
     switchOrientationMode() {
         this.autoOrient = !this.autoOrient;
+
+        if(!this.autoOrient) {
+            // When auto-orientation is turned off, keep the current rotation
+            this.entity.orientation = this.entity.rotation;
+        } else {
+            // When auto-orientation is turned on, sync rotation and orientation
+            this.entity.rotation = this.entity.orientation;
+        }
+    }
+
+    updateProfileBasedOnDamper(damperState) {
+        if(this.isUpdatingProfile) return;
+        this.isUpdatingProfile = true;
+
+        if(damperState) {
+            this.setProfile('arcade');
+            this.autoOrient = true; // Ensure auto-orientation is enabled
+        } else {
+            this.setProfile('advanced');
+            this.autoOrient = false; // Ensure auto-orientation is disabled
+            this.entity.orientation = this.entity.rotation; // Sync orientation with the current rotation
+        }
+
+        this.isUpdatingProfile = false;
+
+        // Log damper state and profile
+        console.log('Damper State:', damperState, 'Profile:', this.profile);
     }
 }

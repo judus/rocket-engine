@@ -8,18 +8,22 @@ export default class ScopedMouse extends GlobalMouse {
     /**
      * Creates an instance of ScopedMouse.
      * @param {HTMLElement} element - The element to scope the mouse events to.
-     * @param {DataStoreManager} dataStoreManager - The data store manager instance.
      */
-    constructor(element, dataStoreManager) {
+    constructor(element) {
         super();
         this.element = element;
-        this.dataStore = dataStoreManager;
         this.pos = {x: 0, y: 0};
         this.world = {x: 0, y: 0};
         this.buttons = {left: false, middle: false, right: false};
         this.selectionStart = null;
         this.selectionEnd = null;
         this.isMouseDown = false; // New flag to track mouse down state
+    }
+
+    init(engine) {
+        this.engine = engine;
+        this.eventBus = engine.eventBus();
+        this.eventBus.on('cameraMoved', this.updateWorldPosition.bind(this));
     }
 
     /**
@@ -39,11 +43,7 @@ export default class ScopedMouse extends GlobalMouse {
             this.pos.x = mouseX;
             this.pos.y = mouseY;
 
-            const camera = this.engine.sceneDirector().getSceneManager('world').getCurrentScene()?.cameraManager.getCamera('main');
-            if(camera) {
-                this.world.x = (mouseX / camera.zoomLevel) + camera.pos.x;
-                this.world.y = (mouseY / camera.zoomLevel) + camera.pos.y;
-            }
+            this.updateWorldPosition();
         } else {
             this.pos.x = null;
             this.pos.y = null;
@@ -51,6 +51,20 @@ export default class ScopedMouse extends GlobalMouse {
             this.world.y = null;
         }
     }
+
+    /**
+     * Updates the mouse world position relative to the camera.
+     */
+    updateWorldPosition() {
+        const camera = this.engine.sceneDirector().getSceneManager('world').getCurrentScene()?.cameraManager.getCamera('main');
+        if(camera) {
+            this.world.x = (this.pos.x / camera.zoomLevel) + camera.pos.x;
+            this.world.y = (this.pos.y / camera.zoomLevel) + camera.pos.y;
+            this.eventBus.emit('mouseWorldPositionChanged', this.world);
+        }
+
+    }
+
 
     /**
      * Updates the mouse button state.

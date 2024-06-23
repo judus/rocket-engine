@@ -40,8 +40,7 @@ export default class InputManager extends EngineBase {
             if(renderer && renderer.canvas) {
                 const scopedMouse = this.engine.create(
                     EngineParts.SCOPED_MOUSE,
-                    renderer.canvas,
-                    this.engine.service(EngineParts.DATA_STORE_MANAGER)
+                    renderer.canvas
                 );
                 scopedMouse.init(this.engine);
                 this.addScopedMouse(scopedMouse);
@@ -51,6 +50,7 @@ export default class InputManager extends EngineBase {
         // Start the interval to check for continuous mouse down events
         this.startContinuousMouseDownCheck();
     }
+
 
     /**
      * Adds a scoped mouse instance.

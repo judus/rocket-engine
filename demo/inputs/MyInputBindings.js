@@ -51,7 +51,7 @@ export default class MyInputBindings extends InputBindings {
                 up: () => this.eventBus.emit('stopBoost')
             },
             'space': {
-                down: () => this.eventBus.emit('switchInertiaDampers'),
+                down: () => { this.eventBus.emit('switchInertiaDampers'); console.log('space'); },
             },
             '0': {
                 down: () => this.eventBus.emit('key', 0),

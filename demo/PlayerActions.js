@@ -141,7 +141,7 @@ export default class PlayerActions {
     }
 
     handleInertiaDamperSwitch(event) {
-        this.entityController.switchControllerProfile();
+        this.entityController.switchDamper();
     }
 
     handleDropHeatSink(event) {

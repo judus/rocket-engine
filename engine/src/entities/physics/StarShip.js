@@ -187,7 +187,7 @@ export default class StarShip extends Entity2D {
                 health: 100,
                 energyCostMW: 0,
                 maxEnergyMW: 20, // megawatts
-                rechargeRateMW: 0.3 // megawatts
+                rechargeRateMW: 0.6 // megawatts
             }
         };
 
