@@ -11,6 +11,7 @@ import DynamicContextMenuLayer from "../layers/shared/context-menu/DynamicContex
 import StarBackground from "../layers/shared/stars/StarBackground.js";
 import SpriteLayer from "../layers/SpriteLayer.js";
 import ParallaxBackground2 from "../layers/shared/stars/ParallaxBackground2.js";
+import HealthBarLayer from "../layers/shared/HealthBarLayer.js";
 
 export default class WorldScene1 extends BaseScene {
     constructor() {
@@ -23,9 +24,10 @@ export default class WorldScene1 extends BaseScene {
         //this.addLayer('backgroundLayer', BackgroundLayer);
         this.addLayer('ParallaxBackground', ParallaxBackground);
         this.addLayer('ParallaxBackground2', ParallaxBackground2);
-        //this.addLayer('axisBackground', AxisBackground);
+        this.addLayer('axisBackground', AxisBackground);
         this.addLayer('highlight', HighlightBackground);
-        this.addLayer('spriteLayer', SpriteLayer); // Add the new sprite layer
+        this.addLayer('spriteLayer', SpriteLayer);
+        this.addLayer('healthBarLayer', HealthBarLayer); // Add the new sprite layer
         this.addLayer('foregroundLayer', PolygonLayer);
         this.addLayer('ParticleLayer', ParticleLayer);
         //this.addLayer('ProjectileLayer', ProjectileLayer);

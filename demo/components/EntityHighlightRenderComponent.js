@@ -11,7 +11,7 @@ export default class EntityHighlightRenderComponent extends RenderComponent {
             this.initializeConfig(config);
             this.updateCircleAngles(deltaTime);
 
-            this.drawHighlight(context, this.entity, camera);
+            this.drawHighlight(context, camera);
         });
 
         this.highlightEnabled = config.highlightEnabled || false;
@@ -58,14 +58,14 @@ export default class EntityHighlightRenderComponent extends RenderComponent {
         this.dottedCircleAngle = (this.dottedCircleAngle || 0) + (deltaTime * this.dottedCircleBaseSpeed / this.dottedCircleRadius);
     }
 
-    drawHighlight(context, entity, camera) {
-        const posX = (entity.pos.x - camera.pos.x) * camera.zoomLevel;
-        const posY = (entity.pos.y - camera.pos.y) * camera.zoomLevel;
+    drawHighlight(context, camera) {
+        const posX = (this.entity.pos.x - camera.pos.x) * camera.zoomLevel;
+        const posY = (this.entity.pos.y - camera.pos.y) * camera.zoomLevel;
 
         this.drawFilledCircle(context, posX, posY, camera.zoomLevel);
         this.drawDashedCircle(context, posX, posY, camera.zoomLevel);
         this.drawDottedCircle(context, posX, posY, camera.zoomLevel);
-        this.drawHealthBar(context, entity, posX, posY, camera.zoomLevel);
+        // this.drawHealthBar(context, camera); // Uncomment this line if you want to draw the health bar as part of the highlight
     }
 
     drawFilledCircle(context, posX, posY, zoomLevel) {
@@ -108,25 +108,29 @@ export default class EntityHighlightRenderComponent extends RenderComponent {
         context.restore();
     }
 
-    drawHealthBar(context, entity, posX, posY, zoomLevel) {
-        entity.hasComponent('health', (healthComponent) => {
-            const healthRatio = healthComponent.currentHealth / healthComponent.maxHealth;
-            const healthBarX = posX - (this.healthBarWidth * zoomLevel) / 2;
-            const healthBarY = posY - (this.healthBarOffsetY * zoomLevel) - (this.healthBarHeight * zoomLevel) / 2;
+    drawHealthBar(context, camera) {
+        const posX = (this.entity.pos.x - camera.pos.x) * camera.zoomLevel;
+        const posY = (this.entity.pos.y - camera.pos.y) * camera.zoomLevel;
 
-            // Background of the health bar
-            context.fillStyle = this.healthBarBackgroundColor;
-            context.fillRect(healthBarX, healthBarY, this.healthBarWidth * zoomLevel, this.healthBarHeight * zoomLevel);
+        const healthComponent = this.entity.getComponent('health');
+        if(!healthComponent) return;
 
-            // Current health
-            context.fillStyle = this.healthBarFillColor;
-            context.fillRect(healthBarX, healthBarY, this.healthBarWidth * healthRatio * zoomLevel, this.healthBarHeight * zoomLevel);
+        const healthRatio = healthComponent.currentHealth / healthComponent.maxHealth;
+        const healthBarX = posX - (this.healthBarWidth * camera.zoomLevel) / 2;
+        const healthBarY = posY - (this.healthBarOffsetY * camera.zoomLevel) - (this.healthBarHeight * camera.zoomLevel) / 2;
 
-            // Border
-            context.strokeStyle = this.healthBarBorderColor;
-            context.lineWidth = this.healthBarBorderWidth;
-            context.strokeRect(healthBarX - 1, healthBarY - 1, this.healthBarWidth * zoomLevel + 2, this.healthBarHeight * zoomLevel + 2);
-        });
+        // Background of the health bar
+        context.fillStyle = this.healthBarBackgroundColor;
+        context.fillRect(healthBarX, healthBarY, this.healthBarWidth * camera.zoomLevel, this.healthBarHeight * camera.zoomLevel);
+
+        // Current health
+        context.fillStyle = this.healthBarFillColor;
+        context.fillRect(healthBarX, healthBarY, this.healthBarWidth * healthRatio * camera.zoomLevel, this.healthBarHeight * camera.zoomLevel);
+
+        // Border
+        context.strokeStyle = this.healthBarBorderColor;
+        context.lineWidth = this.healthBarBorderWidth;
+        context.strokeRect(healthBarX - 1, healthBarY - 1, this.healthBarWidth * camera.zoomLevel + 2, this.healthBarHeight * camera.zoomLevel + 2);
     }
 
     enableHighlight() {
