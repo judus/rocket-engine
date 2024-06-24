@@ -1,6 +1,4 @@
-// Terminal.js
-
-class Terminal {
+export default class Terminal {
     constructor(logElementId, progressElementId, inputElementId) {
         this.logElement = document.getElementById(logElementId);
         this.progressBar = document.getElementById(progressElementId);
@@ -51,5 +49,3 @@ class Terminal {
         }
     }
 }
-
-export default Terminal;

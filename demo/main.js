@@ -3,7 +3,7 @@ import WorldScene1 from "./scenes/WorldScene1.js";
 import WorldScene2 from "./scenes/WorldScene2.js";
 import WorldScene3 from "./scenes/WorldScene3.js";
 import Cockpit from "./scenes/Cockpit.js";
-import Settings from "./scenes/Settings.js";
+import Settings from "./entities/Settings.js";
 import Application from "./Application.js";
 import EngineParts from "../engine/src/EngineParts.js";
 import MyInputBindings from "./inputs/MyInputBindings.js";

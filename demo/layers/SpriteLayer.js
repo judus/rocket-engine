@@ -1,5 +1,5 @@
 import BaseLayer from "../../engine/src/scenes/BaseLayer.js";
-import SpriteComponent from "../../engine/src/sprites/SpriteComponent.js";
+import SpriteComponent from "../../engine/src/components/SpriteComponent.js";
 
 export default class SpriteLayer extends BaseLayer {
     constructor(canvas, context) {

@@ -1,4 +1,4 @@
-import BaseComponent from "../abstracts/BaseComponent.js";
+import BaseComponent from "./BaseComponent.js";
 /**
  * ClickableComponent handles click events for an entity.
  */

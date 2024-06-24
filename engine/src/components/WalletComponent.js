@@ -1,4 +1,4 @@
-import BaseComponent from "../abstracts/BaseComponent.js";
+import BaseComponent from "./BaseComponent.js";
 export default class WalletComponent extends BaseComponent {
     /**
      * WalletComponent constructor.

@@ -1,11 +1,11 @@
-import PlayerActions from './PlayerActions.js';
+import PlayerActions from './inputs/PlayerActions.js';
 import GameLogic from './GameLogic.js';
-import EntityInitialization from "./entities/EntityInitialization.js";
+import EntityInitialization from "./setup/EntityInitialization.js";
 import EngineBase from "../engine/src/abstracts/EngineBase.js";
 import Cockpit from "./html-ui/Cockpit.js";
-import AudioLoader from "./AudioLoader.js";
-import AudioEventHandler from "./AudioEventHandler.js";
-import UserInteractionHandler from "./UserInteractionHandler.js";
+import AudioLoader from "./audio/AudioLoader.js";
+import AudioEventHandler from "./audio/AudioEventHandler.js";
+import UserInteractionHandler from "./inputs/UserInteractionHandler.js";
 import SpatialHashGrid2DDataStore from "../engine/src/datastores/SpatialHashGrid2DDataStore.js";
 import ParticleGrid from "../engine/src/datastores/ParticleGrid.js";
 

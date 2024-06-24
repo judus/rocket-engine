@@ -1,4 +1,4 @@
-import BaseComponent from "../abstracts/BaseComponent.js";
+import BaseComponent from "./BaseComponent.js";
 import EntityTransform from "../services/EntityTransform.js";
 
 export default class RenderComponent extends BaseComponent {

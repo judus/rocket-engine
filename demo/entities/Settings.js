@@ -1,6 +1,8 @@
 import BaseScene from "../../engine/src/scenes/BaseScene.js";
+import PolygonLayer from '../layers/PolygonLayer.js';
+import BackgroundLayer from "../layers/shared/BackgroundLayer.js";
 
-export default class WorldScene2 extends BaseScene {
+export default class Settings extends BaseScene {
     constructor() {
         super(1, 1); // Fade in and fade out duration
     }
@@ -8,6 +10,9 @@ export default class WorldScene2 extends BaseScene {
     init(engine) {
         super.init(engine);
 
+        // Set up layers
+        this.addLayer('backgroundLayer', BackgroundLayer);
+        this.addLayer('mainLayer', PolygonLayer);
 
         engine.createStore('exampleType');
 

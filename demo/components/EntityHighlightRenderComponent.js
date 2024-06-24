@@ -109,6 +109,10 @@ export default class EntityHighlightRenderComponent extends RenderComponent {
     }
 
     drawHealthBar(context, camera) {
+        if(!this.highlightEnabled) {
+            return;
+        }
+
         const posX = (this.entity.pos.x - camera.pos.x) * camera.zoomLevel;
         const posY = (this.entity.pos.y - camera.pos.y) * camera.zoomLevel;
 

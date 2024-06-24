@@ -19,7 +19,7 @@ import ScopedMouse from "./inputs/ScopedMouse.js";
 import EntitySelector from "./services/EntitySelector.js";
 import EntityController from "./services/EntityController.js";
 import TaskScheduler from "./services/TaskScheduler.js";
-import ParticleSystem from "./particles/ParticleSystem.js";
+import ParticleSystem from "./physics/particles/ParticleSystem.js";
 import ParticleGrid from "./datastores/ParticleGrid.js";
 
 export default class EngineInit {

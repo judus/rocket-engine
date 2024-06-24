@@ -1,5 +1,3 @@
-import UnifiedCollisionSystem from "../engine/src/physics/collisions/UnifiedCollisionSystem.js";
-import SceneDirector from "../engine/src/scenes/SceneDirector.js";
 import CollisionSystem from "../engine/src/physics/collisions/CollisionSystem.js";
 
 export default class
@@ -7,7 +5,6 @@ GameLogic {
     constructor(engine) {
         this.engine = engine;
         this.dataStore = this.engine.dataStoreManager();
-        this.unifiedCollisionSystem = new UnifiedCollisionSystem();
         this.isPaused = false;
     }
 

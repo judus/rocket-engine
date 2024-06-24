@@ -33,6 +33,14 @@ export default class CameraECS {
         return this.components[componentClass.name];
     }
 
+    hasComponent(componentClass, onTrue, onFalse) {
+        if(this.components[componentClass.name]) {
+            onTrue && onTrue(this.components[componentClass.name], this);
+        } else {
+            onFalse && onFalse(componentClass.name)
+        }
+    }
+
     isMoving() {
         return this.vel.x !== 0 || this.vel.y !== 0 || this.moves;
     }
@@ -86,37 +94,33 @@ export default class CameraECS {
     }
 
     zoom(deltaY) {
-        const zoomComponent = this.getComponent(ZoomComponent);
-        if(zoomComponent) {
+        this.hasComponent(ZoomComponent, (zoomComponent) => {
             zoomComponent.zoom(deltaY);
-        }
+        });
     }
 
     touched(x, y) {
-        const touchComponent = this.getComponent(TouchComponent);
-        if(touchComponent) {
+        this.hasComponent(TouchComponent, (touchComponent) => {
             touchComponent.touched(x, y);
-        }
+        });
     }
 
     setTarget(target) {
-        const followComponent = this.getComponent(FollowComponent);
-        if(followComponent) {
+        this.hasComponent(FollowComponent, (followComponent) => {
             followComponent.setTarget(target);
-        }
+        });
     }
 
     follow() {
-        const followComponent = this.getComponent(FollowComponent);
-        if(followComponent) {
+        this.hasComponent(FollowComponent, (followComponent) => {
             followComponent.update(0); // Use the update method to handle the following logic
-        }
+        });
+
     }
 
     shake(duration, magnitude) {
-        const shakeComponent = this.getComponent(ShakeComponent);
-        if(shakeComponent) {
+        this.hasComponent(ShakeComponent, (shakeComponent) => {
             shakeComponent.shake(duration, magnitude);
-        }
+        });
     }
 }

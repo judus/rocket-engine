@@ -1,106 +1,50 @@
-import BaseComponent from "../../engine/src/abstracts/BaseComponent.js";
-
-const weaponTypes = {
-    laserCannon: {
-        projectileType: 'laserBeam',
-        fireRate: 5,
-        damage: 15,
-        color: 'blue',
-        size: 3,
-        lifetime: 2,
-        reach: 200,
-        influencedByShipVelocity: false
-    },
-    machineGun: {
-        projectileType: 'bullet',
-        fireRate: 10,
-        damage: 5,
-        color: 'yellow',
-        size: 1,
-        lifetime: 1,
-        reach: 100,
-        influencedByShipVelocity: true
-    }
-};
-
-const projectileTypes = {
-    laserBeam: {
-        color: 'blue',
-        size: 3,
-        lifetime: 2,
-        reach: 200,
-        damage: 15,
-        influencedByShipVelocity: false
-    },
-    bullet: {
-        color: 'yellow',
-        size: 1,
-        lifetime: 1,
-        reach: 100,
-        damage: 5,
-        influencedByShipVelocity: true
-    }
-};
-
+import BaseComponent from "../../engine/src/components/BaseComponent.js";
 
 export default class WeaponSystemComponent extends BaseComponent {
-    constructor(eventBus, dataStoreManager) {
-        super(eventBus, dataStoreManager);
-        this.eventBus = eventBus;
-        this.dataStoreManager = dataStoreManager;
-        this.weapons = []; // List of weapon slots
-        this.weaponGroups = {}; // Weapon groups for different configurations
-        this.currentGroup = 'default'; // Current active weapon group
+    constructor() {
+        super();
+        this.weaponGroups = {};
+        this.activeGroup = null;
     }
 
-    // Add a weapon to a specific slot
-    addWeapon(slot, weaponType) {
-        this.weapons[slot] = weaponType;
+    createWeaponGroup(groupKey, weaponIndices) {
+        this.weaponGroups[groupKey] = weaponIndices;
+        this.entity.eventBus.emit('weaponGroups.update', this.weaponGroups);
     }
 
-    // Configure weapon groups
-    configureGroup(groupName, slots) {
-        this.weaponGroups[groupName] = slots;
-    }
-
-    // Set the current weapon group
-    setGroup(groupName) {
-        if(this.weaponGroups[groupName]) {
-            this.currentGroup = groupName;
+    switchGroup(groupKey) {
+        if(this.weaponGroups[groupKey]) {
+            this.activeGroup = groupKey;
+            this.entity.eventBus.emit('activeGroup.update', groupKey);
         } else {
-            console.error(`Weapon group ${groupName} does not exist`);
+            console.warn(`Weapon group ${groupKey} does not exist.`);
         }
     }
 
-    // Fire all weapons in the current group
-    fire(scopedMouse) {
-        console.log('WeaponSystemComponent.fire() called.');
-
-        const slots = this.weaponGroups[this.currentGroup];
-        if(!slots) {
-            console.error(`Weapon group ${this.currentGroup} is empty or does not exist`);
-            return;
-        }
-
-        slots.forEach(slot => {
-            const weaponType = this.weapons[slot];
-            if(weaponType) {
-                this.fireWeapon(weaponType, scopedMouse);
+    fire() {
+        if(this.activeGroup) {
+            const weaponIndices = this.weaponGroups[this.activeGroup];
+            if(weaponIndices) {
+                weaponIndices.forEach(index => {
+                    const weaponMounts = this.entity.getComponent('mounts').getMounts('weapon');
+                    const mount = weaponMounts[index];
+                    if(mount && mount.currentEntity) {
+                        mount.currentEntity.fire();
+                    }
+                });
             }
-        });
+        }
     }
 
-    // Fire a specific weapon type
-    fireWeapon(weaponType, scopedMouse) {
-        const weapon = weaponTypes[weaponType];
-        if(!weapon) {
-            console.error(`Weapon type ${weaponType} does not exist`);
-            return;
-        }
+    getWeaponGroups() {
+        return this.weaponGroups;
+    }
 
-        const attackComponent = this.entity.getComponent('attack');
-        if(attackComponent) {
-            attackComponent.attack(scopedMouse, projectileTypes[weapon.projectileType]);
-        }
+    getActiveGroup() {
+        return this.activeGroup;
+    }
+
+    update(deltaTime) {
+        // Update logic for the weapon system if necessary
     }
 }
