@@ -78,19 +78,18 @@ export default class CameraECS {
         return new Area(x1, y1, x2, y2);
     }
 
-    handleMouseWheelScroll(event) {
-        const zoomComponent = this.getComponent(ZoomComponent);
-        if(zoomComponent) {
-            const zoomChange = event.deltaY > 0 ? -0.1 : 0.1; // Invert zoom behavior
-            const newZoom = zoomComponent.targetZoom + zoomChange;
-            zoomComponent.setZoom(Math.max(0.1, Math.min(newZoom, 5))); // Allow zooming out further
-        }
-    }
-
     handleMouseDown(mouse) {
         const x = (mouse.pos.x / this.zoomLevel) + this.pos.x;
         const y = (mouse.pos.y / this.zoomLevel) + this.pos.y;
         this.eventBus.emit('cameraClick', {x, y, mouse});
+    }
+
+    handleMouseWheelScroll(event) {
+        this.hasComponent(ZoomComponent, (zoomComponent) => {
+            const zoomChange = event.deltaY > 0 ? -0.1 : 0.1; // Invert zoom behavior
+            const newZoom = zoomComponent.targetZoom + zoomChange;
+            zoomComponent.setZoom(Math.max(0.1, Math.min(newZoom, 5))); // Allow zooming out further
+        });
     }
 
     zoom(deltaY) {
