@@ -13,8 +13,8 @@ switched by pressing the space bar:
 - **Arcade Mode:** For close combat with inertia dampers on.
 
 Additionally, the game includes an energy management system. Various components like the engine, weapons, and inertia
-dampers consume energy and require sufficient power to operate effectively. If you notice some components not working,
-it may be due to insufficient energy.
+dampers consume energy and require sufficient power to operate effectively. If you notice some components not working or automatically turning off, or the ship flying uncontrollably,
+it may be due to insufficient energy. Just wait until the ship's reactor recharges.
 
 I haven't finished implementing all ship components into the energy management system. Also, the demo is not optimized
 for portable devices. It requires at least a 1920x1080 display.
