@@ -1,0 +1,1 @@
+Just a helper for quickly drawing polygons.
