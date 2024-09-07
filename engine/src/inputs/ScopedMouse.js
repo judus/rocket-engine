@@ -56,13 +56,13 @@ export default class ScopedMouse extends GlobalMouse {
      * Updates the mouse world position relative to the camera.
      */
     updateWorldPosition() {
-        const camera = this.engine.sceneDirector().getSceneManager('world').getCurrentScene()?.cameraManager.getCamera('main');
+        const currentStack = this.engine.sceneDirector().getCurrentStack();  // Get the current active stack
+        const camera = currentStack.getCurrentScene()?.cameraManager?.getCamera('main');  // Access the camera of the current scene
         if(camera) {
             this.world.x = (this.pos.x / camera.zoomLevel) + camera.pos.x;
             this.world.y = (this.pos.y / camera.zoomLevel) + camera.pos.y;
             this.eventBus.emit('mouseWorldPositionChanged', this.world);
         }
-
     }
 
 
