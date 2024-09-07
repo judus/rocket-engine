@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Rocket Engine - Simple Animation</title>
+	<style>
+		body {
+			margin: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			background-color: #F0F0F0;
+		}
+
+		#my-container {
+			border: 2px solid black;
+		}
+
+		canvas {
+			display: block;
+			margin: 0 auto;
+			border: 0;
+			outline: none; /* Removes the default focus outline */
+		}
+
+		canvas:focus {
+			outline: none; /* Ensures no outline on focus */
+		}
+	</style>
+</head>
+<body>
+<div id="my-container"></div>
+<script src="main.js" type="module"></script>
+</body>
+</html>

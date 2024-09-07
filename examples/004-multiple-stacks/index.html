@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Rocket Engine - Simple Animation</title>
+	<style>
+		body {
+			margin: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			background-color: #F0F0F0;
+			position: relative;
+		}
+
+		#my-container {
+			position: relative;
+			width: 600px;
+			height: 400px;
+		}
+
+		canvas {
+			position: absolute;
+			border: 2px solid black;
+			display: block;
+			outline: none;
+		}
+
+		canvas:focus {
+			outline: none;
+		}
+
+		/* Center the first canvas */
+		#stack1 {
+			top: 0;
+			left: 0;
+			z-index: 1;
+		}
+
+		/* Offset the second canvas slightly to the top-left */
+		#stack2 {
+			top: -100px;
+			left: -250px;
+			z-index: 2;
+		}
+
+		/* Offset the third canvas slightly to the bottom-right */
+		#stack3 {
+			top: 100px;
+			left: 250px;
+			z-index: 3;
+		}
+	</style>
+</head>
+<body>
+<div id="my-container"></div>
+<script src="main.js" type="module"></script>
+</body>
+</html>
