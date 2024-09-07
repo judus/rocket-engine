@@ -1,4 +1,4 @@
-# Rocket Engine Documentation
+# Rocket Engine
 
 ## Introduction
 
@@ -11,31 +11,52 @@ of any level.
 Below is an example of initializing the Rocket Engine and setting up a few scenes:
 
 ```javascript
+// Import necessary components from your project and the engine
 import Rocket from "../engine/src/Rocket.js";
-import WorldScene1 from "./scenes/WorldScene1.js";
-import Application from "./Application.js";
 import MyInputBindings from "./inputs/MyInputBindings.js";
-import Cockpit from "./scenes/Cockpit";
+import MyGameLogic from "./MyGameLogic.js";
+import WorldScene1 from "./scenes/WorldScene1.js";
+import WorldScene2 from "./scenes/WorldScene2.js";
+import GameOverScene from "./scenes/GameOverScene.js";
+import UserInterface from "./scenes/UserInterface.js";
 
+// Get the HTML element where the game will be rendered
 const main = document.getElementById('rocket-main');
 
+// Initialize the Rocket engine with custom settings
 const rocket = new Rocket({
-    targetElement: main,
-    showPerformanceMonitor: true,
-    inputBindings: new MyInputBindings(),
+	// Set the main target element for rendering the game
+	targetElement: main,
+	// Define custom input bindings (e.g., for controls)
+	inputBindings: new MyInputBindings(),
 });
 
-rocket.service('application', new Application());
+// Optional: Register a custom game logic service to handle your game-specific logic,
+// or you could also define the logic in the scene objects
+rocket.service('application', new MyGameLogic());
 
+// Define the 'world' stack and add multiple scenes 
+// These scenes will represent different parts of the game, such as levels or game states
 rocket.stack('world', (stack) => {
-    stack.addScene(new WorldScene1());
-}, { width: 1920, height: 1080 });
+	stack.addScene(new WorldScene1());
+	stack.addScene(new WorldScene2());
+	stack.addScene(new GameOverScene());
+}, {
+	width: 1920,  // Set the canvas width
+	height: 1080, // Set the canvas height
+});
 
-rocket.stack('cockpit', (stack) => {
-    stack.addScene(new Cockpit());
-}, { width: 300, height: 300 });
+// Define another stack for the 'ui' (User Interface), where different UI elements can be rendered. This allows the UI to render separately from the game world.
+rocket.stack('ui', (stack) => {
+	stack.addScene(new UserInterface());
+}, {
+	width: 300,   // Set a smaller canvas width for the UI
+	height: 300,  // Set a smaller canvas height for the UI
+});
 
+// Launch the Rocket engine, starting the game loop and rendering the first scenes
 rocket.launch();
+
 ```
 
 ---
