@@ -2,77 +2,56 @@
 
 ## Introduction
 
-Rocket Engine is a modular, JavaScript game engine designed for simplicity, flexibility, and extensibility. It supports
-scene management, entity component systems, physics, audio, and much more—all while remaining easy to use for developers
+Rocket Engine is a modular, JavaScript game and animation engine designed for simplicity, flexibility, and extensibility. It supports 
+scene management, entity component systems, physics, sprites, audio, and much more—all while remaining easy to use for developers
 of any level.
 
 ### Quick Start Example
 
-Below is an example of initializing the Rocket Engine and setting up a few scenes:
+Example of initializing the Rocket Engine and setting up a few scenes:
 
 ```javascript
-// Import necessary components from your project and the engine
-import Rocket from "../engine/src/Rocket.js";
-import MyInputBindings from "./inputs/MyInputBindings.js";
-import MyGameLogic from "./MyGameLogic.js";
-import WorldScene1 from "./scenes/WorldScene1.js";
-import WorldScene2 from "./scenes/WorldScene2.js";
-import GameOverScene from "./scenes/GameOverScene.js";
-import UserInterface from "./scenes/UserInterface.js";
-
-// Get the HTML element where the game will be rendered
-const main = document.getElementById('rocket-main');
-
 // Initialize the Rocket engine with custom settings
 const rocket = new Rocket({
-	// Set the main target element for rendering the game
-	targetElement: main,
-	// Define custom input bindings (e.g., for controls)
-	inputBindings: new MyInputBindings(),
+    // Set the main target element for rendering the game
+    targetElement: document.getElementById('my-container'),
+    // Define custom input bindings (e.g., for controls)
+    inputBindings: new MyInputBindings(),
 });
 
-// Optional: Register a custom game logic service to handle your game-specific logic,
-// or you could also define the logic in the scene objects
+// Optional: Register a custom application to handle more complex stuff 
+// Not necessary for simple animations, but you'll probably want it for games
 rocket.service('application', new MyGameLogic());
 
-// Define the 'world' stack and add multiple scenes 
-// These scenes will represent different parts of the game, such as levels or game states
+// Define the 'world' stack and add multiple scenes. The scenes can represent 
+// different parts of the game, such as levels, menus, start and game over screens. 
 rocket.stack('world', (stack) => {
-	stack.addScene(new WorldScene1());
-	stack.addScene(new WorldScene2());
-	stack.addScene(new GameOverScene());
-}, {
-	width: 1920,  // Set the canvas width
-	height: 1080, // Set the canvas height
-});
+    stack.addScene(new WorldScene1());
+    stack.addScene(new WorldScene2());
+    stack.addScene(new GameOverScene());
+}, { width: 1920, height: 1080 }); // Set the canvas size
 
-// Define another stack for the 'ui' (User Interface), where different UI elements can be rendered. This allows the UI to render separately from the game world.
-rocket.stack('ui', (stack) => {
-	stack.addScene(new UserInterface());
-}, {
-	width: 300,   // Set a smaller canvas width for the UI
-	height: 300,  // Set a smaller canvas height for the UI
-});
+// You can define multiple stacks. Each stack will create a separate canvas element
+rocket.stack('minimap', (stack) => {
+    stack.addScene(new MiniMap());
+}, { width: 300, height: 300 }); // Set the canvas size
 
-// Launch the Rocket engine, starting the game loop and rendering the first scenes
+// Launch the Rocket engine, starting the game loop and rendering the first scene of each stack
 rocket.launch();
 
+// You can navigate between scenes using the scene manager and the stack name
+rocket.sceneManager('world').next();
+rocket.sceneManager('world').previous();
 ```
 
+Find more examples in the ./examples folder.
+
 ---
-
-## Personal Note
-
-This is a fun project that I work on when I have time and the weather is bad. I’m learning about game development and
-programming in plain JavaScript, with the main focus on structuring code for larger projects and discovering various
-techniques and patterns used in game development.
-
-The project consists of two parts: a game engine and a demo space game.
 
 ### Demo Space Game
 
 The demo focuses on controlling a spaceship in infinite space. There are two main control modes that can be switched by
-pressing the space bar:
+**pressing the space bar**:
 
 - **Realistic Physics**: For long-distance travel with inertia dampers off.
 - **Arcade Mode**: For close combat with inertia dampers on.
@@ -86,8 +65,12 @@ a 1920x1080 display.
 
 ### Main Controls
 
-- **w, a, s, d**: Move the ship.
-- **Space Bar**: Toggle inertia dampers.
+Beware: The controls behave differently depending on the selected control mode. **Press the space bar**.
+Also: If you can't fire or control the ship, **check the energy levels**!
+
+
+- **w, a, s, d**: Move the ship. 
+- **Space Bar**: Toggle inertia dampers (control mode).
 - **1, 2, 3, 4, 5, 6**: Switch weapons.
 - **Mouse 1**: Fire active weapon.
 - **Mouse 2 + drag**: Select objects in space.
@@ -96,6 +79,12 @@ a 1920x1080 display.
 You can destroy asteroids and space stations, but beyond that, there’s not much to do yet.
 
 Check out the demo [here](https://canvas-playground.crashleague.net/rocket/demo.html).
+
+## Important Note
+
+This is a fun project that I work on when I have time and the weather is bad. I’m learning about game development and
+programming in plain JavaScript, with the main focus on structuring code for larger projects and discovering various
+techniques and patterns used in game development.
 
 ---
 
