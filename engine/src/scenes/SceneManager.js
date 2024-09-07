@@ -1,5 +1,6 @@
 import EngineBase from "../abstracts/EngineBase.js";
 import EngineParts from "../EngineParts.js";
+import BaseScene from "./BaseScene.js";
 
 /**
  * Manages scenes within a specific context or stack.
@@ -38,7 +39,10 @@ export default class SceneManager extends EngineBase {
     addScene(sceneName, scene) {
         this.scenes.set(sceneName, scene);
         this.sceneOrder.push(sceneName);
-        scene.init(this.engine); // Initialize the scene with the engine API
+
+        if(scene instanceof BaseScene) {
+            scene.init(this.engine); // Initialize the scene with the engine API
+        }
     }
 
     /**
@@ -77,37 +81,50 @@ export default class SceneManager extends EngineBase {
      * Switches to the specified scene.
      * @param {string} name - The name of the scene to switch to.
      */
+    /**
+     * Switches to the specified scene.
+     * @param {string} name - The name of the scene to switch to.
+     */
     async switchTo(name) {
         if(this.scenes.has(name)) {
             const nextScene = this.scenes.get(name);
             this.currentSceneIndex = this.sceneOrder.indexOf(name);
 
-            if(this.currentScene) {
+            if(this.currentScene instanceof BaseScene) {
+                // Perform transition out and exit for the current scene if it's a BaseScene
                 await this.transitionOutScene(this.currentScene);
                 await this.currentScene.onExit();
             }
 
-            const loadingScene = nextScene.onLoad();
+            // Load the loading scene if it exists
+            const loadingScene = nextScene.onLoad && nextScene.onLoad();
 
-            if(loadingScene) {
+            if(loadingScene instanceof BaseScene) {
                 this.currentScene = loadingScene;
                 loadingScene.init(this.engine);
                 await this.transitionInScene(this.currentScene);
                 await loadingScene.onEnter();
             }
 
-            await nextScene.load(() => {
-                nextScene.init(this.engine);
+            // Load the next scene
+            await nextScene.load && nextScene.load(() => {
+                if(nextScene instanceof BaseScene) {
+                    nextScene.init(this.engine);
+                }
             });
 
-            if(loadingScene) {
+            if(loadingScene instanceof BaseScene) {
                 await this.transitionOutScene(this.currentScene);
                 await this.currentScene.onExit();
             }
 
+            // Set the new current scene
             this.currentScene = nextScene;
-            await this.transitionInScene(this.currentScene);
-            this.currentScene.onEnter();
+
+            if(nextScene instanceof BaseScene) {
+                await this.transitionInScene(this.currentScene);
+                this.currentScene.onEnter();
+            }
         } else {
             console.error(`Scene "${name}" not found`);
         }

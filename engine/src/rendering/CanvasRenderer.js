@@ -44,14 +44,28 @@ export default class CanvasRenderer extends Renderer {
                 return;
             }
 
+            // Clear the main canvas
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-            scene.getLayers().forEach((layer) => {
-                if(!layer.lazy || (scene.camera && scene.camera.isMoving())) {
-                    layer.render(scene, deltaTime, tickCount, totalTime);
+            // Check if the scene has layers
+            const layers = scene.getLayers ? scene.getLayers() : null;
+
+            if(layers && layers.size > 0) {
+                // Render each layer
+                layers.forEach((layer) => {
+                    if(!layer.lazy || (scene.camera && scene.camera.isMoving())) {
+                        layer.render(scene, deltaTime, tickCount, totalTime);
+                    }
+                    this.context.drawImage(layer.canvas, 0, 0);
+                });
+            } else {
+                // Fallback: Render directly from the scene object
+                if(typeof scene.render === 'function') {
+                    scene.render(this.context, deltaTime, tickCount, totalTime);
+                } else {
+                    console.error("Scene does not have a render method.");
                 }
-                this.context.drawImage(layer.canvas, 0, 0);
-            });
+            }
 
             // Apply fade effect
             if(this.isFadingOut || this.isFadingIn) {

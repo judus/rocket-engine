@@ -171,7 +171,7 @@ export default class Rocket {
         }
 
         // Load the first scene
-        if(sceneDirector && (shouldUpdateApp || shouldRenderApp)) {
+        if(sceneDirector) {
             console.log("✅ Rocket Engine: Setting course for first scene...");
             sceneDirector.loadFirstScene();
         }
@@ -394,5 +394,9 @@ export default class Rocket {
 
     initService(name) {
         return this.engine.initService(name);
+    }
+
+    sceneManager(stackName) {
+        return this.engine.sceneManager(stackName);
     }
 }

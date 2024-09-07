@@ -144,6 +144,7 @@ export default class EngineInit {
     }
 
     defaultInputBindingsManager() {
+        this.engine.config.inputBindings &&
         this.engine.config.inputBindings.init(this.engine);
         return new InputBindingsManager(
             this.engine.service(EngineParts.EVENT_BUS),

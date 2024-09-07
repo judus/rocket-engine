@@ -371,6 +371,11 @@ export default class Engine {
         return sceneDirector.stack(name, setupCallback, options);
     }
 
+    sceneManager(stackName) {
+        const sceneDirector = this.service(EngineParts.SCENE_DIRECTOR);
+        return sceneDirector.getSceneManager(stackName);
+    }
+
     /**
      * Switches to a specific scene within a scene manager.
      * @param {string} sceneName - The name of the scene to switch to.
