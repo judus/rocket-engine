@@ -1,5 +1,7 @@
 # Rocket Engine
 
+A javascript "game engine"? Dunno... this how I do html5 canvas stuff
+
 ### Quick Start Example
 
 Example of initializing the Rocket Engine and setting up a few scenes:
