@@ -1,11 +1,5 @@
 # Rocket Engine
 
-## Introduction
-
-Rocket Engine is a modular, JavaScript game and animation engine designed for simplicity, flexibility, and extensibility. It supports 
-scene management, entity component systems, physics, sprites, audio, and much more—all while remaining easy to use for developers
-of any level.
-
 ### Quick Start Example
 
 Example of initializing the Rocket Engine and setting up a few scenes:
