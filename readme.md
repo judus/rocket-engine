@@ -74,7 +74,7 @@ Also: If you can't fire or control the ship, **check the energy levels**!
 
 You can destroy asteroids and space stations, but beyond that, there’s not much to do yet.
 
-Check out the demo [here](https://canvas-playground.crashleague.net/rocket/demo.html).
+Check out the demo [here](https://rocket-engine.maduser.net).
 
 ## Important Note
 
