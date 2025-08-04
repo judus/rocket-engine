@@ -8,10 +8,6 @@ Oh yes — you can totally reach the stars.
 But only if your unit of measurement is AU… and precision isn’t an issue.
 I mean, at a cosmic scale… what’s a light second gonna change?
 
-Todd Howard would say: it just works!
-
-No kidding, it does.
-
 ### Quick Start Example
 
 Example of initializing the Rocket Engine and setting up a few scenes:
@@ -118,7 +114,7 @@ rocket.stack('gameplay', (stack) => {
 ### 2. Entity Component System (ECS)
 
 ECS allows for highly modular game objects, where behavior is defined through components. The **EntityManager** manages
-all entities and their components.
+all entities and their components. (Just use ECS, dude! It'll fix everything!)
 
 **Example:**
 ```javascript
@@ -129,7 +125,7 @@ rocket.entityManager().addEntity(player, 'player');
 ### 3. Physics and Collision Detection
 
 Built-in physics support for 2D and 3D games, including various levels of collision detection (bounding boxes, polygons,
-etc.).
+etc.) (Yes, real Newtonian physics — allegedly. I outsourced the math to ChatGPT because I panicked at the first integral. Don't blame me if it's wrong).
 
 **Example:**
 ```javascript
@@ -216,6 +212,7 @@ rocket.eventBus().emit('playerDied');
 ### 10. Pathfinding
 
 Built-in A* pathfinding algorithm helps navigate complex game environments using grid-based heuristic searching.
+(Okay, that’s a lie — it’s still on the TODO list. I’m just working on the README ahead of time for efficiency.)
 
 **Example:**
 ```javascript
@@ -235,6 +232,7 @@ const rocket = new Rocket({ showPerformanceMonitor: true });
 ### 12. Extensibility with Plugins and Services
 
 Extend the engine’s functionality by adding custom services and plugins through the **ServiceContainer**.
+(Because yes, I'm a PHP dev who builds his own service containers. So what?! It works...)
 
 **Example:**
 ```javascript
@@ -266,6 +264,9 @@ rocket.particleSystem().createEffect('explosion', x, y);
 
 Rocket Engine offers a broad set of tools for developing games of varying complexity. While it’s a personal project and
 not maintained professionally, it covers essential game development aspects such as physics, audio, rendering, and scene
-management.
+management. (That’s what ChatGPT recommends I say — I even may be proud. Unlike others who install Unity, launch it once, and never touch it again… I actually tried.
+And somehow, I ended up with _something_.)
 
 For more details, check the API reference or explore the example projects.
+
+> Rocket Engine: Powered by effort, duct tape, and 53 bits of hope.
