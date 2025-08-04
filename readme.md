@@ -1,12 +1,16 @@
 # Rocket Engine
 
-It draws. It simulates real physics.
-It detects collisions with quad trees and spatial partitioning.
-Until `Number` says, “Nope, you’re not YOLOing past IEEE 754.”
+This is not production software. It’s my creative sandbox — part doodling, part curiosity.
+A place where I try out ideas, patterns I’ve heard about, or anything I feel like exploring.
 
-Oh yes — you can totally reach the stars.
-But only if your unit of measurement is AU… and precision isn’t an issue.
-I mean, at a cosmic scale… what’s a light second gonna change?
+It draws. It handles canvas layers and scenes. It loads assets and animates sprites.
+It simulates real Newtonian physics and detects collisions using quad trees, spatial partitioning, and other nifty tricks.
+
+Oh, you can totally build a space game that reaches the stars with it.
+As long as your unit of measurement is AU… and precision isn’t a concern.
+Because eventually, `Number` will say, "Nope, you’re not YOLOing past IEEE 754."
+
+But hey — at a cosmic scale, what’s a light second more or less gonna matter?
 
 ### Quick Start Example
 
@@ -79,20 +83,6 @@ Also: If you can't fire or control the ship, **check the energy levels**!
 - **Mouse Wheel**: Zoom in/out.
 
 You can destroy asteroids and space stations, but beyond that, there’s not much to do yet.
-
-Check out the demo [here](https://rocket-engine.maduser.net).
- _(Temporarily offline due to a rapid unscheduled disassembly. It'll be back — once I'm done defying the limitations of reality in other projects. No really, there is real working demo)_
-
-## Important Note
-
-This is a fun side project I poke at when the weather is bad, the stars misalign, or I feel like arguing with floating point numbers.
-
-It’s written in plain JavaScript (because I enjoy unsurmountable challenges and pain) and exists mainly so I can learn about game development, figure out how to structure bigger codebases, and discover patterns — usually right as the entire foundation starts to implode.
-
-It’s how I earned the right to rant at other (livestreaming, pep-talking) devs and pretend I know exactly why their code is miserable.
-When I say I’m experienced, I mean I’ve already suffered enough consequences to foresee when the code is doomed to eternal Early Access.
-
-😂
 
 ---
 
@@ -216,13 +206,12 @@ rocket.eventBus().emit('playerDied');
 
 Built-in A* pathfinding algorithm helps navigate complex game environments using grid-based heuristic searching.
 
-
 **Example:**
 ```javascript
 const path = rocket.pathfinding.search(startNode, endNode);
 console.log('Path found:', path);
 ```
-_(Okay, that’s a lie — it’s still on the TODO list. I’m just working on the README ahead of time for efficiency.)_
+_(Okay, that’s a lie — it's not working yet. I’m just working on the README ahead of time... for efficiency...)_
 
 ### 11. Performance Monitoring
 
@@ -237,7 +226,7 @@ const rocket = new Rocket({ showPerformanceMonitor: true });
 
 Extend the engine’s functionality by adding custom services and plugins through the **ServiceContainer**.
 
-_(Because yes — I’m a PHP dev who built a service container that would make Taylor Otwell hide in shame. So of course I brought that pattern to JavaScript. Why wouldn’t I?)_
+_(Because yes — I’m a PHP dev who builts his own service containers. So of course I had to bring that pattern to JavaScript...)_
 
 **Example:**
 ```javascript
@@ -265,14 +254,6 @@ Create particle effects such as explosions, fire, or smoke using the **ParticleS
 rocket.particleSystem().createEffect('explosion', x, y);
 ```
 
----
-
-Rocket Engine offers a broad set of tools for developing games of varying complexity. While it’s a personal project and
-not maintained professionally, it covers essential game development aspects such as physics, audio, rendering, and scene
-management. 
-
-_(That’s what ChatGPT recommends I say — I even may be proud. Unlike others who install Unity, launch it once, and never touch it again… I actually tried.
-And somehow, I ended up with **something**.)_
 
 For more details, check the API reference or explore the example projects.
 
