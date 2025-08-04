@@ -12,6 +12,11 @@ Because eventually, `Number` will say, "Nope, you’re not YOLOing past IEEE 754
 
 But hey — at a cosmic scale, what’s a light second more or less gonna matter?
 
+**About the Docs**
+This README is as unfinished and unstable as the engine itself.
+Some features aren’t documented. Some are outdated.
+Some I barely remember writing. 
+
 ### Quick Start Example
 
 Example of initializing the Rocket Engine and setting up a few scenes:
@@ -56,7 +61,7 @@ Find more examples in the ./examples folder.
 
 ### Demo Space Game
 
-The demo focuses on controlling a spaceship infinite space (well — theoretically, but IEEE 754 keeps contradicting me). There are two main control modes that can be switched by
+The demo focuses on controlling a spaceship infinite space (well — theoretically, but IEEE 754 won't have it). There are two main control modes that can be switched by
 **pressing the space bar**:
 
 - **Realistic Physics**: For long-distance travel with inertia dampers off.
@@ -82,7 +87,7 @@ Also: If you can't fire or control the ship, **check the energy levels**!
 - **Mouse 2 + drag**: Select objects in space.
 - **Mouse Wheel**: Zoom in/out.
 
-You can destroy asteroids and space stations, but beyond that, there’s not much to do yet.
+You can destroy asteroids and space stations, but beyond that, there’s not much to do.
 
 ---
 
@@ -117,7 +122,7 @@ rocket.entityManager().addEntity(player, 'player');
 Built-in physics support for 2D and 3D games, including various levels of collision detection (bounding boxes, polygons,
 etc.) 
 
-_(Yes, real Newtonian physics — allegedly. I outsourced the math to ChatGPT because I panicked at the first integral. Don't blame me if it's wrong. And if it just feels weird… that’s because real games never use real physics. Now you know why.)_
+_(Yes, real Newtonian physics. I outsourced the math to ChatGPT because I panicked at the first integral. If it feels weird… that’s because real games never use real physics. Now you know why.)_
 
 **Example:**
 ```javascript
@@ -143,7 +148,7 @@ _(To be honest: I only provide the ability to replace the Canvas renderer with y
 ### 5. Sprite Sheet Support
 
 Efficiently manage animated characters and objects with **SpriteSheetManager**, which also supports collision shape
-generation.
+generation. (means nothing to you, but it reminds me it's there)
 
 **Example:**
 ```javascript
@@ -215,7 +220,7 @@ _(Okay, that’s a lie — it's not working yet. I’m just working on the READM
 
 ### 11. Performance Monitoring
 
-Keep track of game performance with the built-in **PerformanceMonitor**, which can be toggled during development.
+Keep track of game performance with a built-in **PerformanceMonitor**
 
 **Example:**
 ```javascript
@@ -226,12 +231,13 @@ const rocket = new Rocket({ showPerformanceMonitor: true });
 
 Extend the engine’s functionality by adding custom services and plugins through the **ServiceContainer**.
 
-_(Because yes — I’m a PHP dev who builts his own service containers. So of course I had to bring that pattern to JavaScript...)_
+_(Because yes — I’m a PHP dev who builds his own service containers. So of course I had to bring that pattern to JavaScript...)_
 
 **Example:**
 ```javascript
 rocket.service('customService', new MyCustomService());
 ```
+Yes, technically, lazy loading works too. Put a callback in there if you're feeling fancy. Just don't expect automagic dependency injection. This ain't Laravel.
 
 ### 13. Task Scheduling
 
@@ -253,6 +259,8 @@ Create particle effects such as explosions, fire, or smoke using the **ParticleS
 ```javascript
 rocket.particleSystem().createEffect('explosion', x, y);
 ```
+_(...ahem, that's all I can say about it for now, I don't remember the details)_
+
 
 
 For more details, check the API reference or explore the example projects.
