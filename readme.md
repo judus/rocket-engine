@@ -15,7 +15,7 @@ But hey — at a cosmic scale, what’s a light second more or less gonna matter
 **About the Docs**
 This README is as unfinished and unstable as the engine itself.
 Some features aren’t documented. Some are outdated.
-Some I barely remember writing. 
+Some I barely remember writing.
 
 ### Quick Start Example
 
@@ -95,8 +95,7 @@ You can destroy asteroids and space stations, but beyond that, there’s not muc
 
 ### 1. Scene Management
 
-Rocket Engine uses a stack-based approach for managing game scenes. Each stack can hold multiple scenes, allowing for
-smooth transitions between different game states (e.g., menus, gameplay, game over).
+Rocket Engine uses "stacks" for managing game scenes. A stack can hold multiple scenes.
 
 **Example:**
 ```javascript
@@ -108,12 +107,12 @@ rocket.stack('gameplay', (stack) => {
 
 ### 2. Entity Component System (ECS)
 
-ECS allows for highly modular game objects, where behavior is defined through components. The **EntityManager** manages
+ECS allows for modular game objects, where behavior is defined through components. The **EntityManager** manages
 all entities and their components. (Just use ECS, dude! It'll fix everything!)
 
 **Example:**
 ```javascript
-const player = new Player();
+const player = new Player(); // extends some abstract base ecs entity... provides addComponent() or something
 rocket.entityManager().addEntity(player, 'player');
 ```
 
@@ -168,7 +167,7 @@ rocket.audioManager().playSound('explosion');
 
 ### 7. Input Handling
 
-Custom input bindings allow developers to map keyboard or mouse inputs to specific actions in-game.
+Custom input bindings allows mapping keyboard or mouse inputs to specific actions.
 
 **Example:**
 ```javascript
@@ -195,8 +194,7 @@ rocket.assetManager().loadImage('background', 'bg.png');
 
 ### 9. Event System
 
-The **EventBus** allows components to communicate by emitting and listening for events, making interactions between game
-systems easier.
+The **EventBus** allows components to communicate by emitting and listening for events.
 
 **Example:**
 ```javascript
@@ -216,7 +214,7 @@ Built-in A* pathfinding algorithm helps navigate complex game environments using
 const path = rocket.pathfinding.search(startNode, endNode);
 console.log('Path found:', path);
 ```
-_(Okay, that’s a lie — it's not working yet. I’m just working on the README ahead of time... for efficiency...)_
+_(Okay, that’s... not working yet. It's there but unfinished...)_
 
 ### 11. Performance Monitoring
 
@@ -259,7 +257,7 @@ Create particle effects such as explosions, fire, or smoke using the **ParticleS
 ```javascript
 rocket.particleSystem().createEffect('explosion', x, y);
 ```
-_(...ahem, that's all I can say about it for now, I don't remember the details)_
+_(...ahem, that's all I can say about it for now, I don't remember the details or what 'explosion' refers to)_
 
 > Rocket Engine: Powered by effort, duct tape, and 53 bits of hope.
 > _(ChatGPT, loyal unbiased assistant)_
