@@ -146,6 +146,7 @@ rocket.stack('world', (stack) => {
     stack.addScene(new WorldScene1());
 }, { container: document.getElementById('game-world'), width: 1024, height: 768 });
 ```
+_(To be honest: I only provide the ability to replace the Canvas renderer with your own. If you really want WebGL or — god help you — DOM rendering, you're completely on your own.)_
 
 ### 5. Sprite Sheet Support
 
