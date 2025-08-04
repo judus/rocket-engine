@@ -8,6 +8,10 @@ Oh yes — you can totally reach the stars.
 But only if your unit of measurement is AU… and precision isn’t an issue.
 I mean, at a cosmic scale… what’s a light second gonna change?
 
+Todd Howard would say: it just works!
+
+No kidding, it does.
+
 ### Quick Start Example
 
 Example of initializing the Rocket Engine and setting up a few scenes:
@@ -52,7 +56,7 @@ Find more examples in the ./examples folder.
 
 ### Demo Space Game
 
-The demo focuses on controlling a spaceship in infinite space. There are two main control modes that can be switched by
+The demo focuses on controlling a spaceship infinite space (well — theoretically, but IEEE 754 keeps contradicting me). There are two main control modes that can be switched by
 **pressing the space bar**:
 
 - **Realistic Physics**: For long-distance travel with inertia dampers off.
@@ -81,13 +85,18 @@ Also: If you can't fire or control the ship, **check the energy levels**!
 You can destroy asteroids and space stations, but beyond that, there’s not much to do yet.
 
 Check out the demo [here](https://rocket-engine.maduser.net).
- _(Temporarily offline due to a rapid unscheduled disassembly. It'll be back — once I'm done defying the limitations of reality in other projects.)_
+ _(Temporarily offline due to a rapid unscheduled disassembly. It'll be back — once I'm done defying the limitations of reality in other projects. No really, there is real working demo)_
 
 ## Important Note
 
-This is a fun project that I work on when I have time and the weather is bad. I’m learning about game development and
-programming in plain JavaScript, with the main focus on structuring code for larger projects and discovering various
-techniques and patterns used in game development.
+This is a fun side project I poke at when the weather is bad, the stars misalign, or I feel like arguing with floating point numbers.
+
+It’s written in plain JavaScript (because I enjoy unsurmountable challenges and pain) and exists mainly so I can learn about game development, figure out how to structure bigger codebases, and discover patterns — usually right as the entire foundation starts to implode.
+
+It’s how I earned the right to rant at other (livestreaming, pep-talking) devs and pretend I know exactly why their code is miserable.
+When I say I’m experienced, I mean I’ve already suffered enough consequences to foresee when the code is doomed to eternal Early Access.
+
+😂
 
 ---
 
