@@ -236,7 +236,8 @@ const rocket = new Rocket({ showPerformanceMonitor: true });
 ### 12. Extensibility with Plugins and Services
 
 Extend the engine’s functionality by adding custom services and plugins through the **ServiceContainer**.
-(Because yes, I'm a PHP dev who builds his own service containers. So what?! It works...)
+
+_(Because yes — I’m a PHP dev who built a service container that would make Taylor Otwell hide in shame. So of course I brought that pattern to JavaScript. Why wouldn’t I?)_
 
 **Example:**
 ```javascript
