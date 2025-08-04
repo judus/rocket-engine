@@ -1,6 +1,7 @@
 # Rocket Engine
 
-A javascript "game engine"? Dunno... this how I do html5 canvas stuff
+It draws. It simulates real physics. It detects collisions with quad trees and spatial partitioning.
+Until `Number` says, “Nope, you’re not YOLOing past IEEE 754.”
 
 ### Quick Start Example
 
