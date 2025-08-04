@@ -261,9 +261,5 @@ rocket.particleSystem().createEffect('explosion', x, y);
 ```
 _(...ahem, that's all I can say about it for now, I don't remember the details)_
 
-
-
-For more details, check the API reference or explore the example projects.
-
 > Rocket Engine: Powered by effort, duct tape, and 53 bits of hope.
 > _(ChatGPT, loyal unbiased assistant)_
