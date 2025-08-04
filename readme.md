@@ -2,7 +2,7 @@
 
 It draws. It simulates real physics.
 It detects collisions with quad trees and spatial partitioning.
-Until Number says, “Nope, you’re not YOLOing past IEEE 754.”
+Until `Number` says, “Nope, you’re not YOLOing past IEEE 754.”
 
 Oh yes — you can totally reach the stars.
 But only if your unit of measurement is AU… and precision isn’t an issue.
