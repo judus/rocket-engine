@@ -126,7 +126,8 @@ rocket.entityManager().addEntity(player, 'player');
 
 Built-in physics support for 2D and 3D games, including various levels of collision detection (bounding boxes, polygons,
 etc.) 
-_(Yes, real Newtonian physics — allegedly. I outsourced the math to ChatGPT because I panicked at the first integral. Don't blame me if it's wrong. And if it just feels weird… that’s because real games never use real physics. Now you know why.)._
+
+_(Yes, real Newtonian physics — allegedly. I outsourced the math to ChatGPT because I panicked at the first integral. Don't blame me if it's wrong. And if it just feels weird… that’s because real games never use real physics. Now you know why.)_
 
 **Example:**
 ```javascript
