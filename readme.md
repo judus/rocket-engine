@@ -269,9 +269,12 @@ rocket.particleSystem().createEffect('explosion', x, y);
 
 Rocket Engine offers a broad set of tools for developing games of varying complexity. While it’s a personal project and
 not maintained professionally, it covers essential game development aspects such as physics, audio, rendering, and scene
-management. _(That’s what ChatGPT recommends I say — I even may be proud. Unlike others who install Unity, launch it once, and never touch it again… I actually tried.
+management. 
+
+_(That’s what ChatGPT recommends I say — I even may be proud. Unlike others who install Unity, launch it once, and never touch it again… I actually tried.
 And somehow, I ended up with **something**.)_
 
 For more details, check the API reference or explore the example projects.
 
 > Rocket Engine: Powered by effort, duct tape, and 53 bits of hope.
+> _(ChatGPT, loyal unbiased assistant)_
