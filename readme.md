@@ -125,7 +125,8 @@ rocket.entityManager().addEntity(player, 'player');
 ### 3. Physics and Collision Detection
 
 Built-in physics support for 2D and 3D games, including various levels of collision detection (bounding boxes, polygons,
-etc.) _(Yes, real Newtonian physics — allegedly. I outsourced the math to ChatGPT because I panicked at the first integral. Don't blame me if it's wrong)._
+etc.) 
+_(Yes, real Newtonian physics — allegedly. I outsourced the math to ChatGPT because I panicked at the first integral. Don't blame me if it's wrong)._
 
 **Example:**
 ```javascript
@@ -213,13 +214,14 @@ rocket.eventBus().emit('playerDied');
 ### 10. Pathfinding
 
 Built-in A* pathfinding algorithm helps navigate complex game environments using grid-based heuristic searching.
-(Okay, that’s a lie — it’s still on the TODO list. I’m just working on the README ahead of time for efficiency.)
+
 
 **Example:**
 ```javascript
 const path = rocket.pathfinding.search(startNode, endNode);
 console.log('Path found:', path);
 ```
+_(Okay, that’s a lie — it’s still on the TODO list. I’m just working on the README ahead of time for efficiency.)_
 
 ### 11. Performance Monitoring
 
@@ -265,8 +267,8 @@ rocket.particleSystem().createEffect('explosion', x, y);
 
 Rocket Engine offers a broad set of tools for developing games of varying complexity. While it’s a personal project and
 not maintained professionally, it covers essential game development aspects such as physics, audio, rendering, and scene
-management. (That’s what ChatGPT recommends I say — I even may be proud. Unlike others who install Unity, launch it once, and never touch it again… I actually tried.
-And somehow, I ended up with _something_.)
+management. _(That’s what ChatGPT recommends I say — I even may be proud. Unlike others who install Unity, launch it once, and never touch it again… I actually tried.
+And somehow, I ended up with **something**.)_
 
 For more details, check the API reference or explore the example projects.
 
