@@ -31,8 +31,8 @@ Thumbs.db
 *.temp
 
 # Ignore specific paths and files
-/demo/assets/css/styles.css
-/demo/assets/images/
-/demo/assets/sounds/
+/demo/src/assets/css/styles.css
+/demo/src/assets/images/
+/demo/src/assets/sounds/
 /trash/
 engine/docs
