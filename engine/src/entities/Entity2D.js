@@ -6,7 +6,6 @@ import CustomPhysics2D from "../physics/CustomPhysics2D.js";
 import Vector3D from "../utils/maths/Vector3D.js";
 import QuadTree from "../services/QuadTree.js";
 import Rectangle from "../utils/maths/Rectangle.js";
-import EntityFactory from "../../../demo/setup/EntityFactory.js";
 export default class Entity2D {
     constructor(engine, config, id = null) {
         this.engine = engine;
@@ -39,7 +38,6 @@ export default class Entity2D {
         this.renderTaskScheduler = engine.create(EngineParts.TASK_SCHEDULER);
         this.eventBus = engine.service(EngineParts.EVENT_BUS);
         this.particleSystem = engine.particleSystem();
-        this.entityFactory = new EntityFactory(engine);
         this.components = {};
         this.behavior = config.behavior || null;
 
